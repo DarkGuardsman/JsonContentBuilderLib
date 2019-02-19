@@ -1,7 +1,21 @@
-plugins {
-    id 'java'
+apply plugin: 'java' 
+
+repositories {
+    jcenter() 
+}
+
+dependencies {
+    implementation 'com.google.guava:guava:11.0.2'
+	implementation 'com.google.code.gson:gson:2.8.5'
+    testImplementation 'junit:junit:4.12' 
 }
 
 sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
-version = '1.1.1'
+
+jar 
+{ 
+    baseName = 'BBM-Content-Builder' 
+    version = '1.1.1' 
+    destinationDir = file rootDir.path + '/output/'
+}    
