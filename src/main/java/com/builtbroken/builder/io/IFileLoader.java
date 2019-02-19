@@ -9,7 +9,7 @@ import java.io.File;
  */
 public interface IFileLoader
 {
-    String[] getSupportedExtensions();
+    String getSupportedExtension();
 
     DataFileLoad loadFile(File file);
 }

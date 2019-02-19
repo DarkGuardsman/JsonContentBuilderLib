@@ -11,6 +11,12 @@ public class DataFileLoad
     public final FileSource fileSource;
     public final JsonElement element;
 
+    public DataFileLoad(String fileName, JsonElement element)
+    {
+        fileSource = new FileSource();
+        fileSource.file = fileName;
+        this.element = element;
+    }
     public DataFileLoad(FileSource fileSource, JsonElement element)
     {
         this.fileSource = fileSource;

@@ -11,9 +11,9 @@ public class FileLoaderJSON implements IFileLoader
 {
 
     @Override
-    public String[] getSupportedExtensions()
+    public String getSupportedExtension()
     {
-        return new String[]{"json"};
+        return "json";
     }
 
     @Override
