@@ -1,15 +1,17 @@
 package com.builtbroken.builder.io;
 
-import com.builtbroken.builder.data.DataFileLoad;
+import com.google.gson.JsonElement;
 
-import java.io.File;
+import java.io.Reader;
+import java.util.List;
 
 /**
  * Created by Dark(DarkGuardsman, Robert) on 2/19/19.
  */
 public interface IFileLoader
 {
+
     String getSupportedExtension();
 
-    DataFileLoad loadFile(File file);
+    List<JsonElement> load(Reader reader);
 }

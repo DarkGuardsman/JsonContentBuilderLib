@@ -1,8 +1,10 @@
 package com.builtbroken.builder.io;
 
-import com.builtbroken.builder.data.DataFileLoad;
+import com.google.gson.JsonElement;
+import com.google.gson.internal.Streams;
+import com.google.gson.stream.JsonReader;
 
-import java.io.File;
+import java.io.Reader;
 
 /**
  * Created by Dark(DarkGuardsman, Robert) on 2/19/19.
@@ -17,8 +19,9 @@ public class FileLoaderJSON implements IFileLoader
     }
 
     @Override
-    public DataFileLoad loadFile(File file)
+    public JsonElement load(Reader reader)
     {
-        return null;
+        JsonReader jsonReader = new JsonReader(reader);
+        return Streams.parse(jsonReader);
     }
 }

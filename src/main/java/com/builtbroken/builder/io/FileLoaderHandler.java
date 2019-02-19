@@ -10,9 +10,7 @@ import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.util.Enumeration;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -22,6 +20,18 @@ import java.util.jar.JarFile;
  */
 public class FileLoaderHandler
 {
+
+    private static HashMap<String, IFileLoader> fileLoaders = new HashMap();
+
+    static
+    {
+        addFileLoader(new FileLoaderJSON());
+    }
+
+    public static void addFileLoader(IFileLoader fileLoader)
+    {
+        fileLoaders.put(fileLoader.getSupportedExtension(), fileLoader);
+    }
 
     public static DataFileLoad loadFile(File file)
     {
@@ -43,42 +53,6 @@ public class FileLoaderHandler
         }
     }
 
-    /**
-     * Loads a json file from the resource path
-     *
-     * @param file - file to read from
-     * @return json file as a json element object
-     * @throws IOException
-     */
-    public static void loadJsonFile(File file, List<DataFileLoad> dataFromFiles) throws IOException
-    {
-        if (file.exists() && file.isFile())
-        {
-            FileReader stream = new FileReader(file);
-            loadJson(file.getName(), new BufferedReader(stream), dataFromFiles);
-            stream.close();
-        }
-    }
-
-    /**
-     * Loads a json file from a reader
-     *
-     * @param fileName - file the reader loaded from, used only for error logs
-     * @param reader   - reader with the data
-     * @param dataFromFiles  - place to put json entries into
-     */
-    public static void loadJson(String fileName, Reader reader, List<DataFileLoad> dataFromFiles)
-    {
-        try
-        {
-            JsonReader jsonReader = new JsonReader(reader);
-            JsonElement element = Streams.parse(jsonReader);
-            dataFromFiles.add(new DataFileLoad(fileName, element));
-        } catch (Exception e)
-        {
-            throw new RuntimeException("Failed to parse file '" + fileName + "'", e);
-        }
-    }
 
     /**
      * Creates an json element from a string
@@ -120,25 +94,45 @@ public class FileLoaderHandler
         return result;
     }
 
-    public void loadResourcesFromFolder(final File currentFolder)
+    public void loadResourcesFromFolder(final File currentFolder, final List<DataFileLoad> dataLoaded)
     {
         for (File subFolderFile : currentFolder.listFiles())
         {
             if (subFolderFile.isDirectory())
             {
-                loadResourcesFromFolder(subFolderFile);
+                loadResourcesFromFolder(subFolderFile, dataLoaded);
             }
             else
             {
-                String extension = subFolderFile.getName().substring(subFolderFile.getName().lastIndexOf(".") + 1, subFolderFile.getName().length());
-                if (extension.equalsIgnoreCase("jar"))
+                loadResourcesFromFile(currentFolder, dataLoaded);
+            }
+        }
+    }
+
+    public void loadResourcesFromFile(final File file, final List<DataFileLoad> dataLoaded)
+    {
+        final String extension = file.getName().substring(file.getName().lastIndexOf(".") + 1).toLowerCase();
+        if (extension.equalsIgnoreCase("jar"))
+        {
+
+        }
+        else if (fileLoaders.containsKey(extension))
+        {
+            try
+            {
+                FileReader stream = new FileReader(file);
+                List<JsonElement> elements = fileLoaders.get(extension).load(new BufferedReader(stream));
+                for (JsonElement element : elements)
                 {
-
+                    if (element != null)
+                    {
+                        dataLoaded.add(new DataFileLoad(file.getAbsolutePath(), element));
+                    }
                 }
-                //else if (extensionsToLoad.contains(extension))
-                //{
-
-                //}
+                stream.close();
+            } catch (Exception e)
+            {
+                e.printStackTrace(); //TODO crash
             }
         }
     }
