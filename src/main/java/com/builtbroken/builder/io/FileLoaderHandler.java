@@ -33,9 +33,18 @@ public class FileLoaderHandler
         fileLoaders.put(fileLoader.getSupportedExtension(), fileLoader);
     }
 
-    public static DataFileLoad loadFile(File file)
+    public static List<DataFileLoad> loadFile(File file)
     {
-        return null;
+        List<DataFileLoad> dataEntries = new ArrayList();
+        if (file.isDirectory())
+        {
+            loadResourcesFromFolder(file, dataEntries);
+        }
+        else
+        {
+            loadResourcesFromFile(file, dataEntries);
+        }
+        return dataEntries;
     }
 
     /**
@@ -45,56 +54,30 @@ public class FileLoaderHandler
      * @return json file as a json element object
      * @throws IOException
      */
-    public static void loadJsonFileFromResources(URL resource, List<DataFileLoad> dataFromFiles) throws Exception
+    public static void loadFile(URL resource, List<DataFileLoad> dataFromFiles) throws Exception
     {
         if (resource != null)
         {
-            loadJson(resource.getFile(), new InputStreamReader(resource.openStream()), dataFromFiles);
-        }
-    }
+            final String extension = resource.toString().substring(resource.toString().lastIndexOf(".") + 1).toLowerCase();
 
-
-    /**
-     * Creates an json element from a string
-     *
-     * @param data - string data, needs to be formatted correctly,
-     *             e.g. { "content" : { "more":"content"} }
-     * @return json element
-     * @throws JsonSyntaxException - if string is not formatted correctly
-     */
-    public static JsonElement createElement(String data)
-    {
-        JsonReader jsonReader = new JsonReader(new StringReader(data));
-        return Streams.parse(jsonReader);
-    }
-
-    //Based on http://www.uofr.net/~greg/java/get-resource-listing.html
-    public static List<String> getResourceListing(URL resource) throws URISyntaxException, IOException
-    {
-        List<String> result = new LinkedList(); //TODO check if this is faster than array list
-        if (resource.getProtocol().equals("jar"))
-        {
-            //Get path to jar file
-            String jarPath = getJarPath(resource);
-
-            //open jar and get entities
-            JarFile jar = new JarFile(URLDecoder.decode(jarPath, "UTF-8"));
-            Enumeration<JarEntry> entries = jar.entries(); //gives ALL entries in jar
-
-            //Loop entries
-            while (entries.hasMoreElements())
+            try
             {
-                String filePath = entries.nextElement().getName();
-                if (!filePath.endsWith("/") && !result.contains(filePath))
+                List<JsonElement> elements = fileLoaders.get(extension).load(new InputStreamReader(resource.openStream()));
+                for (JsonElement element : elements)
                 {
-                    result.add(filePath);
+                    if (element != null)
+                    {
+                        dataFromFiles.add(new DataFileLoad(resource.getFile(), element));
+                    }
                 }
+            } catch (Exception e)
+            {
+                e.printStackTrace(); //TODO crash
             }
         }
-        return result;
     }
 
-    public void loadResourcesFromFolder(final File currentFolder, final List<DataFileLoad> dataLoaded)
+    public static void loadResourcesFromFolder(final File currentFolder, final List<DataFileLoad> dataLoaded)
     {
         for (File subFolderFile : currentFolder.listFiles())
         {
@@ -109,19 +92,14 @@ public class FileLoaderHandler
         }
     }
 
-    public void loadResourcesFromFile(final File file, final List<DataFileLoad> dataLoaded)
+    public static void loadResourcesFromFile(final File file, final List<DataFileLoad> dataLoaded)
     {
         final String extension = file.getName().substring(file.getName().lastIndexOf(".") + 1).toLowerCase();
-        if (extension.equalsIgnoreCase("jar"))
+        if (fileLoaders.containsKey(extension))
         {
-
-        }
-        else if (fileLoaders.containsKey(extension))
-        {
-            try
+            try (BufferedReader stream = new BufferedReader(new FileReader(file)))
             {
-                FileReader stream = new FileReader(file);
-                List<JsonElement> elements = fileLoaders.get(extension).load(new BufferedReader(stream));
+                List<JsonElement> elements = fileLoaders.get(extension).load(stream);
                 for (JsonElement element : elements)
                 {
                     if (element != null)
@@ -129,23 +107,10 @@ public class FileLoaderHandler
                         dataLoaded.add(new DataFileLoad(file.getAbsolutePath(), element));
                     }
                 }
-                stream.close();
             } catch (Exception e)
             {
                 e.printStackTrace(); //TODO crash
             }
         }
-    }
-
-    public static String getJarPath(URL resource)
-    {
-        String path = resource.toExternalForm().replace("jar:", "").replace("file:", "");
-        path = path.substring(1, path.indexOf("!")); //TODO fix need for starting at 1 for windows, as this is breaking linux paths
-        //Fix for linux
-        if (!path.startsWith(File.separator) && (path.indexOf(":") > 5 || path.indexOf(":") < 0))
-        {
-            path = File.separator + path;
-        }
-        return path;
     }
 }
