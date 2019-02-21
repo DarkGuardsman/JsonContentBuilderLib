@@ -6,6 +6,7 @@ import com.google.gson.JsonElement;
 import java.io.*;
 import java.net.URL;
 import java.util.*;
+import java.util.function.Function;
 
 /**
  * Handles loading all files from the file system into data structures for use
@@ -31,7 +32,7 @@ public class FileLoaderHandler
         List<DataFileLoad> dataEntries = new ArrayList();
         if (file.isDirectory())
         {
-            loadResourcesFromFolder(file, dataEntries);
+            loadResourcesFromFolder(file, dataEntries, null);
         }
         else
         {
@@ -56,34 +57,53 @@ public class FileLoaderHandler
      */
     public static void loadFile(URL resource, List<DataFileLoad> dataFromFiles)
     {
+        List<JsonElement> elements = loadFileJsonElements(resource);
+        if (elements != null)
+        {
+            for (JsonElement element : elements)
+            {
+                if (element != null)
+                {
+                    dataFromFiles.add(new DataFileLoad(resource.getFile(), element));
+                }
+            }
+        }
+    }
+
+    public static List<JsonElement> loadFileJsonElements(URL resource)
+    {
         if (resource != null)
         {
             final String extension = resource.toString().substring(resource.toString().lastIndexOf(".") + 1).toLowerCase();
 
             try
             {
-                List<JsonElement> elements = fileLoaders.get(extension).loadFile(new InputStreamReader(resource.openStream()));
-                for (JsonElement element : elements)
-                {
-                    if (element != null)
-                    {
-                        dataFromFiles.add(new DataFileLoad(resource.getFile(), element));
-                    }
-                }
+                return getLoaderFor(extension).loadFile(new InputStreamReader(resource.openStream()));
             } catch (Exception e)
             {
                 e.printStackTrace(); //TODO crash
             }
         }
+        return null;
     }
 
-    public static void loadResourcesFromFolder(final File currentFolder, final List<DataFileLoad> dataLoaded)
+    public static IFileLoader getLoaderFor(String extension)
+    {
+        return fileLoaders.get(extension.toLowerCase());
+    }
+
+    public static void loadResourcesFromFolder(final File currentFolder, final List<DataFileLoad> dataLoaded, Function<File, Boolean> shouldPathFolder)
     {
         for (File subFolderFile : currentFolder.listFiles())
         {
             if (subFolderFile.isDirectory())
             {
-                loadResourcesFromFolder(subFolderFile, dataLoaded);
+                if (shouldPathFolder == null || shouldPathFolder.apply(subFolderFile))
+                {
+                    loadResourcesFromFolder(subFolderFile, dataLoaded, shouldPathFolder);
+                    //TODO build path from main search folder and pass that into check instead
+                    //Ex: /contents instead of C:/user/install/folder/contents
+                }
             }
             else
             {
@@ -95,22 +115,43 @@ public class FileLoaderHandler
     public static void loadResourcesFromFile(final File file, final List<DataFileLoad> dataLoaded)
     {
         final String extension = file.getName().substring(file.getName().lastIndexOf(".") + 1).toLowerCase();
+        List<JsonElement> elements = null;
         if (fileLoaders.containsKey(extension))
         {
-            try (BufferedReader stream = new BufferedReader(new FileReader(file)))
+            final IFileLoader loader = fileLoaders.get(extension);
+            if (loader.useReader())
             {
-                List<JsonElement> elements = fileLoaders.get(extension).loadFile(stream);
-                for (JsonElement element : elements)
+                try (BufferedReader stream = new BufferedReader(new FileReader(file)))
                 {
-                    if (element != null)
-                    {
-                        dataLoaded.add(new DataFileLoad(file.getAbsolutePath(), element));
-                    }
+                    elements = loader.loadFile(stream);
+
+                } catch (Exception e)
+                {
+                    e.printStackTrace(); //TODO crash
+                    return;
                 }
-            } catch (Exception e)
+            }
+            else
             {
-                e.printStackTrace(); //TODO crash
+                elements = loader.loadFile(file);
             }
         }
+
+        //Load json into output
+        if (elements != null)
+        {
+            for (JsonElement element : elements)
+            {
+                if (element != null)
+                {
+                    dataLoaded.add(new DataFileLoad(file.getAbsolutePath(), element));
+                }
+            }
+        }
+    }
+
+    public static boolean canSupport(String extension)
+    {
+        return fileLoaders.containsKey(extension.toLowerCase());
     }
 }

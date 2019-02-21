@@ -6,6 +6,7 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.internal.Streams;
 import com.google.gson.stream.JsonReader;
 
+import java.io.File;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.List;
@@ -27,6 +28,12 @@ public class FileLoaderJSON implements IFileLoader
     {
         JsonReader jsonReader = new JsonReader(reader);
         return Lists.newArrayList(Streams.parse(jsonReader));
+    }
+
+    @Override
+    public List<JsonElement> loadFile(File file)
+    {
+        return null;
     }
 
 

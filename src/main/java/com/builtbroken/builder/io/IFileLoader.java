@@ -2,6 +2,7 @@ package com.builtbroken.builder.io;
 
 import com.google.gson.JsonElement;
 
+import java.io.File;
 import java.io.Reader;
 import java.util.List;
 
@@ -14,4 +15,11 @@ public interface IFileLoader
     String getSupportedExtension();
 
     List<JsonElement> loadFile(Reader reader);
+
+    List<JsonElement> loadFile(File file);
+
+    default boolean useReader()
+    {
+        return true;
+    }
 }
