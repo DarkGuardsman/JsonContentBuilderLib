@@ -13,5 +13,5 @@ public interface IFileLoader
 
     String getSupportedExtension();
 
-    List<JsonElement> load(Reader reader);
+    List<JsonElement> loadFile(Reader reader);
 }

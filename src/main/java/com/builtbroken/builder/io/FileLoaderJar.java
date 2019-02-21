@@ -27,7 +27,7 @@ public class FileLoaderJar implements IFileLoader
     }
 
     @Override
-    public List<JsonElement> load(Reader reader)
+    public List<JsonElement> loadFile(Reader reader)
     {
         return null;
     }

@@ -2,17 +2,10 @@ package com.builtbroken.builder.io;
 
 import com.builtbroken.builder.data.DataFileLoad;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonSyntaxException;
-import com.google.gson.internal.Streams;
-import com.google.gson.stream.JsonReader;
 
 import java.io.*;
-import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLDecoder;
 import java.util.*;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 
 /**
  * Handles loading all files from the file system into data structures for use
@@ -47,6 +40,13 @@ public class FileLoaderHandler
         return dataEntries;
     }
 
+    public static List<DataFileLoad> loadFile(URL resource)
+    {
+        List<DataFileLoad> dataEntries = new ArrayList();
+        loadFile(resource, dataEntries);
+        return dataEntries;
+    }
+
     /**
      * Loads a files from the resource path
      *
@@ -54,7 +54,7 @@ public class FileLoaderHandler
      * @return json file as a json element object
      * @throws IOException
      */
-    public static void loadFile(URL resource, List<DataFileLoad> dataFromFiles) throws Exception
+    public static void loadFile(URL resource, List<DataFileLoad> dataFromFiles)
     {
         if (resource != null)
         {
@@ -62,7 +62,7 @@ public class FileLoaderHandler
 
             try
             {
-                List<JsonElement> elements = fileLoaders.get(extension).load(new InputStreamReader(resource.openStream()));
+                List<JsonElement> elements = fileLoaders.get(extension).loadFile(new InputStreamReader(resource.openStream()));
                 for (JsonElement element : elements)
                 {
                     if (element != null)
@@ -99,7 +99,7 @@ public class FileLoaderHandler
         {
             try (BufferedReader stream = new BufferedReader(new FileReader(file)))
             {
-                List<JsonElement> elements = fileLoaders.get(extension).load(stream);
+                List<JsonElement> elements = fileLoaders.get(extension).loadFile(stream);
                 for (JsonElement element : elements)
                 {
                     if (element != null)

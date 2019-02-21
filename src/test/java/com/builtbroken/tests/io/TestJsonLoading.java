@@ -15,7 +15,7 @@ import java.util.List;
 public class TestJsonLoading extends TestCase
 {
 
-    private static final String[] TEST_FOLDERS = new String[]{"", "/[test]test", "/{test}test", "/test test", "/test.test", "/test_test", "/test-test", "/.local"};
+    public static final String[] TEST_FOLDERS = new String[]{"", "/[test]test", "/{test}test", "/test test", "/test.test", "/test_test", "/test-test", "/.local"};
 
     @Test
     public void testJsonPathLoading() throws Exception
@@ -27,50 +27,23 @@ public class TestJsonLoading extends TestCase
             assertTrue("No file with path: " + file, file.exists());
 
             List<DataFileLoad> elements = FileLoaderHandler.loadFile(file);
-            assertNotNull("Should contain something for " + file, elements);
-            assertEquals("Should contain 1 element for " + file, 1, elements.size());
-
-            assertNotNull(elements.get(0));
-            assertNotNull(elements.get(0).fileSource);
-            assertNotNull(elements.get(0).element);
-
-            assertTrue(elements.get(0).element.isJsonObject());
-            assertEquals(1, elements.get(0).element.getAsJsonObject().entrySet().size());
-            assertTrue(elements.get(0).element.getAsJsonObject().has("tag"));
-            assertEquals("hello", elements.get(0).element.getAsJsonObject().getAsJsonPrimitive("tag").getAsString());
+            validJsonTestFile(elements, file.toString());
         }
     }
 
-    @Test
-    public void testJarFilePathLoading() throws Exception
+    public static void validJsonTestFile(List<DataFileLoad> elements, String file)
     {
-        for (String folderPath : TEST_FOLDERS)
-        {
-            File file = new File(System.getProperty("user.dir"), "src/test/resources/test" + folderPath + "/test.jar");
+        assertNotNull("Should contain something for " + file, elements);
+        assertEquals("Should contain 1 element for " + file, 1, elements.size());
 
-            assertTrue("No file with path: " + file, file.exists());
+        assertNotNull(elements.get(0));
+        assertNotNull(elements.get(0).fileSource);
+        assertNotNull(elements.get(0).element);
 
-            //JsonContentLoader loader = new JsonContentLoader();
+        assertTrue(elements.get(0).element.isJsonObject());
+        assertEquals(1, elements.get(0).element.getAsJsonObject().entrySet().size());
+        assertTrue(elements.get(0).element.getAsJsonObject().has("tag"));
+        assertEquals("hello", elements.get(0).element.getAsJsonObject().getAsJsonPrimitive("tag").getAsString());
 
-            //loader.loadResourcesFromPackage(new URL("jar:file:/" + file.getAbsolutePath() + "!/content"));
-            //assertEquals("Failed for: " + folderPath, 1, loader.jsonEntries.size());
-        }
-    }
-
-    @Test
-    public void testJarPathDetector() throws Exception
-    {
-        for (String folderPath : TEST_FOLDERS)
-        {
-            File file = new File(System.getProperty("user.dir"), "src/test/resources/test/" + folderPath + "/test.jar");
-
-            assertTrue(file.exists());
-            URL url = new URL("jar:file:/" + file.getAbsolutePath() + "!/content");
-
-            //List<String> files = JsonLoader.getResourceListing(url);
-
-            //assertTrue("Failed for: " + folderPath, !files.isEmpty());
-            //assertEquals("Failed for: " + folderPath, "content/test.json", files.get(0));
-        }
     }
 }

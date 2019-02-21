@@ -23,7 +23,7 @@ public class FileLoaderJSON implements IFileLoader
     }
 
     @Override
-    public List<JsonElement> load(Reader reader)
+    public List<JsonElement> loadFile(Reader reader)
     {
         JsonReader jsonReader = new JsonReader(reader);
         return Lists.newArrayList(Streams.parse(jsonReader));
