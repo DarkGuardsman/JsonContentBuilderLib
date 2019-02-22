@@ -20,6 +20,7 @@ public class FileLoaderHandler
     static
     {
         addFileLoader(new FileLoaderJSON());
+        addFileLoader(new FileLoaderJar());
     }
 
     public static void addFileLoader(IFileLoader fileLoader)
@@ -112,9 +113,19 @@ public class FileLoaderHandler
         }
     }
 
+    public static String getExtension(File file)
+    {
+        return getExtension(file.getName());
+    }
+
+    public static String getExtension(String fileName)
+    {
+        return fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
+    }
+
     public static void loadResourcesFromFile(final File file, final List<DataFileLoad> dataLoaded)
     {
-        final String extension = file.getName().substring(file.getName().lastIndexOf(".") + 1).toLowerCase();
+        final String extension = getExtension(file);
         List<JsonElement> elements = null;
         if (fileLoaders.containsKey(extension))
         {
@@ -135,6 +146,10 @@ public class FileLoaderHandler
             {
                 elements = loader.loadFile(file);
             }
+        }
+        else
+        {
+            System.out.println("No Matching loader for extension: " + extension);//TODO move to logger or error handler;
         }
 
         //Load json into output

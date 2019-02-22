@@ -14,9 +14,15 @@ public interface IFileLoader
 
     String getSupportedExtension();
 
-    List<JsonElement> loadFile(Reader reader);
+    default List<JsonElement> loadFile(Reader reader)
+    {
+        return null;
+    }
 
-    List<JsonElement> loadFile(File file);
+    default List<JsonElement> loadFile(File file)
+    {
+        return null;
+    }
 
     default boolean useReader()
     {

@@ -2,16 +2,16 @@ package com.builtbroken.builder.io;
 
 import com.google.gson.JsonElement;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
+import java.io.*;
 import java.net.*;
 import java.nio.file.*;
 import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.stream.Stream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
 
 /**
  * Created by Dark(DarkGuardsman, Robert) on 2/21/19.
@@ -22,13 +22,7 @@ public class FileLoaderJar implements IFileLoader
     @Override
     public String getSupportedExtension()
     {
-        return ".jar";
-    }
-
-    @Override
-    public List<JsonElement> loadFile(Reader reader)
-    {
-        return null;
+        return "jar";
     }
 
     @Override
@@ -37,11 +31,30 @@ public class FileLoaderJar implements IFileLoader
         List<JsonElement> elements = new ArrayList();
         try
         {
-            URL url = new URL("jar:file:/" + file.getAbsolutePath());
-            loadResourcesFromPackage(url, elements);
-        } catch (MalformedURLException e)
-        {
-            e.printStackTrace();
+            ZipFile zipFile = new ZipFile(file);
+
+            Enumeration<? extends ZipEntry> entries = zipFile.entries();
+
+            while (entries.hasMoreElements())
+            {
+                ZipEntry entry = entries.nextElement();
+                if (!entry.isDirectory())
+                {
+                    final String fileName = entry.getName();
+                    final String extension = FileLoaderHandler.getExtension(fileName);
+                    if (FileLoaderHandler.canSupport(extension))
+                    {
+                        IFileLoader loader = FileLoaderHandler.getLoaderFor(extension);
+                        if (loader.useReader())
+                        {
+                            InputStreamReader stream = new InputStreamReader(zipFile.getInputStream(entry));
+                            elements.addAll(loader.loadFile(stream));
+                            stream.close();
+                        }
+                    }
+                }
+            }
+            zipFile.close();
         } catch (Exception e)
         {
             e.printStackTrace();

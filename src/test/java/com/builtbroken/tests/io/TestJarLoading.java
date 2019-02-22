@@ -44,7 +44,7 @@ public class TestJarLoading extends TestCase
 
             assertTrue("No file with path: " + file, file.exists());
 
-            List<DataFileLoad> files = FileLoaderHandler.loadFile(new URL("jar:file:/" + file.getAbsolutePath() + "!/content"));
+            List<DataFileLoad> files = FileLoaderHandler.loadFile(file);
 
             TestJsonLoading.validJsonTestFile(files, file.toString());
         }
