@@ -31,12 +31,12 @@ public class FileLoaderJar implements IFileLoader
         List<JsonElement> elements = new ArrayList();
         try
         {
+            //Loop all entries in jar
             ZipFile zipFile = new ZipFile(file);
-
             Enumeration<? extends ZipEntry> entries = zipFile.entries();
-
             while (entries.hasMoreElements())
             {
+                //For each entry see if its a valid file we can load
                 ZipEntry entry = entries.nextElement();
                 if (!entry.isDirectory())
                 {
@@ -44,6 +44,7 @@ public class FileLoaderJar implements IFileLoader
                     final String extension = FileLoaderHandler.getExtension(fileName);
                     if (FileLoaderHandler.canSupport(extension))
                     {
+                        //If valid load only if it can use the reader
                         IFileLoader loader = FileLoaderHandler.getLoaderFor(extension);
                         if (loader.useReader())
                         {
@@ -113,7 +114,7 @@ public class FileLoaderJar implements IFileLoader
      *
      * @param folder - package your looking to load data from
      */
-    public void loadResourcesFromPackage(Class clazz, String folder)
+    public List<JsonElement> loadResourcesFromPackage(Class clazz, String folder)
     {
         //Actual load process
         try
@@ -125,58 +126,38 @@ public class FileLoaderJar implements IFileLoader
             }
             if (url != null)
             {
-                //loadResourcesFromPackage(url);
+                return loadResourcesFromPackage(url);
             }
             else
             {
-                //debug.error("Could not locate folder[ " + folder + " ]");
+                System.out.println("Could not locate folder[ " + folder + " ]"); //TODO logger or error handler
             }
         } catch (Exception e)
         {
             throw new RuntimeException("Failed to load resources from class path.  Class='" + clazz + "' folder= '" + folder + "'", e);
         }
+        return new ArrayList();
     }
 
     /**
      * Loads package
      */
-    public void loadResourcesFromPackage(URL url, List<JsonElement> elements) throws Exception
+    public List<JsonElement> loadResourcesFromPackage(URL url) throws Exception
     {
         try
         {
             if ("jar".equals(url.getProtocol()))
             {
-
                 //Get path to jar file
                 String jarPath = getJarPath(url);
                 String decodedPath = URLDecoder.decode(jarPath, "UTF-8");
 
                 //open jar and get entities
-                JarFile jar = new JarFile(decodedPath);
-                Enumeration<JarEntry> entries = jar.entries(); //gives ALL entries in jar
-
-                List<String> listOfFilesParsed = new LinkedList();
-                //Loop entries
-                while (entries.hasMoreElements())
-                {
-                    final JarEntry entry = entries.nextElement();
-                    final String name = entry.getName();
-                    final String extension = name.substring(name.lastIndexOf(".") + 1, name.length());
-                    if (!"jar".equalsIgnoreCase(extension) && FileLoaderHandler.canSupport(extension))
-                    {
-                        IFileLoader loader = FileLoaderHandler.getLoaderFor(extension);
-                        if (loader != null && loader.useReader())
-                        {
-                            listOfFilesParsed.add(name);
-                            //url.toExternalForm() + "/" + name <- add file path>?
-                            elements.addAll(loader.loadFile(new InputStreamReader(jar.getInputStream(entry))));
-                        }
-                    }
-                }
+                return loadFile(new File(decodedPath));
             }
             else
             {
-                walkPaths(Paths.get(url.toURI()));
+                return walkPaths(Paths.get(url.toURI()));
             }
         } catch (Exception e)
         {
@@ -185,8 +166,9 @@ public class FileLoaderJar implements IFileLoader
     }
 
     //Old method, no longer used for .jars... keep for IDE usage
-    private void walkPaths(Path filePath) throws IOException
+    private List<JsonElement> walkPaths(Path filePath) throws IOException
     {
+        List<JsonElement> elements = new ArrayList();
         Stream<Path> walk = Files.walk(filePath, 100);
         for (Iterator<Path> it = walk.iterator(); it.hasNext(); )
         {
@@ -194,24 +176,20 @@ public class FileLoaderJar implements IFileLoader
             String name = nextPath.getFileName().toString();
             if (name.lastIndexOf(".") > 1)
             {
-                String extension = name.substring(name.lastIndexOf(".") + 1, name.length());
-                // if (extensionsToLoad.contains(extension))
-                //{
-                //    debug.log("Found " + name);
-                //    JsonLoader.loadJson(nextPath.toAbsolutePath().toString(), Files.newBufferedReader(nextPath), jsonEntries);
-                //}
+                final String extension = FileLoaderHandler.getExtension(name);
+                if (FileLoaderHandler.canSupport(extension))
+                {
+                    //If valid load only if it can use the reader
+                    IFileLoader loader = FileLoaderHandler.getLoaderFor(extension);
+                    if (loader.useReader())
+                    {
+                        BufferedReader stream = Files.newBufferedReader(nextPath);
+                        elements.addAll(loader.loadFile(stream));
+                        stream.close();
+                    }
+                }
             }
         }
-    }
-
-    private FileSystem getFileSystem(URI uri) throws IOException
-    {
-        try
-        {
-            return FileSystems.getFileSystem(uri);
-        } catch (FileSystemNotFoundException e)
-        {
-            return FileSystems.newFileSystem(uri, Collections.<String, String>emptyMap());
-        }
+        return elements;
     }
 }
