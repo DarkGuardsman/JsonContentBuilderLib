@@ -7,7 +7,6 @@ import com.google.gson.JsonElement;
  */
 public class DataFileLoad
 {
-
     public final FileSource fileSource;
     public final JsonElement element;
 
