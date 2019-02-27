@@ -1,7 +1,8 @@
-package com.builtbroken.builder.pipe.cleaning;
+package com.builtbroken.builder.pipe.nodes.cleaning;
 
 import com.builtbroken.builder.References;
-import com.builtbroken.builder.pipe.ILoaderPipeNode;
+import com.builtbroken.builder.pipe.nodes.IPipeNode;
+import com.builtbroken.builder.pipe.nodes.NodeType;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -9,17 +10,24 @@ import com.google.gson.JsonObject;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Queue;
 
 /**
  * Created by Dark(DarkGuardsman, Robert) on 2/26/19.
  */
-public class PipeNodeCommentRemover implements ILoaderPipeNode
+public class PipeNodeCommentRemover implements IPipeNode
 {
+
     @Override
-    public Object receive(JsonObject data, Object currentObject)
+    public void receive(JsonObject data, Object currentObject, Queue<Object> out)
     {
         cleanObject(data, 0);
-        return currentObject;
+    }
+
+    @Override
+    public NodeType getNodeType()
+    {
+        return NodeType.JSON_EDITOR;
     }
 
     private void cleanArray(JsonArray array, int depth)

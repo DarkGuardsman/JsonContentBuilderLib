@@ -6,6 +6,10 @@ package com.builtbroken.builder;
 public class References
 {
     //==== PIPE IDs ======
+    public static final String PIPE_JSON = "json";
+    public static final String PIPE_BUILDER = "builder";
+    public static final String PIPE_MAPPER = "mapper";
+
     public static final String PIPE_ID = "com.builtbroken";
     public static final String PIPE_COMMENT_REMOVER = PIPE_ID + ":comment.remover";
 }
