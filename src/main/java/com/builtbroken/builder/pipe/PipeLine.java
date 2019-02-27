@@ -1,7 +1,7 @@
 package com.builtbroken.builder.pipe;
 
 import com.builtbroken.builder.References;
-import com.builtbroken.builder.pipe.nodes.cleaning.PipeNodeCommentRemover;
+import com.builtbroken.builder.pipe.nodes.json.PipeNodeCommentRemover;
 import com.builtbroken.builder.pipe.nodes.IPipeNode;
 import com.google.gson.JsonObject;
 

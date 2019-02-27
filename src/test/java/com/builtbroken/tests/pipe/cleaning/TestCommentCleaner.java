@@ -1,6 +1,6 @@
 package com.builtbroken.tests.pipe.cleaning;
 
-import com.builtbroken.builder.pipe.nodes.cleaning.PipeNodeCommentRemover;
+import com.builtbroken.builder.pipe.nodes.json.PipeNodeCommentRemover;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;

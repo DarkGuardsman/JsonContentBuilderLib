@@ -1,4 +1,4 @@
-package com.builtbroken.builder.pipe.nodes.cleaning;
+package com.builtbroken.builder.pipe.nodes.json;
 
 import com.builtbroken.builder.References;
 import com.builtbroken.builder.pipe.nodes.IPipeNode;
