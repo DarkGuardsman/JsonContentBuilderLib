@@ -29,7 +29,7 @@ import java.util.Queue;
  * Never assume that the input into your pipe is always going to be
  * the built object or null. Instead take time to understand the expected
  * output of the previous pipe and define your expected input. This is
- * where ordering of the pipes is important in order to receive
+ * where ordering of the pipes is important to receive
  * the right type of object.
  * <p>
  * Created by Dark(DarkGuardsman, Robert) on 2/26/19.
@@ -41,8 +41,8 @@ public class Pipe
     public final String pipeName;
     public final boolean allowNullRuns;
 
-    private Queue<Object> queueOut = new LinkedList();
-    private Queue<Object> queueIn = new LinkedList();
+    private final Queue<Object> queueOut = new LinkedList();
+    private final Queue<Object> queueIn = new LinkedList();
 
     public Pipe(String pipeName, boolean allowNullRuns)
     {
@@ -71,13 +71,8 @@ public class Pipe
             final IPipeNode node = iterator.next();
 
             //Move objects to next to loop
-            switchQueues();
-
-            //If we have no objects run on null
-            if (queueIn.isEmpty() && allowNullRuns)
-            {
-                queueIn.add(null);
-            }
+            queueIn.addAll(queueOut);
+            queueOut.clear();
 
             //Loop inputs
             while (queueIn.peek() != null)
@@ -88,16 +83,6 @@ public class Pipe
 
         //Last run add everything
         objectsOut.addAll(queueOut);
-    }
-
-    private void switchQueues()
-    {
-        Queue queue = queueIn;
-        queueIn = queueOut;
-        queueOut = queue;
-
-        //Should already be empty if queue in was consumed fulled
-        queueOut.clear();
     }
 
     private void handleNodeStep(IPipeNode node, JsonElement jsonData, Object currentObject, Queue<Object> queueOut)

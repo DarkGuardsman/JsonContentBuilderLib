@@ -4,6 +4,7 @@ import com.builtbroken.builder.References;
 import com.builtbroken.builder.pipe.nodes.json.PipeNodeCommentRemover;
 import com.builtbroken.builder.pipe.nodes.IPipeNode;
 import com.builtbroken.builder.pipe.nodes.json.PipeNodeJsonSplitter;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.util.*;
@@ -75,11 +76,15 @@ public class PipeLine
      *                       an entire pipe from the start but shouldn't be run through the previous pipes.
      * @return
      */
-    public List<Object> handle(JsonObject jsonData, Function<Pipe, Boolean> shouldSkipPipe) //TODO need a set return type other than object, something that is <Type, Data>
+    public List<Object> handle(JsonElement jsonData, Function<Pipe, Boolean> shouldSkipPipe) //TODO need a set return type other than object, something that is <Type, Data>
     {
         final List<Object> builtObjects = new ArrayList();
-        Queue<Object> currentIN = new LinkedList();
-        Queue<Object> currentOut = new LinkedList();
+        final Queue<Object> currentIN = new LinkedList();
+        final Queue<Object> currentOut = new LinkedList();
+
+        //Add JSON to first input
+        currentIN.add(jsonData);
+
         for (Pipe pipe : pipes)
         {
             //Check if we should run this pipe
@@ -89,12 +94,6 @@ public class PipeLine
                 currentIN.addAll(currentOut);
                 currentOut.clear();
 
-                //Add null if we want null runs
-                if (currentIN.isEmpty() && pipe.allowNullRuns)
-                {
-                    currentIN.add(null);
-                }
-
                 //loop inputs
                 while (currentIN.peek() != null)
                 {
@@ -102,6 +101,10 @@ public class PipeLine
                 }
             }
         }
+
+        //Output
+        builtObjects.addAll(currentOut);
+        builtObjects.removeIf(o -> o == null);
         return builtObjects;
     }
 }
