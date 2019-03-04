@@ -1,5 +1,6 @@
 package com.builtbroken.builder.pipe.nodes;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.util.Queue;
@@ -30,7 +31,7 @@ public interface IPipeNode
      * @param objectsOut    - any object generated in this phase, add current object if not consumed
      * @return current object, or new object if created
      */
-    void receive(JsonObject data, Object currentObject, Queue<Object> objectsOut);
+    void receive(JsonElement data, Object currentObject, Queue<Object> objectsOut);
 
     /**
      * Type of node

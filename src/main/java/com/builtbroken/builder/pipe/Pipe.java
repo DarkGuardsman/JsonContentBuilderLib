@@ -1,6 +1,7 @@
 package com.builtbroken.builder.pipe;
 
 import com.builtbroken.builder.pipe.nodes.IPipeNode;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.util.LinkedList;
@@ -56,7 +57,7 @@ public class Pipe
      * @param currentObject - current object being handled, can be null and can also be the JSON broken into parts.
      * @param objectsOut    - additional objects generated that will get passed into the next pipe, add current object if not consumed
      */
-    public void processSet(JsonObject jsonData, Object currentObject, Queue<Object> objectsOut)
+    public void processSet(JsonElement jsonData, Object currentObject, Queue<Object> objectsOut)
     {
         //Start
         queueIn.clear();
@@ -99,7 +100,7 @@ public class Pipe
         queueOut.clear();
     }
 
-    private void handleNodeStep(IPipeNode node, JsonObject jsonData, Object currentObject, Queue<Object> queueOut)
+    private void handleNodeStep(IPipeNode node, JsonElement jsonData, Object currentObject, Queue<Object> queueOut)
     {
         try
         {

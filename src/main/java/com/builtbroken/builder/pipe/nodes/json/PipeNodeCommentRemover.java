@@ -19,9 +19,16 @@ public class PipeNodeCommentRemover implements IPipeNode
 {
 
     @Override
-    public void receive(JsonObject data, Object currentObject, Queue<Object> out)
+    public void receive(JsonElement data, Object currentObject, Queue<Object> out)
     {
-        cleanObject(data, 0);
+        if (data.isJsonObject())
+        {
+            cleanObject(data.getAsJsonObject(), 0);
+        }
+        else if(data.isJsonArray())
+        {
+            cleanArray(data.getAsJsonArray(), 0);
+        }
         out.add(data);
     }
 

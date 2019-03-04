@@ -5,9 +5,7 @@ import com.builtbroken.builder.pipe.nodes.IPipeNode;
 import com.builtbroken.builder.pipe.nodes.NodeType;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
-import java.util.Map;
 import java.util.Queue;
 
 /**
@@ -18,7 +16,7 @@ import java.util.Queue;
 public class PipeNodeJsonSplitter implements IPipeNode
 {
     @Override
-    public void receive(JsonObject data, Object currentObject, Queue<Object> objectsOut)
+    public void receive(JsonElement data, Object currentObject, Queue<Object> objectsOut)
     {
         if (currentObject instanceof JsonArray)
         {

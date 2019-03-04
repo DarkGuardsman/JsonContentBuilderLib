@@ -3,6 +3,7 @@ package com.builtbroken.builder.pipe;
 import com.builtbroken.builder.References;
 import com.builtbroken.builder.pipe.nodes.json.PipeNodeCommentRemover;
 import com.builtbroken.builder.pipe.nodes.IPipeNode;
+import com.builtbroken.builder.pipe.nodes.json.PipeNodeJsonSplitter;
 import com.google.gson.JsonObject;
 
 import java.util.*;
@@ -33,6 +34,7 @@ public class PipeLine
         //Setup cleaner
         Pipe jsonPrepPipe = new Pipe(References.PIPE_JSON, true);
         jsonPrepPipe.addNode(new PipeNodeCommentRemover());
+        jsonPrepPipe.addNode(new PipeNodeJsonSplitter());
         handler.pipes.add(jsonPrepPipe);
 
         //Setup builder
