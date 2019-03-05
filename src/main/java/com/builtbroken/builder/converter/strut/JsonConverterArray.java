@@ -1,7 +1,6 @@
 package com.builtbroken.builder.converter.strut;
 
 import com.builtbroken.builder.converter.ConversionHandler;
-import com.builtbroken.builder.converter.IJsonConverter;
 import com.builtbroken.builder.converter.JsonConverter;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -14,11 +13,16 @@ import java.util.Arrays;
 public class JsonConverterArray extends JsonConverter
 {
 
-    private final ConversionHandler handler;
+    private ConversionHandler handler;
 
-    public JsonConverterArray(ConversionHandler handler)
+    public JsonConverterArray()
     {
         super("java:array.object");
+    }
+
+    @Override
+    public void onRegistered(ConversionHandler handler)
+    {
         this.handler = handler;
     }
 

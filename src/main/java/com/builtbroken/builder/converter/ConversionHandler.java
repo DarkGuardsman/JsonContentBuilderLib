@@ -90,6 +90,7 @@ public class ConversionHandler
                     //TODO throw error if strict mode, and use logger
                 }
                 converters.put(type, converter);
+                converter.onRegistered(this);
 
 
                 if (converter.getAlias() != null)

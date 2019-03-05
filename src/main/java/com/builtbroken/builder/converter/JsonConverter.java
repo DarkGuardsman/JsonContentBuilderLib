@@ -5,6 +5,7 @@ package com.builtbroken.builder.converter;
  */
 public abstract class JsonConverter<O extends Object> implements IJsonConverter<O>
 {
+
     private final String id;
 
     public JsonConverter(String id)
@@ -16,5 +17,11 @@ public abstract class JsonConverter<O extends Object> implements IJsonConverter<
     public String getUniqueID()
     {
         return id;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "JsonConverter[" + getUniqueID() + "]";
     }
 }

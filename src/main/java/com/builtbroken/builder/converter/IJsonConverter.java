@@ -115,4 +115,9 @@ public interface IJsonConverter<O extends Object>
     {
         throw new UnsupportedOperationException();
     }
+
+    default void onRegistered(ConversionHandler handler)
+    {
+
+    }
 }
