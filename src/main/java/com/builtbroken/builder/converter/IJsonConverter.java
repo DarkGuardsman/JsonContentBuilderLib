@@ -100,7 +100,7 @@ public interface IJsonConverter<O extends Object>
      */
     default O fromJson(JsonElement element, String[] args)
     {
-        return fromJson(element, args);
+        return fromJson(element);
     }
 
     /**
@@ -116,6 +116,13 @@ public interface IJsonConverter<O extends Object>
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Called when the converter is added to the handler.
+     * This can be used to get access to the handler and
+     * other resources.
+     *
+     * @param handler
+     */
     default void onRegistered(ConversionHandler handler)
     {
 
