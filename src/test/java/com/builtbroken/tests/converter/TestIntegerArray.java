@@ -1,5 +1,6 @@
 package com.builtbroken.tests.converter;
 
+import com.builtbroken.builder.converter.strut.array.JsonConverterArrayByte;
 import com.builtbroken.builder.converter.strut.array.JsonConverterArrayInt;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -9,11 +10,11 @@ import org.junit.Test;
 /**
  * Created by Dark(DarkGuardsman, Robert) on 2019-03-05.
  */
-public class TestArrayConverters extends TestCase
+public class TestIntegerArray extends TestCase
 {
 
     @Test
-    public void testIntArrayToJson()
+    public void testToJson()
     {
         JsonConverterArrayInt converter = new JsonConverterArrayInt();
         int[] array = new int[]{2, 5, 9, 1};
@@ -28,7 +29,7 @@ public class TestArrayConverters extends TestCase
     }
 
     @Test
-    public void testIntArrayFromJson()
+    public void testFromJson()
     {
         JsonConverterArrayInt converter = new JsonConverterArrayInt();
         JsonArray element = new JsonArray();
