@@ -3,7 +3,7 @@ package com.builtbroken.builder;
 /**
  * Created by Dark(DarkGuardsman, Robert) on 2/26/19.
  */
-public class References
+public class ContentBuilderRefs
 {
 
     //==== PIPE IDs ======
@@ -14,4 +14,5 @@ public class References
     public static final String PIPE_ID = "com.builtbroken";
     public static final String PIPE_COMMENT_REMOVER = PIPE_ID + ":json.comment.remover";
     public static final String PIPE_JSON_SPLITTER = PIPE_ID + ":json.splitter";
+    public static final String PIPE_OBJECT_CREATOR = PIPE_ID + ":builder.creator";
 }

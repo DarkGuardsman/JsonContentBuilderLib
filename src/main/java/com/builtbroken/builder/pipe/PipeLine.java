@@ -1,11 +1,10 @@
 package com.builtbroken.builder.pipe;
 
-import com.builtbroken.builder.References;
+import com.builtbroken.builder.ContentBuilderRefs;
 import com.builtbroken.builder.pipe.nodes.json.PipeNodeCommentRemover;
 import com.builtbroken.builder.pipe.nodes.IPipeNode;
 import com.builtbroken.builder.pipe.nodes.json.PipeNodeJsonSplitter;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 import java.util.*;
 import java.util.function.Function;
@@ -33,17 +32,17 @@ public class PipeLine
         PipeLine handler = new PipeLine();
 
         //Setup cleaner
-        Pipe jsonPrepPipe = new Pipe(References.PIPE_JSON, true);
+        Pipe jsonPrepPipe = new Pipe(ContentBuilderRefs.PIPE_JSON, true);
         jsonPrepPipe.addNode(new PipeNodeCommentRemover());
         jsonPrepPipe.addNode(new PipeNodeJsonSplitter());
         handler.pipes.add(jsonPrepPipe);
 
         //Setup builder
-        Pipe builderPipe = new Pipe(References.PIPE_BUILDER, false);
+        Pipe builderPipe = new Pipe(ContentBuilderRefs.PIPE_BUILDER, false);
         handler.pipes.add(builderPipe);
 
         //Setup mapper
-        Pipe mapperPipe = new Pipe(References.PIPE_MAPPER, false);
+        Pipe mapperPipe = new Pipe(ContentBuilderRefs.PIPE_MAPPER, false);
         handler.pipes.add(mapperPipe);
 
         return handler;

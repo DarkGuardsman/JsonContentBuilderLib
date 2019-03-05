@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Created by Dark(DarkGuardsman, Robert) on 2/19/19.
  */
-public class TestContentBuilder extends TestCase
+public class TestContentBuilderLib extends TestCase
 {
 
 

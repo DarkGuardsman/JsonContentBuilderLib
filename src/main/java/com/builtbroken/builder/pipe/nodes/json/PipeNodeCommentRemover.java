@@ -1,6 +1,6 @@
 package com.builtbroken.builder.pipe.nodes.json;
 
-import com.builtbroken.builder.References;
+import com.builtbroken.builder.ContentBuilderRefs;
 import com.builtbroken.builder.pipe.nodes.IPipeNode;
 import com.builtbroken.builder.pipe.nodes.NodeType;
 import com.google.gson.JsonArray;
@@ -92,6 +92,6 @@ public class PipeNodeCommentRemover implements IPipeNode
     @Override
     public String getUniqueID()
     {
-        return References.PIPE_COMMENT_REMOVER;
+        return ContentBuilderRefs.PIPE_COMMENT_REMOVER;
     }
 }

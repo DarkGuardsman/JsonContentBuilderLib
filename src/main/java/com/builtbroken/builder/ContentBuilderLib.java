@@ -10,7 +10,7 @@ import com.builtbroken.builder.loader.ContentLoader;
  * <p>
  * Created by Dark(DarkGuardsman, Robert) on 2/19/19.
  */
-public class ContentBuilder
+public class ContentBuilderLib
 {
 
     public static final ContentLoader MAIN_LOADER = new ContentLoader("main");

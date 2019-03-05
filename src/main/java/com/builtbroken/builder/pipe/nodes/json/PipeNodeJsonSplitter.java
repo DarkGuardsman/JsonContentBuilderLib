@@ -1,6 +1,6 @@
 package com.builtbroken.builder.pipe.nodes.json;
 
-import com.builtbroken.builder.References;
+import com.builtbroken.builder.ContentBuilderRefs;
 import com.builtbroken.builder.pipe.nodes.IPipeNode;
 import com.builtbroken.builder.pipe.nodes.NodeType;
 import com.google.gson.JsonArray;
@@ -43,6 +43,6 @@ public class PipeNodeJsonSplitter implements IPipeNode
     @Override
     public String getUniqueID()
     {
-        return References.PIPE_JSON_SPLITTER;
+        return ContentBuilderRefs.PIPE_JSON_SPLITTER;
     }
 }

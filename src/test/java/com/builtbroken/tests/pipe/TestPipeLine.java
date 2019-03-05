@@ -1,6 +1,6 @@
 package com.builtbroken.tests.pipe;
 
-import com.builtbroken.builder.References;
+import com.builtbroken.builder.ContentBuilderRefs;
 import com.builtbroken.builder.pipe.PipeLine;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -41,7 +41,7 @@ public class TestPipeLine extends TestCase
 
 
         //Only run json pipe
-        List<Object> out = pipeLine.handle(array, pipe -> pipe.pipeName != References.PIPE_JSON);
+        List<Object> out = pipeLine.handle(array, pipe -> pipe.pipeName != ContentBuilderRefs.PIPE_JSON);
         assertNotNull(out);
         assertEquals(3, out.size());
         testPipeFlowJsonType(out.get(0), "tree");
