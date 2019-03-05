@@ -1,6 +1,9 @@
 package com.builtbroken.builder.pipe;
 
 import com.builtbroken.builder.ContentBuilderRefs;
+import com.builtbroken.builder.converter.ConversionHandler;
+import com.builtbroken.builder.loader.ContentLoader;
+import com.builtbroken.builder.pipe.nodes.building.PipeNodeObjectCreator;
 import com.builtbroken.builder.pipe.nodes.json.PipeNodeCommentRemover;
 import com.builtbroken.builder.pipe.nodes.IPipeNode;
 import com.builtbroken.builder.pipe.nodes.json.PipeNodeJsonSplitter;
@@ -27,22 +30,30 @@ public class PipeLine
     public final LinkedList<Pipe> pipes = new LinkedList();
     public final HashMap<String, Pipe> id_to_pipe = new HashMap();
 
-    public static PipeLine newDefault()
+    private final ContentLoader contentLoader;
+
+    public PipeLine(ContentLoader contentLoader)
     {
-        PipeLine handler = new PipeLine();
+        this.contentLoader = contentLoader;
+    }
+
+    public static PipeLine newDefault(ContentLoader loader)
+    {
+        PipeLine handler = new PipeLine(loader);
 
         //Setup cleaner
-        Pipe jsonPrepPipe = new Pipe(ContentBuilderRefs.PIPE_JSON, true);
+        Pipe jsonPrepPipe = new Pipe(handler,  ContentBuilderRefs.PIPE_JSON, true);
         jsonPrepPipe.addNode(new PipeNodeCommentRemover());
         jsonPrepPipe.addNode(new PipeNodeJsonSplitter());
         handler.pipes.add(jsonPrepPipe);
 
         //Setup builder
-        Pipe builderPipe = new Pipe(ContentBuilderRefs.PIPE_BUILDER, false);
+        Pipe builderPipe = new Pipe(handler,  ContentBuilderRefs.PIPE_BUILDER, false);
+        builderPipe.addNode(new PipeNodeObjectCreator(builderPipe));
         handler.pipes.add(builderPipe);
 
         //Setup mapper
-        Pipe mapperPipe = new Pipe(ContentBuilderRefs.PIPE_MAPPER, false);
+        Pipe mapperPipe = new Pipe(handler,  ContentBuilderRefs.PIPE_MAPPER, false);
         handler.pipes.add(mapperPipe);
 
         return handler;
@@ -105,5 +116,15 @@ public class PipeLine
         builtObjects.addAll(currentOut);
         builtObjects.removeIf(o -> o == null);
         return builtObjects;
+    }
+
+    public ContentLoader getLoader()
+    {
+        return contentLoader;
+    }
+
+    public ConversionHandler getConverter()
+    {
+        return contentLoader != null ? contentLoader.conversionHandler : null;
     }
 }

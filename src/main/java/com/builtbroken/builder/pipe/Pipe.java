@@ -1,5 +1,7 @@
 package com.builtbroken.builder.pipe;
 
+import com.builtbroken.builder.converter.ConversionHandler;
+import com.builtbroken.builder.loader.ContentLoader;
 import com.builtbroken.builder.pipe.nodes.IPipeNode;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -36,16 +38,18 @@ import java.util.Queue;
  */
 public class Pipe
 {
-
     public final LinkedList<IPipeNode> nodes = new LinkedList();
+
+    public final PipeLine pipeLine;
     public final String pipeName;
     public final boolean allowNullRuns;
 
     private final Queue<Object> queueOut = new LinkedList();
     private final Queue<Object> queueIn = new LinkedList();
 
-    public Pipe(String pipeName, boolean allowNullRuns)
+    public Pipe(PipeLine pipeLine, String pipeName, boolean allowNullRuns)
     {
+        this.pipeLine = pipeLine;
         this.pipeName = pipeName;
         this.allowNullRuns = allowNullRuns;
     }
@@ -101,5 +105,20 @@ public class Pipe
     public void addNode(IPipeNode node)
     {
         nodes.add(node);
+    }
+
+    public PipeLine getPipeLine()
+    {
+        return pipeLine;
+    }
+
+    public ContentLoader getLoader()
+    {
+        return pipeLine != null ? pipeLine.getLoader() : null;
+    }
+
+    public ConversionHandler getConverter()
+    {
+        return pipeLine != null ? pipeLine.getConverter() : null;
     }
 }

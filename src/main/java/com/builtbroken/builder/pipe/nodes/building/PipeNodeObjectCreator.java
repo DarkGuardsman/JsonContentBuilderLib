@@ -1,8 +1,11 @@
 package com.builtbroken.builder.pipe.nodes.building;
 
 import com.builtbroken.builder.ContentBuilderRefs;
-import com.builtbroken.builder.pipe.nodes.IPipeNode;
+import com.builtbroken.builder.converter.ConversionHandler;
+import com.builtbroken.builder.data.GeneratedObject;
+import com.builtbroken.builder.pipe.Pipe;
 import com.builtbroken.builder.pipe.nodes.NodeType;
+import com.builtbroken.builder.pipe.nodes.PipeNode;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -14,8 +17,15 @@ import java.util.Queue;
  * <p>
  * Created by Dark(DarkGuardsman, Robert) on 2019-02-27.
  */
-public class PipeNodeObjectCreator implements IPipeNode
+public class PipeNodeObjectCreator extends PipeNode
 {
+
+    public String type_key = "type";
+
+    public PipeNodeObjectCreator(Pipe pipe)
+    {
+        super(pipe, NodeType.BUILDER, ContentBuilderRefs.PIPE_OBJECT_CREATOR);
+    }
 
     @Override
     public void receive(JsonElement data, Object currentObject, Queue<Object> objectsOut)
@@ -23,32 +33,41 @@ public class PipeNodeObjectCreator implements IPipeNode
         if (currentObject instanceof JsonObject)
         {
             final JsonObject jsonObject = (JsonObject) currentObject;
-            if(jsonObject.has("type"))
+            if (jsonObject.has(type_key))
             {
+                final ConversionHandler handler = getConverter();
+                final String type = jsonObject.getAsJsonPrimitive(type_key).getAsString();
 
+                final Object object = handler.fromJson(type, jsonObject);
+                if (object != null)
+                {
+                    objectsOut.add(new GeneratedObject(type, object, jsonObject.deepCopy()));
+                }
+                else
+                {
+                    System.out.println("PipeNodeObjectCreator: Error, Failed to convert object. Input: " + currentObject);
+                    //TODO throw error, only if strict mode is enabled
+                }
             }
             else
             {
-                System.out.println("Error: Input JsonObject needs to define a type to use this builder. Input: " + currentObject);
-                //TODO throw error
+                System.out.println("PipeNodeObjectCreator: Error, Input JsonObject needs to define a type to use this builder. Input: " + currentObject);
+                //TODO throw error, only if strict mode is enabled
             }
         }
         else
         {
-            System.out.println("Error: Input into object creator needs to be a JsonObject. Input: " + currentObject);
-            //TODO throw error
+            System.out.println("PipeNodeObjectCreator: Error, Input into object creator needs to be a JsonObject. Input: " + currentObject);
+            //TODO throw error, only if strict mode is enabled
         }
     }
 
     @Override
-    public NodeType getNodeType()
+    public void onLoadComplete()
     {
-        return NodeType.BUILDER;
-    }
-
-    @Override
-    public String getUniqueID()
-    {
-        return ContentBuilderRefs.PIPE_OBJECT_CREATOR;
+        if (getContentLoader() == null || getConverter() == null)
+        {
+            throw new RuntimeException("PipeNodeObjectCreator: A content loader and converter are required to build objects from JSON for this pipe node.");
+        }
     }
 }
