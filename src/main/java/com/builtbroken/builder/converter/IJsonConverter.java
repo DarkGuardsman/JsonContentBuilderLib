@@ -44,7 +44,7 @@ public interface IJsonConverter<O extends Object>
     /**
      * Called to check if the object matches
      * the expected input. Called before
-     * {@link #toJson(Object)} in most cases
+     * {@link #toJson(Object, String[])} in most cases
      *
      * @param object - object
      * @return true if can support
@@ -62,17 +62,57 @@ public interface IJsonConverter<O extends Object>
 
     /**
      * Called to convert the object to JSON
+     * <p>
+     * Args are used to handle subtypes of this converter.
+     * Best example are arrays that need to know what type of array to convert
      *
-     * @param object
+     * @param object - object to convert to json
+     * @param args   - optional, extra args to define special handling
      * @return
      */
-    JsonElement toJson(O object);
+    default JsonElement toJson(O object, String[] args)
+    {
+        return toJson(object);
+    }
+
+    /**
+     * Called to convert the object to JSON
+     * <p>
+     * Do not call this method instead use {@link #toJson(Object, String[])}
+     *
+     * @param object - object to convert to json
+     * @return
+     */
+    default JsonElement toJson(O object)
+    {
+        throw new UnsupportedOperationException();
+    }
 
     /**
      * Called to convert json to an object
+     * <p>
+     * Args are used to handle subtypes of this converter.
+     * Best example are arrays that need to know what type of array to convert
      *
-     * @param element
+     * @param element - elemnent to convert from
+     * @param args    - optional, extra args to define special handling
      * @return
      */
-    O fromJson(JsonElement element);
+    default O fromJson(JsonElement element, String[] args)
+    {
+        return fromJson(element, args);
+    }
+
+    /**
+     * Called to convert json to an object
+     * <p>
+     * Do not call this method instead use {@link #fromJson(JsonElement, String[])}
+     *
+     * @param element - elemnent to convert from
+     * @return
+     */
+    default O fromJson(JsonElement element)
+    {
+        throw new UnsupportedOperationException();
+    }
 }

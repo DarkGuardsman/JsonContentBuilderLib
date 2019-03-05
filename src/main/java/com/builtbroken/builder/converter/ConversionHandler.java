@@ -23,7 +23,7 @@ public class ConversionHandler
         this.name = name;
     }
 
-    public Object fromJson(String type, JsonElement element)
+    public Object fromJson(String type, JsonElement element, String[] args)
     {
         type = type.toLowerCase();
         if (converters.containsKey(type))
@@ -31,7 +31,7 @@ public class ConversionHandler
             final IJsonConverter converter = converters.get(type);
             if (converter != null && converter.canSupport(element))
             {
-                return converter.fromJson(element);
+                return converter.fromJson(element, args);
             }
         }
         else if (altNames.containsKey(type))
@@ -39,17 +39,17 @@ public class ConversionHandler
             final IJsonConverter converter = altNames.get(type);
             if (converter != null && converter.canSupport(element))
             {
-                return converter.fromJson(element);
+                return converter.fromJson(element, args);
             }
         }
         else if (parent != null)
         {
-            return parent.fromJson(type, element);
+            return parent.fromJson(type, element, args);
         }
         return null; //TODO throw error
     }
 
-    public JsonElement toJson(String type, Object object)
+    public JsonElement toJson(String type, Object object, String[] args)
     {
         type = type.toLowerCase();
         if (converters.containsKey(type))
@@ -57,7 +57,7 @@ public class ConversionHandler
             final IJsonConverter converter = converters.get(type);
             if (converter != null && converter.canSupport(object))
             {
-                return converter.toJson(object);
+                return converter.toJson(object, args);
             }
         }
         else if (altNames.containsKey(type))
@@ -65,12 +65,12 @@ public class ConversionHandler
             final IJsonConverter converter = altNames.get(type);
             if (converter != null && converter.canSupport(object))
             {
-                return converter.toJson(object);
+                return converter.toJson(object, args);
             }
         }
         else if (parent != null)
         {
-            return parent.toJson(type, object);
+            return parent.toJson(type, object, args);
         }
         return null; //TODO throw error
     }
@@ -122,6 +122,34 @@ public class ConversionHandler
         {
             throw new IllegalArgumentException(this + ": Can not add a null converter");
         }
+    }
+
+    public IJsonConverter getConverter(String type)
+    {
+        type = type.toLowerCase();
+        if (converters.containsKey(type))
+        {
+            final IJsonConverter converter = converters.get(type);
+            if (converter != null)
+            {
+                return converter;
+            }
+        }
+
+        if (altNames.containsKey(type))
+        {
+            final IJsonConverter converter = altNames.get(type);
+            if (converter != null)
+            {
+                return converter;
+            }
+        }
+
+        if (parent != null)
+        {
+            return parent.getConverter(type);
+        }
+        return null;
     }
 
     @Override

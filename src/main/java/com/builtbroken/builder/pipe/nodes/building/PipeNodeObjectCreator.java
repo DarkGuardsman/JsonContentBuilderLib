@@ -48,7 +48,7 @@ public class PipeNodeObjectCreator extends PipeNode
                 final String type = jsonObject.getAsJsonPrimitive(type_key).getAsString();
 
                 //Convert object
-                final Object object = handler.fromJson(type, jsonObject);
+                final Object object = handler.fromJson(type, jsonObject, null); //TODO maybe include a few args like version if found
                 if (object != null)
                 {
                     objectsOut.add(new GeneratedObject(type, object, jsonObject.deepCopy()));
