@@ -1,6 +1,7 @@
 package com.builtbroken.builder;
 
 import com.builtbroken.builder.converter.ConversionHandler;
+import com.builtbroken.builder.converter.primitives.*;
 import com.builtbroken.builder.loader.ContentLoader;
 
 
@@ -19,9 +20,36 @@ public class ContentBuilderLib
     public static final ContentLoader MAIN_LOADER = new ContentLoader("main");
 
     private static boolean hasLoaded = false;
+    private static boolean hasSetup = false;
 
+    /**
+     * Call to setup all the defaults for the main loader
+     */
+    public static void setup()
+    {
+        if (!hasSetup)
+        {
+            MAIN_CONVERTER.addConverter(new JsonConverterByte());
+            MAIN_CONVERTER.addConverter(new JsonConverterShort());
+            MAIN_CONVERTER.addConverter(new JsonConverterInt());
+            MAIN_CONVERTER.addConverter(new JsonConverterLong());
+
+            MAIN_CONVERTER.addConverter(new JsonConverterFloat());
+            MAIN_CONVERTER.addConverter(new JsonConverterDouble());
+
+            MAIN_CONVERTER.addConverter(new JsonConverterString());
+        }
+    }
+
+    /**
+     * Call to trigger the main loader
+     */
     public static void load()
     {
+        if (!hasSetup)
+        {
+            setup();
+        }
         if (!hasLoaded)
         {
 
