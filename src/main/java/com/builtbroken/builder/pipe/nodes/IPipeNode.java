@@ -34,6 +34,16 @@ public interface IPipeNode
     void receive(JsonElement data, Object currentObject, Queue<Object> objectsOut);
 
     /**
+     * Called once everything is setup and loaded for the content building process.
+     * Use this to validate that everything that this pipe needs is loaded. As well
+     * that configurations has been setup properly.
+     */
+    default void onLoadComplete()
+    {
+    }
+
+
+    /**
      * Type of node
      *
      * @return
