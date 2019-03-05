@@ -1,6 +1,8 @@
 package com.builtbroken.builder;
 
+import com.builtbroken.builder.converter.ConversionHandler;
 import com.builtbroken.builder.loader.ContentLoader;
+
 
 /**
  * Main class to handle all interaction with the system.
@@ -13,6 +15,7 @@ import com.builtbroken.builder.loader.ContentLoader;
 public class ContentBuilderLib
 {
 
+    public static final ConversionHandler MAIN_CONVERTER = new ConversionHandler(null, "main");
     public static final ContentLoader MAIN_LOADER = new ContentLoader("main");
 
     private static boolean hasLoaded = false;
