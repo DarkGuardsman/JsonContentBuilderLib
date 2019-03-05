@@ -20,6 +20,12 @@ import java.util.Queue;
 public class PipeNodeObjectCreator extends PipeNode
 {
 
+    /**
+     * Key to use for finding what type an object is for the conversion. Change this to match your json format.
+     * <p>
+     * If you plan to support more than 1 field for types. Create a wrapper Pipe Node that stores more than
+     * 1 version of this class or create a completely new pipe node that maps several fields to the type.
+     */
     public String type_key = "type";
 
     public PipeNodeObjectCreator(Pipe pipe)
@@ -30,14 +36,18 @@ public class PipeNodeObjectCreator extends PipeNode
     @Override
     public void receive(JsonElement data, Object currentObject, Queue<Object> objectsOut)
     {
+        //Can only handle json objects
         if (currentObject instanceof JsonObject)
         {
             final JsonObject jsonObject = (JsonObject) currentObject;
+
+            //Make sure we have the type field
             if (jsonObject.has(type_key))
             {
                 final ConversionHandler handler = getConverter();
                 final String type = jsonObject.getAsJsonPrimitive(type_key).getAsString();
 
+                //Convert object
                 final Object object = handler.fromJson(type, jsonObject);
                 if (object != null)
                 {
@@ -65,6 +75,7 @@ public class PipeNodeObjectCreator extends PipeNode
     @Override
     public void onLoadComplete()
     {
+        //Validate that we have our needed components
         if (getContentLoader() == null || getConverter() == null)
         {
             throw new RuntimeException("PipeNodeObjectCreator: A content loader and converter are required to build objects from JSON for this pipe node.");

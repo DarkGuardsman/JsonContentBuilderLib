@@ -30,16 +30,11 @@ public class PipeLine
     public final LinkedList<Pipe> pipes = new LinkedList();
     public final HashMap<String, Pipe> id_to_pipe = new HashMap();
 
-    private final ContentLoader contentLoader;
+    public ContentLoader contentLoader;
 
-    public PipeLine(ContentLoader contentLoader)
+    public static PipeLine newDefault()
     {
-        this.contentLoader = contentLoader;
-    }
-
-    public static PipeLine newDefault(ContentLoader loader)
-    {
-        PipeLine handler = new PipeLine(loader);
+        PipeLine handler = new PipeLine();
 
         //Setup cleaner
         Pipe jsonPrepPipe = new Pipe(handler,  ContentBuilderRefs.PIPE_JSON, true);

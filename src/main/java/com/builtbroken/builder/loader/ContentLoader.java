@@ -56,6 +56,7 @@ public class ContentLoader
     {
         this.name = name;
         this.pipeLine = pipeLine;
+        this.pipeLine.contentLoader = this;
         this.conversionHandler = new ConversionHandler(ContentBuilderLib.MAIN_CONVERTER, name);
     }
 }
