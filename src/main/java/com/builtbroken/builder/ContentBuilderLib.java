@@ -2,9 +2,7 @@ package com.builtbroken.builder;
 
 import com.builtbroken.builder.converter.ConversionHandler;
 import com.builtbroken.builder.converter.primitives.*;
-import com.builtbroken.builder.converter.strut.array.JsonConverterArray;
-import com.builtbroken.builder.converter.strut.array.JsonConverterArrayByte;
-import com.builtbroken.builder.converter.strut.array.JsonConverterArrayInt;
+import com.builtbroken.builder.converter.strut.array.*;
 import com.builtbroken.builder.loader.ContentLoader;
 
 
@@ -49,6 +47,11 @@ public class ContentBuilderLib
 
             MAIN_CONVERTER.addConverter(new JsonConverterArrayByte());
             MAIN_CONVERTER.addConverter(new JsonConverterArrayInt());
+            MAIN_CONVERTER.addConverter(new JsonConverterArrayShort());
+            MAIN_CONVERTER.addConverter(new JsonConverterArrayLong());
+
+            MAIN_CONVERTER.addConverter(new JsonConverterArrayFloat());
+            MAIN_CONVERTER.addConverter(new JsonConverterArrayDouble());
         }
     }
 
