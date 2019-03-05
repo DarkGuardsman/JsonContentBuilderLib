@@ -1,4 +1,4 @@
-package com.builtbroken.builder.converter.strut;
+package com.builtbroken.builder.converter.strut.array;
 
 import com.builtbroken.builder.converter.ConversionHandler;
 import com.builtbroken.builder.converter.JsonConverter;
