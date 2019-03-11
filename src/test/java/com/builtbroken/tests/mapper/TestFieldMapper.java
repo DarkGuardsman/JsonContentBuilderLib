@@ -18,6 +18,8 @@ public class TestFieldMapper extends TestCase
         //Data
         JsonObject json = new JsonObject();
         json.addProperty("test", "trees");
+        json.addProperty("test_byte", (byte)3);
+        json.addProperty("test_int", 5);
 
         //Trigger setup
         JsonMappingHandler.register(ClassForMappingTest.class, "testClass");
@@ -28,12 +30,20 @@ public class TestFieldMapper extends TestCase
         JsonMappingHandler.map("testClass", object, json, ContentBuilderLib.MAIN_CONVERTER);
 
         assertEquals(object.testField, "trees");
+        assertEquals(object.testByteField, (byte)3);
+        assertEquals(object.testIntField, 5);
     }
 
     private static class ClassForMappingTest
     {
         @JsonMapping(keys = "test", type = "string")
         public String testField;
+
+        @JsonMapping(keys = "test_byte", type = "byte")
+        public byte testByteField;
+
+        @JsonMapping(keys = "test_int", type = "int")
+        public int testIntField;
     }
 
 }
