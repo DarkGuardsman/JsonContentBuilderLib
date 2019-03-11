@@ -2,6 +2,7 @@ package com.builtbroken.builder.mapper.mappers;
 
 import com.builtbroken.builder.converter.ConversionHandler;
 import com.builtbroken.builder.mapper.JsonMapping;
+import com.builtbroken.builder.mapper.JsonObjectWiring;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -17,6 +18,7 @@ public class JsonClassMapper
 {
 
     private final HashMap<String, IJsonMapper> mappings = new HashMap();
+    private final HashMap<String, IJsonMapper> linkMappers = new HashMap();
 
     private JsonClassMapper parent;
     private final Class clazz;
@@ -41,6 +43,19 @@ public class JsonClassMapper
                     mappings.put(key.toLowerCase(), mapper);
                 }
             }
+            else
+            {
+                JsonObjectWiring objectWiring = field.getAnnotation(JsonObjectWiring.class);
+                if(objectWiring != null)
+                {
+                    JsonFieldMapper mapper = new JsonFieldMapper(field, mapping);
+                    for (String key : mapping.keys())
+                    {
+                        mappings.put(key.toLowerCase(), mapper);
+                    }
+                }
+            }
+
         }
 
         //Handle methods

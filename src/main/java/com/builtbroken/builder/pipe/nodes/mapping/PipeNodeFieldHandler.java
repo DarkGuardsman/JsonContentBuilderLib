@@ -1,4 +1,4 @@
-package com.builtbroken.builder.pipe.nodes.building;
+package com.builtbroken.builder.pipe.nodes.mapping;
 
 import com.builtbroken.builder.ContentBuilderRefs;
 import com.builtbroken.builder.data.GeneratedObject;
@@ -19,7 +19,7 @@ public class PipeNodeFieldHandler extends PipeNode
 
     public PipeNodeFieldHandler(Pipe pipe)
     {
-        super(pipe, NodeType.MAPPER, ContentBuilderRefs.PIPE_FIELD_MAPPER);
+        super(pipe, NodeType.MAPPER, ContentBuilderRefs.PIPE_LINK_MAPPER);
     }
 
     @Override

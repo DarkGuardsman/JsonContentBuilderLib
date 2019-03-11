@@ -19,4 +19,5 @@ public class ContentBuilderRefs
 
     public static final String PIPE_MAPPER = "mapper";
     public static final String PIPE_FIELD_MAPPER = PIPE_MAPPER + ":fields";
+    public static final String PIPE_LINK_MAPPER = PIPE_MAPPER + ":links";
 }
