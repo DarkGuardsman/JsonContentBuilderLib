@@ -3,6 +3,7 @@ package com.builtbroken.builder.pipe;
 import com.builtbroken.builder.ContentBuilderRefs;
 import com.builtbroken.builder.converter.ConversionHandler;
 import com.builtbroken.builder.loader.ContentLoader;
+import com.builtbroken.builder.pipe.nodes.building.PipeNodeFieldHandler;
 import com.builtbroken.builder.pipe.nodes.building.PipeNodeObjectCreator;
 import com.builtbroken.builder.pipe.nodes.json.PipeNodeCommentRemover;
 import com.builtbroken.builder.pipe.nodes.IPipeNode;
@@ -49,6 +50,7 @@ public class PipeLine
 
         //Setup mapper
         Pipe mapperPipe = new Pipe(handler,  ContentBuilderRefs.PIPE_MAPPER, false);
+        builderPipe.addNode(new PipeNodeFieldHandler(mapperPipe));
         handler.pipes.add(mapperPipe);
 
         return handler;
