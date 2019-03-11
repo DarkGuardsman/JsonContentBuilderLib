@@ -18,7 +18,7 @@ public class JsonFieldMapper extends JsonMapper<Object>
 
     public JsonFieldMapper(Field field, JsonMapping mapping)
     {
-        this(field, mapping.value(), mapping.type(), mapping.args(), mapping.required());
+        this(field, mapping.keys(), mapping.type(), mapping.args(), mapping.required());
     }
 
     public JsonFieldMapper(Field field, String[] names, String type, String[] args, boolean required)
@@ -48,12 +48,13 @@ public class JsonFieldMapper extends JsonMapper<Object>
             }
         } catch (Exception e)
         {
-            throw new RuntimeException("JsonMethodMapper: Failed to map json data to " +
-                    "field " + field.getName()
-                    + "\n TYPE: " + type
-                    + "\n ARGS: " + Arrays.toString(args)
-                    + "\n OBJ: " + object
-                    + "\n JSON: " + data);
+            throw new RuntimeException("JsonMethodMapper: Failed to map json data to field. "
+                    + "\n FIELD:    " + field.getName()
+                    + "\n TYPE:     " + type
+                    + "\n ARGS:     " + Arrays.toString(args)
+                    + "\n OBJ:      " + object
+                    + "\n JSON:     " + data,
+                    e);
         }
     }
 

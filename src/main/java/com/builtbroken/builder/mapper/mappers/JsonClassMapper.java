@@ -36,7 +36,7 @@ public class JsonClassMapper
             if (mapping != null)
             {
                 JsonFieldMapper mapper = new JsonFieldMapper(field, mapping);
-                for (String key : mapping.value())
+                for (String key : mapping.keys())
                 {
                     mappings.put(key.toLowerCase(), mapper);
                 }
@@ -51,7 +51,7 @@ public class JsonClassMapper
             if (mapping != null)
             {
                 JsonMethodMapper mapper = new JsonMethodMapper(method, mapping);
-                for (String key : mapping.value())
+                for (String key : mapping.keys())
                 {
                     mappings.put(key.toLowerCase(), mapper);
                 }

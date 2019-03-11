@@ -18,7 +18,7 @@ public @interface JsonMapping
     /**
      * List of keys to use for matching json
      */
-    String[] value();
+    String[] keys();
 
     /**
      * Data type to load data as, optional for boolean and strings

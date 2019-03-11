@@ -1,11 +1,9 @@
 package com.builtbroken.builder.mapper.mappers;
 
 import com.builtbroken.builder.converter.ConversionHandler;
-import com.builtbroken.builder.converter.JsonConverter;
 import com.builtbroken.builder.mapper.JsonMapping;
 import com.google.gson.JsonElement;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
@@ -19,7 +17,7 @@ public class JsonMethodMapper extends JsonMapper<Object>
 
     public JsonMethodMapper(Method method, JsonMapping mapping)
     {
-        this(method, mapping.value(), mapping.type(), mapping.args());
+        this(method, mapping.keys(), mapping.type(), mapping.args());
     }
 
     public JsonMethodMapper(Method method, String[] names, String type, String[] args)
@@ -52,7 +50,8 @@ public class JsonMethodMapper extends JsonMapper<Object>
                     + "\n TYPE: " + type
                     + "\n ARGS: " + Arrays.toString(args)
                     + "\n OBJ: " + object
-                    + "\n JSON: " + data);
+                    + "\n JSON: " + data,
+                    e);
         }
 
     }

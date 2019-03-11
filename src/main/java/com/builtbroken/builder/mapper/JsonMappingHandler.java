@@ -1,6 +1,8 @@
 package com.builtbroken.builder.mapper;
 
+import com.builtbroken.builder.converter.ConversionHandler;
 import com.builtbroken.builder.mapper.mappers.JsonClassMapper;
+import com.google.gson.JsonObject;
 
 import java.util.HashMap;
 
@@ -16,13 +18,54 @@ public class JsonMappingHandler
     //Key to class, a single class can have several keys
     private static final HashMap<String, Class> keyToClass = new HashMap();
 
+    public static void map(String key, Object object, JsonObject json, ConversionHandler handler)
+    {
+        key = key.toLowerCase();
+        if (keyToClass.containsKey(key))
+        {
+            Class clazz = keyToClass.get(key);
+            if (clazzMappers.containsKey(clazz))
+            {
+                JsonClassMapper mapper = clazzMappers.get(clazz);
+                if (mapper != null)
+                {
+                    try
+                    {
+                        mapper.map(json, object, handler);
+                    } catch (Exception e)
+                    {
+                        throw new RuntimeException("JsonMappingHandler: Failed to map data to object. "
+                                + "\n Key: " + key
+                                + "\n Class: " + clazz
+                                + "\n Object: " + object
+                                + "\n Json: " + json
+                                , e);
+                    }
+                }
+                else
+                {
+                    //TODO error
+                }
+            }
+            else
+            {
+                //TODO error
+            }
+        }
+        else
+        {
+            //TODO error
+        }
+    }
+
+
     /**
      * Called to register a class for mapping
      *
      * @param clazz
      * @param keys
      */
-    public static void register(Class clazz, String[] keys)
+    public static void register(Class clazz, String... keys)
     {
         //Store keys
         for (String string : keys)
