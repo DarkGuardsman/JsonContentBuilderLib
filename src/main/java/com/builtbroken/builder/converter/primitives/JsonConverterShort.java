@@ -10,13 +10,7 @@ public class JsonConverterShort extends JsonConverterNumber
 {
     public JsonConverterShort()
     {
-        super("java:short");
-    }
-
-    @Override
-    public String[] getAlias()
-    {
-        return new String[]{"short", "s"};
+        super("java:short", "short", "s");
     }
 
     @Override

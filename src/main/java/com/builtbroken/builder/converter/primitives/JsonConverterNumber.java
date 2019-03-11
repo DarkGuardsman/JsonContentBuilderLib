@@ -9,9 +9,9 @@ import com.google.gson.JsonPrimitive;
  */
 public abstract class JsonConverterNumber extends JsonConverter<Number>
 {
-    public JsonConverterNumber(String id)
+    public JsonConverterNumber(String id, String... alts)
     {
-        super(id);
+        super(id, alts);
     }
 
     @Override

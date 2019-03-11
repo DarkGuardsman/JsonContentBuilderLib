@@ -25,7 +25,7 @@ public class JsonConverterMap extends JsonConverter<Map>
 
     public JsonConverterMap()
     {
-        super("java:map");
+        super("java:map", "map");
     }
 
     @Override

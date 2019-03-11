@@ -10,13 +10,7 @@ public class JsonConverterLong extends JsonConverterNumber
 {
     public JsonConverterLong()
     {
-        super("java:long");
-    }
-
-    @Override
-    public String[] getAlias()
-    {
-        return new String[]{"long", "l"};
+        super("java:long", "long", "l");
     }
 
     @Override

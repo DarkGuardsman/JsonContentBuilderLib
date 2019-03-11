@@ -10,13 +10,7 @@ public class JsonConverterDouble extends JsonConverterNumber
 {
     public JsonConverterDouble()
     {
-        super("java:double");
-    }
-
-    @Override
-    public String[] getAlias()
-    {
-        return new String[]{"double", "d"};
+        super("java:double", "double", "d");
     }
 
     @Override

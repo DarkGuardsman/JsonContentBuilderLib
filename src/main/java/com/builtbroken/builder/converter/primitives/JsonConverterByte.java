@@ -10,13 +10,7 @@ public class JsonConverterByte extends JsonConverterNumber
 {
     public JsonConverterByte()
     {
-        super("java:byte");
-    }
-
-    @Override
-    public String[] getAlias()
-    {
-        return new String[]{"byte", "b"};
+        super("java:byte", "byte", "b");
     }
 
     @Override

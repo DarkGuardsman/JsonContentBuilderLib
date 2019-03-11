@@ -12,19 +12,13 @@ public class JsonConverterString extends JsonConverter<String>
 
     public JsonConverterString()
     {
-        super("java:string");
+        super("java:string", "string");
     }
 
     @Override
     public boolean canSupport(Object object)
     {
         return object instanceof String;
-    }
-
-    @Override
-    public String[] getAlias()
-    {
-        return new String[]{"string"};
     }
 
     @Override

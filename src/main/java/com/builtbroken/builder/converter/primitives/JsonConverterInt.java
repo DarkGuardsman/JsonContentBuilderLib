@@ -11,13 +11,7 @@ public class JsonConverterInt extends JsonConverterNumber
 {
     public JsonConverterInt()
     {
-        super("java:integer");
-    }
-
-    @Override
-    public String[] getAlias()
-    {
-        return new String[]{"int", "i"};
+        super("java:integer", "int", "i");
     }
 
     @Override

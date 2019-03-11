@@ -10,13 +10,7 @@ public class JsonConverterFloat extends JsonConverterNumber
 {
     public JsonConverterFloat()
     {
-        super("java:float");
-    }
-
-    @Override
-    public String[] getAlias()
-    {
-        return new String[]{"float", "f"};
+        super("java:float", "float", "f");
     }
 
     @Override
