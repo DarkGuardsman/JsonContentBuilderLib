@@ -43,7 +43,7 @@ public class ContentBuilderLib
 
             //Arrays
             MAIN_CONVERTER.addConverter(new JsonConverterArray());
-            MAIN_CONVERTER.addConverter(new JsonConverterString());
+            MAIN_CONVERTER.addConverter(new JsonConverterArrayString());
 
             MAIN_CONVERTER.addConverter(new JsonConverterArrayByte());
             MAIN_CONVERTER.addConverter(new JsonConverterArrayInt());
