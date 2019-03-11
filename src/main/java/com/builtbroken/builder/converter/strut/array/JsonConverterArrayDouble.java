@@ -13,7 +13,7 @@ public class JsonConverterArrayDouble extends JsonConverter<Object>
 
     public JsonConverterArrayDouble()
     {
-        super("java:array.double");
+        super("java:array.double", "array.double");
     }
 
     @Override

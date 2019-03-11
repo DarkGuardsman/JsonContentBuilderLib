@@ -13,7 +13,7 @@ public class JsonConverterArrayLong extends JsonConverter<Object>
 
     public JsonConverterArrayLong()
     {
-        super("java:array.long");
+        super("java:array.long", "array.long");
     }
 
     @Override
