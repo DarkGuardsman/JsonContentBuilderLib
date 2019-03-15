@@ -3,11 +3,13 @@ package com.builtbroken.builder.pipe;
 import com.builtbroken.builder.ContentBuilderRefs;
 import com.builtbroken.builder.converter.ConversionHandler;
 import com.builtbroken.builder.loader.ContentLoader;
+import com.builtbroken.builder.pipe.nodes.mapping.PipeNodeAutoWire;
 import com.builtbroken.builder.pipe.nodes.mapping.PipeNodeFieldHandler;
 import com.builtbroken.builder.pipe.nodes.building.PipeNodeObjectCreator;
 import com.builtbroken.builder.pipe.nodes.json.PipeNodeCommentRemover;
 import com.builtbroken.builder.pipe.nodes.IPipeNode;
 import com.builtbroken.builder.pipe.nodes.json.PipeNodeJsonSplitter;
+import com.builtbroken.builder.pipe.nodes.mapping.PipeNodeMappingValidator;
 import com.google.gson.JsonElement;
 
 import java.util.*;
@@ -51,6 +53,8 @@ public class PipeLine
         //Setup mapper
         Pipe mapperPipe = new Pipe(handler,  ContentBuilderRefs.PIPE_MAPPER, false);
         builderPipe.addNode(new PipeNodeFieldHandler(mapperPipe));
+        builderPipe.addNode(new PipeNodeAutoWire(mapperPipe));
+        builderPipe.addNode(new PipeNodeMappingValidator(mapperPipe));
         handler.pipes.add(mapperPipe);
 
         return handler;

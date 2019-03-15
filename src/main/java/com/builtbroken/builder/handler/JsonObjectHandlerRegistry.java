@@ -50,7 +50,7 @@ public class JsonObjectHandlerRegistry
             }
             unknownObjects.get(type).add(object);
         }
-        //TODO fire events
+        //TODO fire events to allow hooking
     }
 
     public IJsonObjectHandler getHandler(String type)

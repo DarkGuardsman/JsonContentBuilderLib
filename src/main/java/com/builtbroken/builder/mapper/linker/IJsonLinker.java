@@ -1,6 +1,7 @@
 package com.builtbroken.builder.mapper.linker;
 
 import com.builtbroken.builder.converter.ConversionHandler;
+import com.builtbroken.builder.handler.JsonObjectHandlerRegistry;
 import com.google.gson.JsonElement;
 
 /**
@@ -16,7 +17,7 @@ public interface IJsonLinker<O extends Object>
      * @param data
      * @param converter
      */
-    void map(O object, JsonElement data, ConversionHandler converter);
+    void map(O object, JsonElement data, JsonObjectHandlerRegistry registry);
 
     /**
      * Checks if the mapper has
@@ -27,5 +28,10 @@ public interface IJsonLinker<O extends Object>
      */
     boolean isValid(O object);
 
+    /**
+     * Array of keys that JSON maps to this link
+     *
+     * @return
+     */
     String[] getKeys();
 }

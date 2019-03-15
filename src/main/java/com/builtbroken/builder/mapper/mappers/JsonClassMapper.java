@@ -4,6 +4,7 @@ import com.builtbroken.builder.converter.ConversionHandler;
 import com.builtbroken.builder.handler.JsonObjectHandlerRegistry;
 import com.builtbroken.builder.mapper.JsonMapping;
 import com.builtbroken.builder.mapper.JsonObjectWiring;
+import com.builtbroken.builder.mapper.linker.IJsonLinker;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -19,10 +20,10 @@ public class JsonClassMapper
 {
 
     private final HashMap<String, IJsonMapper> mappings = new HashMap();
-    private final HashMap<String, IJsonMapper> linkMappers = new HashMap();
+    private final HashMap<String, IJsonLinker> linkMappers = new HashMap();
 
     private JsonClassMapper parent;
-    private final Class clazz;
+    public final Class clazz;
 
     public JsonClassMapper(Class clazz)
     {
@@ -35,6 +36,10 @@ public class JsonClassMapper
         final Field[] fields = clazz.getDeclaredFields();
         for (Field field : fields)
         {
+            //Field can have either a mapping or a wire, but not both.
+            //      However, both can share keys as they can't overlap.
+            //      Ex: data field to store the ID
+            //          wire to store the reference of the ID
             JsonMapping mapping = field.getAnnotation(JsonMapping.class);
             if (mapping != null)
             {
@@ -47,16 +52,11 @@ public class JsonClassMapper
             else
             {
                 JsonObjectWiring objectWiring = field.getAnnotation(JsonObjectWiring.class);
-                if(objectWiring != null)
+                if (objectWiring != null)
                 {
-                    JsonFieldMapper mapper = new JsonFieldMapper(field, mapping);
-                    for (String key : mapping.keys())
-                    {
-                        mappings.put(key.toLowerCase(), mapper);
-                    }
+
                 }
             }
-
         }
 
         //Handle methods
@@ -90,6 +90,7 @@ public class JsonClassMapper
             {
                 //TODO check for flattening of JSON up a level
                 //        Ex: data/tree -> tree
+                //          Ignore links
             }
         }
         if (getParent() != null)
@@ -100,7 +101,42 @@ public class JsonClassMapper
 
     public void mapDataLinks(JsonObject json, Object object, JsonObjectHandlerRegistry registry)
     {
+        for (Map.Entry<String, JsonElement> entry : json.entrySet())
+        {
+            final String key = entry.getKey().toLowerCase();
+            final JsonElement data = entry.getValue();
+            if (linkMappers.containsKey(key))
+            {
+                linkMappers.get(key).map(object, data, registry);
+            }
+            else
+            {
+                //TODO check for flattening of JSON up a level
+                //        Ex: data/tree -> tree
+                //          Ignore links
+            }
+        }
+        if (getParent() != null)
+        {
+            getParent().mapDataLinks(json, object, registry);
+        }
+    }
 
+    public void validate(Object object)
+    {
+        for (IJsonMapper mapper : mappings.values())
+        {
+            mapper.isValid(object);
+        }
+        for (IJsonLinker mapper : linkMappers.values())
+        {
+            mapper.isValid(object);
+        }
+
+        if (getParent() != null)
+        {
+            getParent().validate(object);
+        }
     }
 
     public JsonClassMapper getParent()

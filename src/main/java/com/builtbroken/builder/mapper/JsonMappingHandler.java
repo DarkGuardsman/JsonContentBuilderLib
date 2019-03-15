@@ -1,6 +1,7 @@
 package com.builtbroken.builder.mapper;
 
 import com.builtbroken.builder.loader.ContentLoader;
+import com.builtbroken.builder.mapper.mappers.IJsonMapper;
 import com.builtbroken.builder.mapper.mappers.JsonClassMapper;
 import com.google.gson.JsonObject;
 
@@ -20,6 +21,35 @@ public class JsonMappingHandler
 
     public static void map(String objectType, Object objectToMap, JsonObject jsonToUse, ContentLoader loader, boolean links)
     {
+        JsonClassMapper mapper = getMapper(objectType, objectToMap);
+        try
+        {
+            if (!links)
+            {
+                mapper.mapDataFields(jsonToUse, objectToMap, loader.conversionHandler);
+            }
+            else
+            {
+                mapper.mapDataLinks(jsonToUse, objectToMap, loader.jsonObjectHandlerRegistry);
+            }
+        } catch (Exception e)
+        {
+            throw new RuntimeException("JsonMappingHandler: Failed to map " + (links ? "links" : "data") + " to object. "
+                    + "\n Key: " + objectType
+                    + "\n Class: " + mapper.clazz
+                    + "\n Object: " + objectToMap
+                    + "\n Json: " + jsonToUse
+                    , e);
+        }
+    }
+
+    public static void validate(String objectType, Object objectToMap)
+    {
+        getMapper(objectType, objectToMap).validate(objectToMap);
+    }
+
+    private static JsonClassMapper getMapper(String objectType, Object objectToMap)
+    {
         objectType = objectType.toLowerCase();
         if (keyToClass.containsKey(objectType))
         {
@@ -29,26 +59,7 @@ public class JsonMappingHandler
                 JsonClassMapper mapper = clazzMappers.get(clazz);
                 if (mapper != null)
                 {
-                    try
-                    {
-                        if (!links)
-                        {
-                            mapper.mapDataFields(jsonToUse, objectToMap, loader.conversionHandler);
-                        }
-                        else
-                        {
-
-                            mapper.mapDataLinks(jsonToUse, objectToMap, loader.jsonObjectHandlerRegistry);
-                        }
-                    } catch (Exception e)
-                    {
-                        throw new RuntimeException("JsonMappingHandler: Failed to map data to object. "
-                                + "\n Key: " + objectType
-                                + "\n Class: " + clazz
-                                + "\n Object: " + objectToMap
-                                + "\n Json: " + jsonToUse
-                                , e);
-                    }
+                    return mapper;
                 }
                 else
                 {
@@ -64,6 +75,9 @@ public class JsonMappingHandler
         {
             //TODO error
         }
+
+
+        return null;
     }
 
 
