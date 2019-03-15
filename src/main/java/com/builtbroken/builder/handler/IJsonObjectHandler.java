@@ -8,7 +8,7 @@ import com.builtbroken.builder.data.IJsonGeneratedObject;
  */
 public interface IJsonObjectHandler<O extends IJsonGeneratedObject>
 {
-    void onCreated(GeneratedObject object);
+    void onCreated(IJsonGeneratedObject object);
 
     O getObject(String unqueId);
 }

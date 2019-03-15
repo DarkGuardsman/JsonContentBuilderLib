@@ -5,5 +5,7 @@ package com.builtbroken.builder.data;
  */
 public interface IJsonGeneratedObject
 {
+    String getJsonType();
 
+    String getJsonUniqueID();
 }

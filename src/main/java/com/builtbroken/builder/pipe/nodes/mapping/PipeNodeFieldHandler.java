@@ -16,7 +16,6 @@ import java.util.Queue;
  */
 public class PipeNodeFieldHandler extends PipeNode
 {
-
     public PipeNodeFieldHandler(Pipe pipe)
     {
         super(pipe, NodeType.MAPPER, ContentBuilderRefs.PIPE_LINK_MAPPER);
@@ -31,7 +30,7 @@ public class PipeNodeFieldHandler extends PipeNode
 
             //Map
             JsonMappingHandler.map(generatedObjectData.type, generatedObjectData.objectCreated,
-                    generatedObjectData.jsonUsed, getConverter());
+                    generatedObjectData.jsonUsed, getContentLoader(), false);
         }
         else
         {

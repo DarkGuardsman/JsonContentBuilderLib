@@ -1,6 +1,7 @@
 package com.builtbroken.builder.mapper.mappers;
 
 import com.builtbroken.builder.converter.ConversionHandler;
+import com.builtbroken.builder.handler.JsonObjectHandlerRegistry;
 import com.builtbroken.builder.mapper.JsonMapping;
 import com.builtbroken.builder.mapper.JsonObjectWiring;
 import com.google.gson.JsonElement;
@@ -75,7 +76,7 @@ public class JsonClassMapper
         return this;
     }
 
-    public void map(JsonObject json, Object object, ConversionHandler handler)
+    public void mapDataFields(JsonObject json, Object object, ConversionHandler handler)
     {
         for (Map.Entry<String, JsonElement> entry : json.entrySet())
         {
@@ -93,8 +94,13 @@ public class JsonClassMapper
         }
         if (getParent() != null)
         {
-            getParent().map(json, object, handler);
+            getParent().mapDataFields(json, object, handler);
         }
+    }
+
+    public void mapDataLinks(JsonObject json, Object object, JsonObjectHandlerRegistry registry)
+    {
+
     }
 
     public JsonClassMapper getParent()

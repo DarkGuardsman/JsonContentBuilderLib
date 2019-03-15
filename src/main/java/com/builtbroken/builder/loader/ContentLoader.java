@@ -2,6 +2,7 @@ package com.builtbroken.builder.loader;
 
 import com.builtbroken.builder.ContentBuilderLib;
 import com.builtbroken.builder.converter.ConversionHandler;
+import com.builtbroken.builder.handler.JsonObjectHandlerRegistry;
 import com.builtbroken.builder.pipe.PipeLine;
 
 /**
@@ -32,6 +33,11 @@ public class ContentLoader
     public final ConversionHandler conversionHandler;
 
     /**
+     * Deals with registering and tracking handlers of objects
+     */
+    public final JsonObjectHandlerRegistry jsonObjectHandlerRegistry;
+
+    /**
      * Creates a new content loader with a default pipe line.
      * <p>
      * The defult pipe is designed to work with a set format
@@ -56,6 +62,7 @@ public class ContentLoader
     {
         this.name = name;
         this.pipeLine = pipeLine;
+        this.jsonObjectHandlerRegistry = new JsonObjectHandlerRegistry();
         this.pipeLine.contentLoader = this;
         this.conversionHandler = new ConversionHandler(ContentBuilderLib.MAIN_CONVERTER, name);
     }

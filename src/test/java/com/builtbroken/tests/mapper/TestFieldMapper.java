@@ -38,7 +38,7 @@ public class TestFieldMapper extends TestCase
 
         //map
         ClassForMappingTest object = new ClassForMappingTest();
-        JsonMappingHandler.map("testClass", object, json, ContentBuilderLib.MAIN_CONVERTER);
+        JsonMappingHandler.map("testClass", object, json, ContentBuilderLib.MAIN_LOADER, false);
 
         assertEquals(object.testField, "trees");
         assertEquals(object.testByteField, (byte)3);

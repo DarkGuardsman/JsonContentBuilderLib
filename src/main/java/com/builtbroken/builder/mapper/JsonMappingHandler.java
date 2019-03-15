@@ -1,6 +1,6 @@
 package com.builtbroken.builder.mapper;
 
-import com.builtbroken.builder.converter.ConversionHandler;
+import com.builtbroken.builder.loader.ContentLoader;
 import com.builtbroken.builder.mapper.mappers.JsonClassMapper;
 import com.google.gson.JsonObject;
 
@@ -18,12 +18,12 @@ public class JsonMappingHandler
     //Key to class, a single class can have several keys
     private static final HashMap<String, Class> keyToClass = new HashMap();
 
-    public static void map(String key, Object object, JsonObject json, ConversionHandler handler)
+    public static void map(String objectType, Object objectToMap, JsonObject jsonToUse, ContentLoader loader, boolean links)
     {
-        key = key.toLowerCase();
-        if (keyToClass.containsKey(key))
+        objectType = objectType.toLowerCase();
+        if (keyToClass.containsKey(objectType))
         {
-            Class clazz = keyToClass.get(key);
+            Class clazz = keyToClass.get(objectType);
             if (clazzMappers.containsKey(clazz))
             {
                 JsonClassMapper mapper = clazzMappers.get(clazz);
@@ -31,14 +31,22 @@ public class JsonMappingHandler
                 {
                     try
                     {
-                        mapper.map(json, object, handler);
+                        if (!links)
+                        {
+                            mapper.mapDataFields(jsonToUse, objectToMap, loader.conversionHandler);
+                        }
+                        else
+                        {
+
+                            mapper.mapDataLinks(jsonToUse, objectToMap, loader.jsonObjectHandlerRegistry);
+                        }
                     } catch (Exception e)
                     {
                         throw new RuntimeException("JsonMappingHandler: Failed to map data to object. "
-                                + "\n Key: " + key
+                                + "\n Key: " + objectType
                                 + "\n Class: " + clazz
-                                + "\n Object: " + object
-                                + "\n Json: " + json
+                                + "\n Object: " + objectToMap
+                                + "\n Json: " + jsonToUse
                                 , e);
                     }
                 }

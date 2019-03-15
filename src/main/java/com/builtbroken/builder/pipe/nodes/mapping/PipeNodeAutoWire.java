@@ -24,13 +24,13 @@ public class PipeNodeAutoWire extends PipeNode
     @Override
     public void receive(JsonElement data, Object currentObject, Queue<Object> objectsOut)
     {
-        if(currentObject instanceof GeneratedObject)
+        if (currentObject instanceof GeneratedObject)
         {
             final GeneratedObject generatedObjectData = (GeneratedObject) currentObject;
 
             //Map
             JsonMappingHandler.map(generatedObjectData.type, generatedObjectData.objectCreated,
-                    generatedObjectData.jsonUsed, getConverter());
+                    generatedObjectData.jsonUsed, getContentLoader(), true);
         }
         else
         {
