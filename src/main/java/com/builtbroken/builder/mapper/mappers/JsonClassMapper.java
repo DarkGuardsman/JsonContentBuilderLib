@@ -5,6 +5,9 @@ import com.builtbroken.builder.handler.JsonObjectHandlerRegistry;
 import com.builtbroken.builder.mapper.JsonMapping;
 import com.builtbroken.builder.mapper.JsonObjectWiring;
 import com.builtbroken.builder.mapper.linker.IJsonLinker;
+import com.builtbroken.builder.mapper.linker.JsonFieldLinker;
+import com.builtbroken.builder.mapper.linker.JsonLinker;
+import com.builtbroken.builder.mapper.linker.JsonMethodLinker;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -54,7 +57,11 @@ public class JsonClassMapper
                 JsonObjectWiring objectWiring = field.getAnnotation(JsonObjectWiring.class);
                 if (objectWiring != null)
                 {
-
+                    JsonFieldLinker linker = new JsonFieldLinker(field, objectWiring);
+                    for (String key : linker.getKeys())
+                    {
+                        linkMappers.put(key.toLowerCase(), linker);
+                    }
                 }
             }
         }
@@ -70,6 +77,18 @@ public class JsonClassMapper
                 for (String key : mapping.keys())
                 {
                     mappings.put(key.toLowerCase(), mapper);
+                }
+            }
+            else
+            {
+                JsonObjectWiring objectWiring = method.getAnnotation(JsonObjectWiring.class);
+                if (objectWiring != null)
+                {
+                    JsonMethodLinker linker = new JsonMethodLinker(method, objectWiring);
+                    for (String key : linker.getKeys())
+                    {
+                        linkMappers.put(key.toLowerCase(), linker);
+                    }
                 }
             }
         }
@@ -107,7 +126,7 @@ public class JsonClassMapper
             final JsonElement data = entry.getValue();
             if (linkMappers.containsKey(key))
             {
-                linkMappers.get(key).map(object, data, registry);
+                linkMappers.get(key).link(object, data, registry);
             }
             else
             {

@@ -15,9 +15,9 @@ public interface IJsonLinker<O extends Object>
      *
      * @param object
      * @param data
-     * @param converter
+     * @param registry
      */
-    void map(O object, JsonElement data, JsonObjectHandlerRegistry registry);
+    void link(O object, JsonElement data, JsonObjectHandlerRegistry registry);
 
     /**
      * Checks if the mapper has
@@ -29,7 +29,14 @@ public interface IJsonLinker<O extends Object>
     boolean isValid(O object);
 
     /**
-     * Array of keys that JSON maps to this link
+     * Handler to match on
+     *
+     * @return
+     */
+    String getType();
+
+    /**
+     * Json field to match on
      *
      * @return
      */
