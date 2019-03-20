@@ -79,50 +79,63 @@ public class ConversionHandler
     {
         if (converter != null)
         {
-            if (converter.getUniqueID() != null && !converter.getUniqueID().trim().isEmpty())
+            final String type = formatKey(converter.getUniqueID());
+            if (converters.containsKey(type))
             {
-                final String type = converter.getUniqueID().toLowerCase();
-                if (converters.containsKey(type))
-                {
-                    System.out.println(this + ": Warning, overriding existing converter " +
-                            "[" + converters.get(type) + "] " +
-                            "with [" + converter + "] for id " + type);
-                    //TODO throw error if strict mode, and use logger
-                }
-                converters.put(type, converter);
-                converter.onRegistered(this);
+                System.out.println(this + ": Warning, overriding existing converter " +
+                        "[" + converters.get(type) + "] " +
+                        "with [" + converter + "] for id " + type);
+                //TODO throw error if strict mode, and use logger
+            }
+            converters.put(type, converter);
+            converter.onRegistered(this);
 
 
-                if (converter.getAlias() != null)
+            if (converter.getAlias() != null)
+            {
+                for (String string : converter.getAlias())
                 {
-                    for (String string : converter.getAlias())
+                    if (string != null && !string.trim().isEmpty())
                     {
-                        if (string != null && !string.trim().isEmpty())
+                        string = formatKey(string);
+                        if (altNames.containsKey(string))
                         {
-                            if (altNames.containsKey(string.toLowerCase()))
-                            {
-                                throw new IllegalArgumentException(this + ": alias[" + string + "] is already in use by another converter " +
-                                        "Current: " + altNames.get(string.toLowerCase())
-                                        + " New: " + converter);
-                            }
-                            altNames.put(string.toLowerCase(), converter);
+                            throw new IllegalArgumentException(this + ": alias[" + string + "] is already in use by another converter " +
+                                    "Current: " + altNames.get(string)
+                                    + " New: " + converter);
                         }
-                        else
-                        {
-                            throw new IllegalArgumentException(this + ": invalid alias[" + string + "] for converter " + converter);
-                        }
+                        altNames.put(string, converter);
+                    }
+                    else
+                    {
+                        throw new IllegalArgumentException(this + ": invalid alias[" + string + "] for converter " + converter);
                     }
                 }
-            }
-            else
-            {
-                throw new IllegalArgumentException(this + ": converters require unique IDs to be set");
             }
         }
         else
         {
             throw new IllegalArgumentException(this + ": Can not add a null converter");
         }
+    }
+
+    private String formatKey(String key)
+    {
+        if (key == null)
+        {
+            throw new RuntimeException(this + ": converters require unique IDs to be set");
+        }
+        if (key.contains(";"))
+        {
+            throw new RuntimeException(this + ": Converter name [" + key + "] can not contain ; ");
+        }
+        key = key.trim().toLowerCase();
+        if (key.isEmpty())
+        {
+            throw new RuntimeException(this + ": Converter name [" + key + "] can not be an empty string");
+        }
+
+        return key;
     }
 
     public IJsonConverter getConverter(String type)
