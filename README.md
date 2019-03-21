@@ -1,5 +1,5 @@
 ## JsonContentBuilderLib
-Collection of useful tools and functions for turning JSON data into functional objects. The idea of this lib is not to replace existing libs. After all it uses GSON which contains some of this functionality already. The purpose is to create a simple system for locationing, loading, and processing JSON so that it can be turned into objects. Then linking and registering those objects to there respective systems.
+Collection of useful tools and functions for turning JSON data into functional objects. The idea of this lib is not to replace existing libs. After all it uses GSON which contains some of this functionality already. The purpose is to create a simple system for locationing, loading, and processing JSON so that it can be turned into objects. Then linking and registering those objects to their respective systems.
 
 
 ##Plan
@@ -31,7 +31,7 @@ The result of the file load phase will be JsonData objects. These will define th
 
 The first step is to map all the objects to handlers, Map<String, JsonData> with string being the key to the data mapper. Once this is done everything will be sorted to ensure loading order is maintained. Then objects will be passed into the data mappers generating objects. Each mapper will have the option to include nested mappers to handle data inside of the object. This is useful for dealing with common data types and sub-objects. 
 
-The second step is to take the generate objects and map them to handlers. These handlers will deal with any regristration and wiring of the data.
+The second step is to take the generate objects and map them to handlers. These handlers will deal with any registration and wiring of the data.
 
 #### Phase(3): Dependency Mapping
 Once all objects are generate the next step is to wire everything together. This step will be repeated a few times depending on what is needed. However, will come down to simple parsing of objects to check for annotations then injecting references based on data provided. This data will depend on the layout of the object. With the option to either select data from the object or from the JSON data still referenced.
@@ -42,10 +42,10 @@ With mapping done the next step is to register all the objects to their systems.
 #### Phase(5): Cleanup
 Once everything is registered then cleanup is started. This first involves validating all objects, running last dependency mapping checks, and anything else on the data itself. However, once this is completed then all data not used is dumped. 
 
-Data dumping involves wiping out the load JSON data and JSONData objects. The only thing that will be kept is location of files to generat objects. As well a little bit of data for error handling. Though even these are up to the implementating system.
+Data dumping involves wiping out the load JSON data and JSONData objects. The only thing that will be kept is location of files to generate objects. As well a little bit of data for error handling. Though even these are up to the implementating system.
 
 #### Data Format
-Format is up to the implementing system. However, the loader is designed to make the process as easy as possibe. This is done by allow JSON files to contain more than 1 data entry. The following is a recommend format for multi-entries.
+Format is up to the implementing system. However, the loader is designed to make the process as easy as possibe. This is done by allowing JSON files to contain more than 1 data entry. The following is a recommend format for multi-entries.
 
 ##### Multi-Entry Format
 {
