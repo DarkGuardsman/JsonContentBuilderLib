@@ -173,6 +173,11 @@ public class ConversionHandler
         altNames.clear();
     }
 
+    public Map<String, IJsonConverter> getConverters()
+    {
+        return converters;
+    }
+
     @Override
     public String toString()
     {
