@@ -75,7 +75,7 @@ public class ConversionHandler
         return null; //TODO throw error
     }
 
-    public void addConverter(IJsonConverter converter)
+    public ConversionHandler addConverter(IJsonConverter converter)
     {
         if (converter != null)
         {
@@ -117,6 +117,7 @@ public class ConversionHandler
         {
             throw new IllegalArgumentException(this + ": Can not add a null converter");
         }
+        return this;
     }
 
     private String formatKey(String key)

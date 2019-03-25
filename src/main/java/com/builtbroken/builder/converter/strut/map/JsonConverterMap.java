@@ -55,7 +55,7 @@ public class JsonConverterMap extends JsonConverter<Map>
         //  ["string:100", "float:2"] could be another option but would require splitting
         //  this also means more complex entries would need a separator
         //  could cache this from the annotation if needed?
-        if (args == null || args.length == 2)
+        if (args == null || args.length != 2)
         {
             throw new IllegalArgumentException("JsonConverterArray: args are required to define conversion type");
         }
@@ -98,7 +98,7 @@ public class JsonConverterMap extends JsonConverter<Map>
     @Override
     public Map fromJson(JsonElement input, String[] args)
     {
-        if (args == null || args.length == 2)
+        if (args == null || args.length != 2)
         {
             throw new IllegalArgumentException("JsonConverterArray: args are required to define conversion type");
         }
