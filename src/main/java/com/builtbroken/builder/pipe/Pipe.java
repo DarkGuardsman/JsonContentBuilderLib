@@ -42,16 +42,14 @@ public class Pipe
 
     public final PipeLine pipeLine;
     public final String pipeName;
-    public final boolean allowNullRuns;
 
     private final Queue<Object> queueOut = new LinkedList();
     private final Queue<Object> queueIn = new LinkedList();
 
-    public Pipe(PipeLine pipeLine, String pipeName, boolean allowNullRuns)
+    public Pipe(PipeLine pipeLine, String pipeName)
     {
         this.pipeLine = pipeLine;
         this.pipeName = pipeName;
-        this.allowNullRuns = allowNullRuns;
     }
 
     /**

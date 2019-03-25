@@ -40,18 +40,18 @@ public class PipeLine
         PipeLine handler = new PipeLine();
 
         //Setup cleaner
-        Pipe jsonPrepPipe = new Pipe(handler,  ContentBuilderRefs.PIPE_JSON, true);
+        Pipe jsonPrepPipe = new Pipe(handler,  ContentBuilderRefs.PIPE_JSON);
         jsonPrepPipe.addNode(new PipeNodeCommentRemover());
         jsonPrepPipe.addNode(new PipeNodeJsonSplitter());
         handler.pipes.add(jsonPrepPipe);
 
         //Setup builder
-        Pipe builderPipe = new Pipe(handler,  ContentBuilderRefs.PIPE_BUILDER, false);
+        Pipe builderPipe = new Pipe(handler,  ContentBuilderRefs.PIPE_BUILDER);
         builderPipe.addNode(new PipeNodeObjectCreator(builderPipe));
         handler.pipes.add(builderPipe);
 
         //Setup mapper
-        Pipe mapperPipe = new Pipe(handler,  ContentBuilderRefs.PIPE_MAPPER, false);
+        Pipe mapperPipe = new Pipe(handler,  ContentBuilderRefs.PIPE_MAPPER);
         builderPipe.addNode(new PipeNodeFieldHandler(mapperPipe));
         builderPipe.addNode(new PipeNodeAutoWire(mapperPipe));
         builderPipe.addNode(new PipeNodeMappingValidator(mapperPipe));
@@ -134,7 +134,7 @@ public class PipeLine
      */
     public void destroy()
     {
-        pipes .clear();
+        pipes.clear();
         id_to_pipe.clear();
     }
 }
