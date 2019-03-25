@@ -22,7 +22,7 @@ public class JsonObjectHandlerRegistry
         if (handler == null)
         {
             handler = new JsonObjectHandler(type.toLowerCase());
-            handlers.put(((JsonObjectHandler) handler).id, handler);
+            handlers.put(type.toLowerCase(), handler);
         }
         return handler;
     }
@@ -39,7 +39,7 @@ public class JsonObjectHandlerRegistry
         {
             if (handlers.containsKey(type))
             {
-                handlers.get(type).onCreated((IJsonGeneratedObject) object);
+                handlers.get(type).onCreated((IJsonGeneratedObject) object.objectCreated);
             }
         }
         else

@@ -30,7 +30,7 @@ public class JsonObjectHandler implements IJsonObjectHandler
                 uniqueID = uniqueID.toLowerCase();
                 if (!objectMap.containsKey(uniqueID))
                 {
-
+                    objectMap.put(uniqueID, object);
                 }
                 else
                 {

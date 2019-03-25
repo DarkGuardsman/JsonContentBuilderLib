@@ -11,7 +11,7 @@ import java.util.HashMap;
  * Handles mapping JSON data to fields/methods
  * Created by Dark(DarkGuardsman, Robert) on 2019-03-11.
  */
-public class JsonMappingHandler
+public class JsonMappingHandler //TODO consider making per builder instance
 {
 
     //Class to mapper, not all mappers will have a matching key
@@ -21,7 +21,7 @@ public class JsonMappingHandler
 
     public static void map(String objectType, Object objectToMap, JsonObject jsonToUse, ContentLoader loader, boolean links)
     {
-        JsonClassMapper mapper = getMapper(objectType, objectToMap);
+        final JsonClassMapper mapper = getMapper(objectType);
         try
         {
             if (!links)
@@ -45,10 +45,10 @@ public class JsonMappingHandler
 
     public static void validate(String objectType, Object objectToMap)
     {
-        getMapper(objectType, objectToMap).validate(objectToMap);
+        getMapper(objectType).validate(objectToMap);
     }
 
-    private static JsonClassMapper getMapper(String objectType, Object objectToMap)
+    private static JsonClassMapper getMapper(String objectType)
     {
         objectType = objectType.toLowerCase();
         if (keyToClass.containsKey(objectType))

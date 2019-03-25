@@ -1,5 +1,10 @@
 package com.builtbroken.builder.mapper;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 /**
  * Annotation used to indicate that an object needs
  * to be linked post creation of all objects. During the
@@ -27,6 +32,8 @@ package com.builtbroken.builder.mapper;
  * <p>
  * Created by Dark(DarkGuardsman, Robert) on 2019-03-11.
  */
+@Retention(RetentionPolicy.RUNTIME)
+@Target(value = {ElementType.FIELD, ElementType.METHOD})
 public @interface JsonObjectWiring
 {
 

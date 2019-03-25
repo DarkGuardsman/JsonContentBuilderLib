@@ -1,6 +1,7 @@
 package com.builtbroken.tests.mapper;
 
 import com.builtbroken.builder.ContentBuilderLib;
+import com.builtbroken.builder.loader.ContentLoader;
 import com.builtbroken.builder.mapper.JsonMapping;
 import com.builtbroken.builder.mapper.JsonMappingHandler;
 import com.google.gson.JsonArray;
@@ -53,6 +54,9 @@ public class TestFieldMapper extends TestCase
         assertEquals("1", object.testArrayField[0]);
         assertEquals("hj", object.testArrayField[1]);
         assertEquals("klj", object.testArrayField[2]);
+
+        //Cleanup
+        ContentBuilderLib.destroy();
     }
 
     private static class ClassForMappingTest
