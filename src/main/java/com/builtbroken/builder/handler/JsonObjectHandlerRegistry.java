@@ -62,4 +62,10 @@ public class JsonObjectHandlerRegistry
         return null;
     }
 
+    public void destroy()
+    {
+        handlers.values().forEach(handler -> handler.onRegistryDestroyed(this));
+        handlers.clear();
+        unknownObjects.clear();
+    }
 }

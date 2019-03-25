@@ -10,7 +10,7 @@ package com.builtbroken.builder.mapper;
  * this will be paired with the type to find the object to wire
  * into the field/method.
  * <p>
- * {@link #type()} is expected to be the matching group of objects
+ * {@link #objectType()} is expected to be the matching group of objects
  * that the input information will be present inside. When objects
  * are created they are created under a builder with a set ID. This
  * ID is the type that needs to be matched and should be unique
@@ -33,7 +33,7 @@ public @interface JsonObjectWiring
     /**
      * List of keys to use for matching JSON
      */
-    String[] value();
+    String[] jsonFields();
 
     /**
      * Type of system to lookup value inside.
@@ -43,7 +43,7 @@ public @interface JsonObjectWiring
      * <p>
      * Ex: "armory:gun"
      */
-    String type();
+    String objectType();
 
     /**
      * Enforced that a value is not null and contains data

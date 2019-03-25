@@ -17,8 +17,8 @@ import com.builtbroken.builder.loader.ContentLoader;
 public class ContentBuilderLib
 {
 
-    public static final ConversionHandler MAIN_CONVERTER = new ConversionHandler(null, "main");
-    public static final ContentLoader MAIN_LOADER = new ContentLoader("main");
+    private static ConversionHandler MAIN_CONVERTER;
+    private static ContentLoader MAIN_LOADER;
 
     private static boolean hasLoaded = false;
     private static boolean hasSetup = false;
@@ -31,27 +31,27 @@ public class ContentBuilderLib
         if (!hasSetup)
         {
             //Primitives
-            MAIN_CONVERTER.addConverter(new JsonConverterByte());
-            MAIN_CONVERTER.addConverter(new JsonConverterShort());
-            MAIN_CONVERTER.addConverter(new JsonConverterInt());
-            MAIN_CONVERTER.addConverter(new JsonConverterLong());
+            getMainConverter().addConverter(new JsonConverterByte());
+            getMainConverter().addConverter(new JsonConverterShort());
+            getMainConverter().addConverter(new JsonConverterInt());
+            getMainConverter().addConverter(new JsonConverterLong());
 
-            MAIN_CONVERTER.addConverter(new JsonConverterFloat());
-            MAIN_CONVERTER.addConverter(new JsonConverterDouble());
+            getMainConverter().addConverter(new JsonConverterFloat());
+            getMainConverter().addConverter(new JsonConverterDouble());
 
-            MAIN_CONVERTER.addConverter(new JsonConverterString());
+            getMainConverter().addConverter(new JsonConverterString());
 
             //Arrays
-            MAIN_CONVERTER.addConverter(new JsonConverterArray());
-            MAIN_CONVERTER.addConverter(new JsonConverterArrayString());
+            getMainConverter().addConverter(new JsonConverterArray());
+            getMainConverter().addConverter(new JsonConverterArrayString());
 
-            MAIN_CONVERTER.addConverter(new JsonConverterArrayByte());
-            MAIN_CONVERTER.addConverter(new JsonConverterArrayInt());
-            MAIN_CONVERTER.addConverter(new JsonConverterArrayShort());
-            MAIN_CONVERTER.addConverter(new JsonConverterArrayLong());
+            getMainConverter().addConverter(new JsonConverterArrayByte());
+            getMainConverter().addConverter(new JsonConverterArrayInt());
+            getMainConverter().addConverter(new JsonConverterArrayShort());
+            getMainConverter().addConverter(new JsonConverterArrayLong());
 
-            MAIN_CONVERTER.addConverter(new JsonConverterArrayFloat());
-            MAIN_CONVERTER.addConverter(new JsonConverterArrayDouble());
+            getMainConverter().addConverter(new JsonConverterArrayFloat());
+            getMainConverter().addConverter(new JsonConverterArrayDouble());
         }
     }
 
@@ -70,4 +70,39 @@ public class ContentBuilderLib
         }
     }
 
+    /**
+     * Used entirely by JUnit testing to destroy
+     * the main loader after each test
+     */
+    public static void destroy()
+    {
+        if (MAIN_LOADER != null)
+        {
+            MAIN_LOADER.destroy();
+        }
+        if (MAIN_CONVERTER != null)
+        {
+            MAIN_CONVERTER.destroy();
+        }
+        MAIN_LOADER = null;
+        MAIN_CONVERTER = null;
+    }
+
+    public static ConversionHandler getMainConverter()
+    {
+        if (MAIN_CONVERTER == null)
+        {
+            MAIN_CONVERTER = new ConversionHandler(null, "main");
+        }
+        return MAIN_CONVERTER;
+    }
+
+    public static ContentLoader getMainLoader()
+    {
+        if (MAIN_LOADER == null)
+        {
+            MAIN_LOADER = new ContentLoader("main");
+        }
+        return MAIN_LOADER;
+    }
 }

@@ -1,17 +1,12 @@
 package com.builtbroken.builder.mapper.linker;
 
-import com.builtbroken.builder.converter.ConversionHandler;
 import com.builtbroken.builder.data.IJsonGeneratedObject;
 import com.builtbroken.builder.handler.IJsonObjectHandler;
-import com.builtbroken.builder.handler.JsonObjectHandler;
 import com.builtbroken.builder.handler.JsonObjectHandlerRegistry;
-import com.builtbroken.builder.mapper.JsonMapping;
 import com.builtbroken.builder.mapper.JsonObjectWiring;
-import com.builtbroken.builder.mapper.mappers.JsonMapper;
 import com.google.gson.JsonElement;
 
 import java.lang.reflect.Field;
-import java.util.Arrays;
 
 /**
  * Created by Dark(DarkGuardsman, Robert) on 2019-03-11.
@@ -22,7 +17,7 @@ public class JsonFieldLinker extends JsonLinker<Object>
 
     public JsonFieldLinker(Field field, JsonObjectWiring mapping)
     {
-        this(field, mapping.value(), mapping.type(), mapping.required());
+        this(field, mapping.jsonFields(), mapping.objectType(), mapping.required());
     }
 
     public JsonFieldLinker(Field field, String[] names, String type, boolean required)

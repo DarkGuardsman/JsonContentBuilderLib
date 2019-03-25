@@ -166,6 +166,12 @@ public class ConversionHandler
         return null;
     }
 
+    public void destroy()
+    {
+        converters.clear();
+        altNames.clear();
+    }
+
     @Override
     public String toString()
     {

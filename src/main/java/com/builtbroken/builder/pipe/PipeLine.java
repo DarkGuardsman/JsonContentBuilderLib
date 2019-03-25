@@ -128,4 +128,13 @@ public class PipeLine
     {
         return contentLoader != null ? contentLoader.conversionHandler : null;
     }
+
+    /**
+     * Called to destroy the pipe and empty all memory connections
+     */
+    public void destroy()
+    {
+        pipes .clear();
+        id_to_pipe.clear();
+    }
 }

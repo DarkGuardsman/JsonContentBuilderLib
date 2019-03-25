@@ -1,16 +1,12 @@
 package com.builtbroken.builder.mapper.linker;
 
-import com.builtbroken.builder.converter.ConversionHandler;
 import com.builtbroken.builder.data.IJsonGeneratedObject;
 import com.builtbroken.builder.handler.IJsonObjectHandler;
 import com.builtbroken.builder.handler.JsonObjectHandlerRegistry;
-import com.builtbroken.builder.mapper.JsonMapping;
 import com.builtbroken.builder.mapper.JsonObjectWiring;
-import com.builtbroken.builder.mapper.mappers.JsonMapper;
 import com.google.gson.JsonElement;
 
 import java.lang.reflect.Method;
-import java.util.Arrays;
 
 /**
  * Created by Dark(DarkGuardsman, Robert) on 2019-03-11.
@@ -22,7 +18,7 @@ public class JsonMethodLinker extends JsonLinker<Object>
 
     public JsonMethodLinker(Method method, JsonObjectWiring mapping)
     {
-        this(method, mapping.value(), mapping.type(), mapping.required());
+        this(method, mapping.jsonFields(), mapping.objectType(), mapping.required());
     }
 
     public JsonMethodLinker(Method method, String[] names, String type, boolean required)

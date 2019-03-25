@@ -64,6 +64,13 @@ public class ContentLoader
         this.pipeLine = pipeLine;
         this.jsonObjectHandlerRegistry = new JsonObjectHandlerRegistry();
         this.pipeLine.contentLoader = this;
-        this.conversionHandler = new ConversionHandler(ContentBuilderLib.MAIN_CONVERTER, name);
+        this.conversionHandler = new ConversionHandler(ContentBuilderLib.getMainConverter(), name);
+    }
+
+    public void destroy()
+    {
+        pipeLine.destroy();
+        conversionHandler.destroy();
+        jsonObjectHandlerRegistry.destroy();
     }
 }
