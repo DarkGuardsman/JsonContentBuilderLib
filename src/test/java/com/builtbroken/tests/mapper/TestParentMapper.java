@@ -46,9 +46,9 @@ public class TestParentMapper
     public void testLayer1()
     {
         Layer1 object = new Layer1();
-        JsonMappingHandler.map(LAYER_1, object, testObject, ContentBuilderLib.getMainLoader(), true);
-        Assertions.assertEquals(object.id, JSON_ID_VAL);
-        Assertions.assertEquals(object.propA, JSON_PROP_A_VAL);
+        JsonMappingHandler.map(LAYER_1, object, testObject, ContentBuilderLib.getMainLoader(), false);
+        Assertions.assertEquals(JSON_ID_VAL, object.id);
+        Assertions.assertEquals(JSON_PROP_A_VAL, object.propA);
     }
 
     @Test
@@ -56,11 +56,11 @@ public class TestParentMapper
     {
         Layer2 object = new Layer2();
         JsonMappingHandler.map(LAYER_2, object, testObject, ContentBuilderLib.getMainLoader(), false);
-        Assertions.assertEquals(object.id, JSON_ID_VAL);
-        Assertions.assertEquals(object.propA, JSON_PROP_A_VAL);
+        Assertions.assertEquals(JSON_ID_VAL, object.id);
+        Assertions.assertEquals(JSON_PROP_A_VAL, object.propA);
 
-        Assertions.assertEquals(object.propB, JSON_PROP_B_VAL);
-        Assertions.assertEquals(object.propD, JSON_PROP_D_VAL);
+        Assertions.assertEquals(JSON_PROP_B_VAL, object.propB);
+        Assertions.assertEquals(JSON_PROP_D_VAL, object.propD);
     }
 
     @Test
@@ -68,10 +68,10 @@ public class TestParentMapper
     {
         Layer2A object = new Layer2A();
         JsonMappingHandler.map(LAYER_2, object, testObject, ContentBuilderLib.getMainLoader(), false);
-        Assertions.assertEquals(object.id, JSON_ID_VAL);
-        Assertions.assertEquals(object.propA, JSON_PROP_A_VAL);
+        Assertions.assertEquals(JSON_ID_VAL, object.id);
+        Assertions.assertEquals(JSON_PROP_A_VAL, object.propA);
 
-        Assertions.assertEquals(object.propE, JSON_PROP_E_VAL);
+        Assertions.assertEquals(JSON_PROP_E_VAL, object.propE);
     }
 
     @Test
@@ -79,13 +79,13 @@ public class TestParentMapper
     {
         Layer3 object = new Layer3();
         JsonMappingHandler.map(LAYER_2, object, testObject, ContentBuilderLib.getMainLoader(), false);
-        Assertions.assertEquals(object.id, JSON_ID_VAL);
-        Assertions.assertEquals(object.propA, JSON_PROP_A_VAL);
+        Assertions.assertEquals(JSON_ID_VAL, object.id);
+        Assertions.assertEquals(JSON_PROP_A_VAL, object.propA);
 
-        Assertions.assertEquals(object.propB, JSON_PROP_B_VAL);
-        Assertions.assertEquals(object.propD, JSON_PROP_D_VAL);
+        Assertions.assertEquals(JSON_PROP_B_VAL, object.propB);
+        Assertions.assertEquals(JSON_PROP_D_VAL, object.propD);
 
-        Assertions.assertEquals(object.propC, JSON_PROP_C_VAL);
+        Assertions.assertEquals(JSON_PROP_C_VAL, object.propC);
     }
 
     @AfterEach

@@ -46,7 +46,7 @@ public class JsonClassMapper
             JsonMapping mapping = field.getAnnotation(JsonMapping.class);
             if (mapping != null)
             {
-                JsonFieldMapper mapper = new JsonFieldMapper(field, mapping);
+                JsonFieldMapper mapper = new JsonFieldMapper(clazz, field, mapping);
                 for (String key : mapping.keys())
                 {
                     mappings.put(key.toLowerCase(), mapper);
@@ -95,7 +95,7 @@ public class JsonClassMapper
         return this;
     }
 
-    public void mapDataFields(JsonObject json, Object object, ConversionHandler handler)
+    public void mapDataFields(JsonObject json, Object objectToMap, ConversionHandler handler)
     {
         for (Map.Entry<String, JsonElement> entry : json.entrySet())
         {
@@ -103,7 +103,7 @@ public class JsonClassMapper
             final JsonElement data = entry.getValue();
             if (mappings.containsKey(key))
             {
-                mappings.get(key).map(object, data, handler);
+                mappings.get(key).map(objectToMap, data, handler);
             }
             else
             {
@@ -114,7 +114,7 @@ public class JsonClassMapper
         }
         if (getParent() != null)
         {
-            getParent().mapDataFields(json, object, handler);
+            getParent().mapDataFields(json, objectToMap, handler);
         }
     }
 

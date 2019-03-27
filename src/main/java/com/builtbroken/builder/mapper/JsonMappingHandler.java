@@ -114,13 +114,17 @@ public class JsonMappingHandler //TODO consider making per builder instance
         {
             keyToClass.put(string.toLowerCase(), clazz);
         }
+        mapClass(clazz);
+    }
 
+    public static void mapClass(Class clazz)
+    {
         //Map classes, do separate from keys as we might have a parent class registered out of order
         if (!clazzMappers.containsKey(clazz))
         {
             //Create
-            JsonClassMapper mapper = new JsonClassMapper(clazz).init();
-            clazzMappers.put(clazz, mapper);
+            JsonClassMapper childMapper = new JsonClassMapper(clazz).init();
+            clazzMappers.put(clazz, childMapper);
 
             //Map parent classes
             while (clazz.getSuperclass() != Object.class && clazzMappers.containsKey(clazz.getSuperclass()))
@@ -129,14 +133,14 @@ public class JsonMappingHandler //TODO consider making per builder instance
                 clazz = clazz.getSuperclass();
 
                 //Create parent mapper
-                JsonClassMapper mapper2 = new JsonClassMapper(clazz).init();
-                clazzMappers.put(clazz, mapper);
+                JsonClassMapper parentMapper = new JsonClassMapper(clazz).init();
+                clazzMappers.put(clazz, parentMapper);
 
                 //Set previous mapper's parent
-                mapper.setParent(mapper2);
+                childMapper.setParent(parentMapper);
 
                 //Set current as last so we can set parent
-                mapper = mapper2;
+                childMapper = parentMapper;
             }
         }
     }
