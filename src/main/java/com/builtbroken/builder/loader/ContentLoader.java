@@ -67,6 +67,31 @@ public class ContentLoader
         this.conversionHandler = new ConversionHandler(ContentBuilderLib.getMainConverter(), name);
     }
 
+    /**
+     * Called to init the loader, use
+     * this to reference resources, objects,
+     * and validate settings.
+     */
+    public void init()
+    {
+        pipeLine.init();
+    }
+
+    /**
+     * Called to finish loading the loader, use
+     * this to reference resources, objects,
+     * and validate settings.
+     */
+    public void loadComplete()
+    {
+        pipeLine.loadComplete();
+    }
+
+    /**
+     * Called to destroy the loader. Mainly
+     * exists to cleanup for JUnit or after
+     * loader is no longer needed.
+     */
     public void destroy()
     {
         pipeLine.destroy();

@@ -66,7 +66,8 @@ public class ContentBuilderLib
         }
         if (!hasLoaded)
         {
-
+            getMainLoader().init();
+            getMainLoader().loadComplete();
         }
     }
 

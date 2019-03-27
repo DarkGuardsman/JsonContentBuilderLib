@@ -38,6 +38,7 @@ import java.util.Queue;
  */
 public class Pipe
 {
+
     public final LinkedList<IPipeNode> nodes = new LinkedList();
 
     public final PipeLine pipeLine;
@@ -50,6 +51,26 @@ public class Pipe
     {
         this.pipeLine = pipeLine;
         this.pipeName = pipeName;
+    }
+
+    /**
+     * Called to init the pipe, use
+     * this to reference resources, objects,
+     * and validate settings.
+     */
+    public void init()
+    {
+        nodes.forEach(node -> node.init());
+    }
+
+    /**
+     * Called to finish the loading phase, use
+     * this to reference resources, objects,
+     * and validate settings.
+     */
+    public void loadComplete()
+    {
+        nodes.forEach(node -> node.onLoadComplete());
     }
 
     /**

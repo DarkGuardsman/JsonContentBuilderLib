@@ -40,18 +40,18 @@ public class PipeLine
         PipeLine handler = new PipeLine();
 
         //Setup cleaner
-        Pipe jsonPrepPipe = new Pipe(handler,  ContentBuilderRefs.PIPE_JSON);
+        Pipe jsonPrepPipe = new Pipe(handler, ContentBuilderRefs.PIPE_JSON);
         jsonPrepPipe.addNode(new PipeNodeCommentRemover());
         jsonPrepPipe.addNode(new PipeNodeJsonSplitter());
         handler.pipes.add(jsonPrepPipe);
 
         //Setup builder
-        Pipe builderPipe = new Pipe(handler,  ContentBuilderRefs.PIPE_BUILDER);
+        Pipe builderPipe = new Pipe(handler, ContentBuilderRefs.PIPE_BUILDER);
         builderPipe.addNode(new PipeNodeObjectCreator(builderPipe));
         handler.pipes.add(builderPipe);
 
         //Setup mapper
-        Pipe mapperPipe = new Pipe(handler,  ContentBuilderRefs.PIPE_MAPPER);
+        Pipe mapperPipe = new Pipe(handler, ContentBuilderRefs.PIPE_MAPPER);
         builderPipe.addNode(new PipeNodeFieldHandler(mapperPipe));
         builderPipe.addNode(new PipeNodeAutoWire(mapperPipe));
         builderPipe.addNode(new PipeNodeMappingValidator(mapperPipe));
@@ -60,9 +60,26 @@ public class PipeLine
         return handler;
     }
 
+    /**
+     * Called to init the pipe line, use
+     * this to reference resources, objects,
+     * and validate settings.
+     */
     public void init()
     {
         //TODO sort out pipes and nodes so they run in order
+        pipes.removeIf(pipe -> pipe == null);
+        pipes.forEach(pipe -> pipe.init());
+    }
+
+    /**
+     * Called to finish loading phase, use
+     * this to reference resources, objects,
+     * and validate settings.
+     */
+    public void loadComplete()
+    {
+        pipes.forEach(pipe -> pipe.loadComplete());
     }
 
     /**
