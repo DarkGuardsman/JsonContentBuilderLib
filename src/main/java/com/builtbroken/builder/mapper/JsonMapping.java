@@ -23,7 +23,7 @@ public @interface JsonMapping
     /**
      * Data type to load data as, optional for boolean and strings
      */
-    String type() default "Unknown";
+    String type() default "*"; //* acts as a indicator to attempt to match field
 
     /**
      * Arguments to pass into type converter, optional in most cases
