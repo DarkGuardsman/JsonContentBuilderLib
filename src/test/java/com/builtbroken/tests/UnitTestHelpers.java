@@ -2,6 +2,7 @@ package com.builtbroken.tests;
 
 import com.builtbroken.builder.data.DataFileLoad;
 import com.builtbroken.builder.io.FileLoaderHandler;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import junit.framework.TestCase;
 
@@ -33,5 +34,25 @@ public class UnitTestHelpers
         TestCase.assertNotNull("Failed to locate test json: " + file, files.get(0).element);
 
         return files.get(0).element;
+    }
+
+    public static JsonArray createJsonStringArray(String... items)
+    {
+        JsonArray array = new JsonArray();
+        for(String s : items)
+        {
+            array.add(s);
+        }
+        return array;
+    }
+
+    public static JsonArray createJsonIntArray(int... items)
+    {
+        JsonArray array = new JsonArray();
+        for(int s : items)
+        {
+            array.add(s);
+        }
+        return array;
     }
 }

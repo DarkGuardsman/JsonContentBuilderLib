@@ -4,6 +4,7 @@ import com.builtbroken.builder.ContentBuilderLib;
 import com.builtbroken.builder.loader.ContentLoader;
 import com.builtbroken.builder.mapper.JsonMapping;
 import com.builtbroken.builder.mapper.JsonMappingHandler;
+import com.builtbroken.tests.UnitTestHelpers;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import junit.framework.TestCase;
@@ -27,11 +28,7 @@ public class TestFieldMapper extends TestCase
         json.addProperty("test_float", 2.3f);
         json.addProperty("test_double", 45.9);
 
-        JsonArray array = new JsonArray();
-        array.add("1");
-        array.add("hj");
-        array.add("klj");
-        json.add("test_array", array);
+        json.add("test_array", UnitTestHelpers.createJsonStringArray("1", "hj", "klj"));
 
         //Trigger setup
         JsonMappingHandler.register(ClassForMappingTest.class, "testClass");
