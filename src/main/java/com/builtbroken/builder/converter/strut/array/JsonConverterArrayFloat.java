@@ -13,7 +13,7 @@ public class JsonConverterArrayFloat extends JsonConverter<Object>
 
     public JsonConverterArrayFloat()
     {
-        super("java:array.float", "array.float");
+        super("java:array.float", "array.float", "float[]");
     }
 
     @Override

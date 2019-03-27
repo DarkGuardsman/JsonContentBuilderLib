@@ -13,7 +13,7 @@ public class JsonConverterArrayByte extends JsonConverter<Object>
 
     public JsonConverterArrayByte()
     {
-        super("java:array.byte", "array.byte");
+        super("java:array.byte", "array.byte", "byte[]");
     }
 
     @Override

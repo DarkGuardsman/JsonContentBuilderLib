@@ -13,7 +13,7 @@ public class JsonConverterArrayInt extends JsonConverter<Object>
 
     public JsonConverterArrayInt()
     {
-        super("java:array.integer", "array.integer", "array.int");
+        super("java:array.integer", "array.integer", "array.int", "int[]");
     }
 
     @Override

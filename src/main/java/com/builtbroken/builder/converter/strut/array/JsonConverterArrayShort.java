@@ -13,7 +13,7 @@ public class JsonConverterArrayShort extends JsonConverter<Object>
 
     public JsonConverterArrayShort()
     {
-        super("java:array.short", "array.short");
+        super("java:array.short", "array.short", "short[]");
     }
 
     @Override

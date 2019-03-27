@@ -17,7 +17,7 @@ public class JsonConverterArray extends JsonConverter
 
     public JsonConverterArray()
     {
-        super("java:array.object", "array", "array.object");
+        super("java:array.object", "array", "array.object", "[]", "object[]");
     }
 
     @Override

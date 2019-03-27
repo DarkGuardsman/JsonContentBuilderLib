@@ -13,7 +13,7 @@ public class JsonConverterArrayString extends JsonConverter
 
     public JsonConverterArrayString()
     {
-        super("java:array.string", "array.string");
+        super("java:array.string", "array.string", "string[]");
     }
 
     @Override
