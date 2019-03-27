@@ -5,13 +5,13 @@ import com.builtbroken.builder.mapper.JsonMapping;
 import com.builtbroken.builder.mapper.JsonMappingHandler;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import junit.framework.TestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Created by Dark(DarkGuardsman, Robert) on 2019-03-25.
  */
-public class TestMethodMapper extends TestCase
+public class TestMethodMapper
 {
 
     @Test
@@ -41,19 +41,19 @@ public class TestMethodMapper extends TestCase
         ClassForMappingTest object = new ClassForMappingTest();
         JsonMappingHandler.map("testClass", object, json, ContentBuilderLib.getMainLoader(), false);
 
-        assertEquals(object.testField, "trees");
-        assertEquals(object.testByteField, (byte) 3);
-        assertEquals(object.testShortField, (short) 45);
-        assertEquals(object.testIntField, 5);
-        assertEquals(object.testLongField, 15L);
-        assertEquals(object.testFloatField, 2.3f);
-        assertEquals(object.testDoubleField, 45.9);
+        Assertions.assertEquals(object.testField, "trees");
+        Assertions.assertEquals(object.testByteField, (byte) 3);
+        Assertions.assertEquals(object.testShortField, (short) 45);
+        Assertions.assertEquals(object.testIntField, 5);
+        Assertions.assertEquals(object.testLongField, 15L);
+        Assertions.assertEquals(object.testFloatField, 2.3f);
+        Assertions.assertEquals(object.testDoubleField, 45.9);
 
-        assertNotNull(object.testArrayField);
-        assertEquals(3, object.testArrayField.length);
-        assertEquals("1", object.testArrayField[0]);
-        assertEquals("hj", object.testArrayField[1]);
-        assertEquals("klj", object.testArrayField[2]);
+        Assertions.assertNotNull(object.testArrayField);
+        Assertions.assertEquals(3, object.testArrayField.length);
+        Assertions.assertEquals("1", object.testArrayField[0]);
+        Assertions.assertEquals("hj", object.testArrayField[1]);
+        Assertions.assertEquals("klj", object.testArrayField[2]);
 
         //Cleanup
         ContentBuilderLib.destroy();
@@ -61,6 +61,7 @@ public class TestMethodMapper extends TestCase
 
     private static class ClassForMappingTest
     {
+
         public String testField;
         public String[] testArrayField;
         public byte testByteField;

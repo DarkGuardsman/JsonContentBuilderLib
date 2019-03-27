@@ -4,8 +4,8 @@ import com.builtbroken.builder.pipe.nodes.json.PipeNodeCommentRemover;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import junit.framework.TestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.LinkedList;
 import java.util.Queue;
@@ -14,7 +14,7 @@ import java.util.Random;
 /**
  * Created by Dark(DarkGuardsman, Robert) on 2/26/19.
  */
-public class TestCommentCleaner extends TestCase
+public class TestCommentCleaner
 {
 
     @Test
@@ -29,10 +29,10 @@ public class TestCommentCleaner extends TestCase
         commentRemover.receive(insert, null, queue);
 
         //Check that we added JSON to output
-        assertSame(queue.peek(), insert);
+        Assertions.assertSame(queue.peek(), insert);
 
         //Check that json is empty
-        assertEquals("Comment remover should have done nothing " + generatedJson.toString() + "  " + insert.toString(), 0, insert.size());
+        Assertions.assertEquals(0, insert.size(), "Comment remover should have done nothing " + generatedJson.toString() + "  " + insert.toString());
     }
 
     @Test
@@ -48,7 +48,7 @@ public class TestCommentCleaner extends TestCase
             {
                 generatedJson.addProperty("_comment:" + j, "");
             }
-            assertEquals("Test failed to generate JSON with " + (i + i) + " comments", i + 1, generatedJson.size());
+            Assertions.assertEquals(i + 1, generatedJson.size(), "Test failed to generate JSON with " + (i + i) + " comments");
 
             //Run
             Queue<Object> queue = new LinkedList();
@@ -56,10 +56,10 @@ public class TestCommentCleaner extends TestCase
             commentRemover.receive(insert, null, queue);
 
             //Check that we added JSON to output
-            assertSame(queue.peek(), insert);
+            Assertions.assertSame(queue.peek(), insert);
 
             //Check that json is empty
-            assertEquals("Comment remover failed to empty object " + generatedJson.toString(), 0, insert.size());
+            Assertions.assertEquals(0, insert.size(), "Comment remover failed to empty object " + generatedJson.toString());
         }
     }
 
@@ -87,7 +87,7 @@ public class TestCommentCleaner extends TestCase
                     generatedJson.addProperty("data:" + j, "" + random.nextInt());
                 }
             }
-            assertEquals("Test failed to generate JSON with 20 entries", 20, generatedJson.size());
+            Assertions.assertEquals(20, generatedJson.size(), "Test failed to generate JSON with 20 entries");
 
             //Run
             Queue<Object> queue = new LinkedList();
@@ -95,20 +95,20 @@ public class TestCommentCleaner extends TestCase
             commentRemover.receive(insert, null, queue);
 
             //Check that we added JSON to output
-            assertSame(queue.peek(), insert);
+            Assertions.assertSame(queue.peek(), insert);
 
             //Check that json is empty
-            assertEquals("Comment remover failed to empty object " + generatedJson.toString(), 20 - commentsAdded, insert.size());
+            Assertions.assertEquals(20 - commentsAdded, insert.size(), "Comment remover failed to empty object " + generatedJson.toString());
 
             for (String s : insert.keySet())
             {
                 if (s.startsWith("_"))
                 {
-                    fail("Comment remover failed to remover comments from " + insert);
+                    Assertions.fail("Comment remover failed to remover comments from " + insert);
                 }
                 else
                 {
-                    assertEquals("Comment remover edited non-comment data" + generatedJson.toString() + "  " + insert.toString(), generatedJson.get(s), insert.get(s));
+                    Assertions.assertEquals(generatedJson.get(s), insert.get(s), "Comment remover edited non-comment data" + generatedJson.toString() + "  " + insert.toString());
                 }
             }
         }
@@ -135,13 +135,13 @@ public class TestCommentCleaner extends TestCase
         commentRemover.receive(insert, null, queue);
 
         //Check that we added JSON to output
-        assertSame(queue.peek(), insert);
+        Assertions.assertSame(queue.peek(), insert);
 
         //Check that json is empty
-        assertEquals("Comment remover should have done nothing " + generatedJson.toString() + "  " + insert.toString(), 1, insert.size());
-        assertNotNull(insert.get("array"));
-        assertTrue(insert.get("array").isJsonArray());
-        assertEquals(7, insert.get("array").getAsJsonArray().size());
+        Assertions.assertEquals(1, insert.size(), "Comment remover should have done nothing " + generatedJson.toString() + "  " + insert.toString());
+        Assertions.assertNotNull(insert.get("array"));
+        Assertions.assertTrue(insert.get("array").isJsonArray());
+        Assertions.assertEquals(7, insert.get("array").getAsJsonArray().size());
     }
 
     @Test

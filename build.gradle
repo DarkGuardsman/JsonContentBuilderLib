@@ -7,7 +7,8 @@ repositories {
 dependencies {
     implementation 'com.google.guava:guava:11.0.2'
 	implementation 'com.google.code.gson:gson:2.8.5'
-    testImplementation 'junit:junit:4.12' 
+   	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.1.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.1.1'
 }
 
 sourceCompatibility = '1.8'

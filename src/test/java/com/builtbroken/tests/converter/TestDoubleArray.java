@@ -1,16 +1,15 @@
 package com.builtbroken.tests.converter;
 
 import com.builtbroken.builder.converter.strut.array.JsonConverterArrayDouble;
-import com.builtbroken.builder.converter.strut.array.JsonConverterArrayFloat;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import junit.framework.TestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Created by Dark(DarkGuardsman, Robert) on 2019-03-05.
  */
-public class TestDoubleArray extends TestCase
+public class TestDoubleArray
 {
 
     @Test
@@ -20,12 +19,12 @@ public class TestDoubleArray extends TestCase
         double[] array = new double[]{2.0, 5.0, 9.0, 1.0};
         JsonElement element = converter.toJson(array, null);
 
-        assertTrue(element instanceof JsonArray);
-        assertEquals(4, element.getAsJsonArray().size());
-        assertEquals(2.0, element.getAsJsonArray().get(0).getAsDouble());
-        assertEquals(5.0, element.getAsJsonArray().get(1).getAsDouble());
-        assertEquals(9.0, element.getAsJsonArray().get(2).getAsDouble());
-        assertEquals(1.0, element.getAsJsonArray().get(3).getAsDouble());
+        Assertions.assertTrue(element instanceof JsonArray);
+        Assertions.assertEquals(4, element.getAsJsonArray().size());
+        Assertions.assertEquals(2.0, element.getAsJsonArray().get(0).getAsDouble());
+        Assertions.assertEquals(5.0, element.getAsJsonArray().get(1).getAsDouble());
+        Assertions.assertEquals(9.0, element.getAsJsonArray().get(2).getAsDouble());
+        Assertions.assertEquals(1.0, element.getAsJsonArray().get(3).getAsDouble());
     }
 
     @Test
@@ -39,10 +38,10 @@ public class TestDoubleArray extends TestCase
         element.add(7.0);
 
         Object array = converter.fromJson(element, null);
-        assertTrue(array instanceof double[]);
-        assertEquals(3.0, ((double[])array)[0]);
-        assertEquals(5.0, ((double[])array)[1]);
-        assertEquals(6.0, ((double[])array)[2]);
-        assertEquals(7.0, ((double[])array)[3]);
+        Assertions.assertTrue(array instanceof double[]);
+        Assertions.assertEquals(3.0, ((double[])array)[0]);
+        Assertions.assertEquals(5.0, ((double[])array)[1]);
+        Assertions.assertEquals(6.0, ((double[])array)[2]);
+        Assertions.assertEquals(7.0, ((double[])array)[3]);
     }
 }

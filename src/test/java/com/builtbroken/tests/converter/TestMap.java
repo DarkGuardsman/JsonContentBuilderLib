@@ -8,8 +8,8 @@ import com.builtbroken.builder.mapper.JsonObjectWiring;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import junit.framework.TestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,7 +17,7 @@ import java.util.Map;
 /**
  * Created by Dark(DarkGuardsman, Robert) on 2019-03-25.
  */
-public class TestMap extends TestCase
+public class TestMap
 {
 
     @Test
@@ -39,8 +39,8 @@ public class TestMap extends TestCase
         JsonElement element = converter.toJson(map, new String[]{"string", "string"});
 
         //Test
-        assertTrue(element instanceof JsonArray);
-        assertEquals(4, element.getAsJsonArray().size());
+        Assertions.assertTrue(element instanceof JsonArray);
+        Assertions.assertEquals(4, element.getAsJsonArray().size());
         checkKey(element, 0, "a");
         checkKey(element, 1, "b");
         checkKey(element, 2, "c");
@@ -54,20 +54,20 @@ public class TestMap extends TestCase
 
     private void checkKey(JsonElement element, int index, String match)
     {
-        assertTrue("Should be a JSON object for index " + index + " in " + element,
-                element.getAsJsonArray().get(index).isJsonObject());
-        assertTrue("Should contain a field 'key' for object at index " + index + " in " + element,
-                element.getAsJsonArray().get(index).getAsJsonObject().has("key"));
-        assertEquals(match, element.getAsJsonArray().get(index).getAsJsonObject().get("key").getAsString());
+        Assertions.assertTrue( element.getAsJsonArray().get(index).isJsonObject(),
+                "Should be a JSON object for index " + index + " in " + element);
+        Assertions.assertTrue(element.getAsJsonArray().get(index).getAsJsonObject().has("key"),
+                "Should contain a field 'key' for object at index " + index + " in " + element);
+        Assertions.assertEquals(match, element.getAsJsonArray().get(index).getAsJsonObject().get("key").getAsString());
     }
 
     private void checkValue(JsonElement element, int index, String match)
     {
-        assertTrue("Should be a JSON object for index " + index + " in " + element,
-                element.getAsJsonArray().get(index).isJsonObject());
-        assertTrue("Should contain a field 'value' for object at index " + index + " in " + element,
-                element.getAsJsonArray().get(index).getAsJsonObject().has("value"));
-        assertEquals(match, element.getAsJsonArray().get(index).getAsJsonObject().get("value").getAsString());
+        Assertions.assertTrue(element.getAsJsonArray().get(index).isJsonObject(),
+                "Should be a JSON object for index " + index + " in " + element);
+        Assertions.assertTrue(element.getAsJsonArray().get(index).getAsJsonObject().has("value"),
+                "Should contain a field 'value' for object at index " + index + " in " + element);
+        Assertions.assertEquals(match, element.getAsJsonArray().get(index).getAsJsonObject().get("value").getAsString());
     }
 
     @Test
@@ -89,17 +89,17 @@ public class TestMap extends TestCase
         Map map = converter.fromJson(element, new String[]{"string", "string"});
 
         //Test
-        assertTrue(map instanceof Map);
-        assertEquals(4, map.size());
-        assertTrue(map.containsKey("a"));
-        assertTrue(map.containsKey("b"));
-        assertTrue(map.containsKey("c"));
-        assertTrue(map.containsKey("d"));
+        Assertions.assertTrue(map instanceof Map);
+        Assertions.assertEquals(4, map.size());
+        Assertions.assertTrue(map.containsKey("a"));
+        Assertions.assertTrue(map.containsKey("b"));
+        Assertions.assertTrue(map.containsKey("c"));
+        Assertions.assertTrue(map.containsKey("d"));
 
-        assertEquals("z", map.get("a"));
-        assertEquals("1", map.get("b"));
-        assertEquals("2", map.get("c"));
-        assertEquals("3", map.get("d"));
+        Assertions.assertEquals("z", map.get("a"));
+        Assertions.assertEquals("1", map.get("b"));
+        Assertions.assertEquals("2", map.get("c"));
+        Assertions.assertEquals("3", map.get("d"));
     }
 
     private JsonObject newMapEntry(String key, String value)

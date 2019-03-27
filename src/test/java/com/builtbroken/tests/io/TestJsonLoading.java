@@ -2,17 +2,16 @@ package com.builtbroken.tests.io;
 
 import com.builtbroken.builder.data.DataFileLoad;
 import com.builtbroken.builder.io.FileLoaderHandler;
-import junit.framework.TestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
-import java.net.URL;
 import java.util.List;
 
 /**
  * Created by Dark(DarkGuardsman, Robert) on 2/21/19.
  */
-public class TestJsonLoading extends TestCase
+public class TestJsonLoading
 {
 
     public static final String[] TEST_FOLDERS = new String[]{"", "/[test]test", "/{test}test", "/test test", "/test.test", "/test_test", "/test-test", "/.local"};
@@ -24,7 +23,7 @@ public class TestJsonLoading extends TestCase
         {
             File file = new File(System.getProperty("user.dir"), "src/test/resources/test" + folderPath + "/test.json");
 
-            assertTrue("No file with path: " + file, file.exists());
+            Assertions.assertTrue(file.exists(),"No file with path: " + file);
 
             List<DataFileLoad> elements = FileLoaderHandler.loadFile(file);
             validJsonTestFile(elements, file.toString());
@@ -33,17 +32,17 @@ public class TestJsonLoading extends TestCase
 
     public static void validJsonTestFile(List<DataFileLoad> elements, String file)
     {
-        assertNotNull("Should contain something for " + file, elements);
-        assertEquals("Should contain 1 element for " + file, 1, elements.size());
+        Assertions.assertNotNull(elements, "Should contain something for " + file);
+        Assertions.assertEquals(1, elements.size(), "Should contain 1 element for " + file);
 
-        assertNotNull(elements.get(0));
-        assertNotNull(elements.get(0).fileSource);
-        assertNotNull(elements.get(0).element);
+        Assertions.assertNotNull(elements.get(0));
+        Assertions.assertNotNull(elements.get(0).fileSource);
+        Assertions.assertNotNull(elements.get(0).element);
 
-        assertTrue(elements.get(0).element.isJsonObject());
-        assertEquals(1, elements.get(0).element.getAsJsonObject().entrySet().size());
-        assertTrue(elements.get(0).element.getAsJsonObject().has("tag"));
-        assertEquals("hello", elements.get(0).element.getAsJsonObject().getAsJsonPrimitive("tag").getAsString());
+        Assertions.assertTrue(elements.get(0).element.isJsonObject());
+        Assertions.assertEquals(1, elements.get(0).element.getAsJsonObject().entrySet().size());
+        Assertions.assertTrue(elements.get(0).element.getAsJsonObject().has("tag"));
+        Assertions.assertEquals("hello", elements.get(0).element.getAsJsonObject().getAsJsonPrimitive("tag").getAsString());
 
     }
 }

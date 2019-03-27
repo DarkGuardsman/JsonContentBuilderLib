@@ -1,16 +1,15 @@
 package com.builtbroken.tests.converter;
 
 import com.builtbroken.builder.converter.strut.array.JsonConverterArrayFloat;
-import com.builtbroken.builder.converter.strut.array.JsonConverterArrayShort;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import junit.framework.TestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Created by Dark(DarkGuardsman, Robert) on 2019-03-05.
  */
-public class TestFloatArray extends TestCase
+public class TestFloatArray
 {
 
     @Test
@@ -20,12 +19,12 @@ public class TestFloatArray extends TestCase
         float[] array = new float[]{2f, 5f, 9f, 1f};
         JsonElement element = converter.toJson(array, null);
 
-        assertTrue(element instanceof JsonArray);
-        assertEquals(4, element.getAsJsonArray().size());
-        assertEquals(2f, element.getAsJsonArray().get(0).getAsFloat());
-        assertEquals(5f, element.getAsJsonArray().get(1).getAsFloat());
-        assertEquals(9f, element.getAsJsonArray().get(2).getAsFloat());
-        assertEquals(1f, element.getAsJsonArray().get(3).getAsFloat());
+        Assertions.assertTrue(element instanceof JsonArray);
+        Assertions.assertEquals(4, element.getAsJsonArray().size());
+        Assertions.assertEquals(2f, element.getAsJsonArray().get(0).getAsFloat());
+        Assertions.assertEquals(5f, element.getAsJsonArray().get(1).getAsFloat());
+        Assertions.assertEquals(9f, element.getAsJsonArray().get(2).getAsFloat());
+        Assertions.assertEquals(1f, element.getAsJsonArray().get(3).getAsFloat());
     }
 
     @Test
@@ -39,10 +38,10 @@ public class TestFloatArray extends TestCase
         element.add(7L);
 
         Object array = converter.fromJson(element, null);
-        assertTrue(array instanceof float[]);
-        assertEquals(3f, ((float[])array)[0]);
-        assertEquals(5f, ((float[])array)[1]);
-        assertEquals(6f, ((float[])array)[2]);
-        assertEquals(7f, ((float[])array)[3]);
+        Assertions.assertTrue(array instanceof float[]);
+        Assertions.assertEquals(3f, ((float[])array)[0]);
+        Assertions.assertEquals(5f, ((float[])array)[1]);
+        Assertions.assertEquals(6f, ((float[])array)[2]);
+        Assertions.assertEquals(7f, ((float[])array)[3]);
     }
 }

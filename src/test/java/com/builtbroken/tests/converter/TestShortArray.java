@@ -5,13 +5,13 @@ import com.builtbroken.builder.converter.strut.array.JsonConverterArrayShort;
 import com.builtbroken.builder.converter.strut.array.JsonConverterArrayString;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import junit.framework.TestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Created by Dark(DarkGuardsman, Robert) on 2019-03-05.
  */
-public class TestShortArray extends TestCase
+public class TestShortArray
 {
 
     @Test
@@ -21,12 +21,12 @@ public class TestShortArray extends TestCase
         short[] array = new short[]{2, 5, 9, 1};
         JsonElement element = converter.toJson(array, null);
 
-        assertTrue(element instanceof JsonArray);
-        assertEquals(4, element.getAsJsonArray().size());
-        assertEquals((short)2, element.getAsJsonArray().get(0).getAsShort());
-        assertEquals((short)5, element.getAsJsonArray().get(1).getAsShort());
-        assertEquals((short)9, element.getAsJsonArray().get(2).getAsShort());
-        assertEquals((short)1, element.getAsJsonArray().get(3).getAsShort());
+        Assertions.assertTrue(element instanceof JsonArray);
+        Assertions.assertEquals(4, element.getAsJsonArray().size());
+        Assertions.assertEquals((short)2, element.getAsJsonArray().get(0).getAsShort());
+        Assertions.assertEquals((short)5, element.getAsJsonArray().get(1).getAsShort());
+        Assertions.assertEquals((short)9, element.getAsJsonArray().get(2).getAsShort());
+        Assertions.assertEquals((short)1, element.getAsJsonArray().get(3).getAsShort());
     }
 
     @Test
@@ -40,10 +40,10 @@ public class TestShortArray extends TestCase
         element.add(7L);
 
         Object array = converter.fromJson(element, null);
-        assertTrue(array instanceof short[]);
-        assertEquals((short)3, ((short[])array)[0]);
-        assertEquals((short)5, ((short[])array)[1]);
-        assertEquals((short)6, ((short[])array)[2]);
-        assertEquals((short)7, ((short[])array)[3]);
+        Assertions.assertTrue(array instanceof short[]);
+        Assertions.assertEquals((short)3, ((short[])array)[0]);
+        Assertions.assertEquals((short)5, ((short[])array)[1]);
+        Assertions.assertEquals((short)6, ((short[])array)[2]);
+        Assertions.assertEquals((short)7, ((short[])array)[3]);
     }
 }

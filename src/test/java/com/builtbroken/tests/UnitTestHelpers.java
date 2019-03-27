@@ -4,7 +4,7 @@ import com.builtbroken.builder.data.DataFileLoad;
 import com.builtbroken.builder.io.FileLoaderHandler;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Assertions;
 
 import java.io.File;
 import java.util.List;
@@ -25,13 +25,13 @@ public class UnitTestHelpers
     public static JsonElement getJsonFromTestFolder(String path)
     {
         File file = new File(System.getProperty("user.dir"), "src/test/resources/test/" + path);
-        TestCase.assertTrue("Failed to locate test file: " + file, file.exists() && file.isFile());
+        Assertions.assertTrue(file.exists() && file.isFile(), "Failed to locate test file: " + file);
 
         List<DataFileLoad> files = FileLoaderHandler.loadFile(file);
-        TestCase.assertNotNull("Failed to locate test file: " + file, files);
-        TestCase.assertEquals("Failed to get only 1 test file: " + file, 1, files.size());
-        TestCase.assertNotNull("Failed to load test file: " + file, files.get(0));
-        TestCase.assertNotNull("Failed to locate test json: " + file, files.get(0).element);
+        Assertions.assertNotNull(files, "Failed to locate test file: " + file);
+        Assertions.assertEquals(1, files.size(), "Failed to get only 1 test file: " + file);
+        Assertions.assertNotNull(files.get(0), "Failed to load test file: " + file);
+        Assertions.assertNotNull(files.get(0).element, "Failed to locate test json: " + file);
 
         return files.get(0).element;
     }

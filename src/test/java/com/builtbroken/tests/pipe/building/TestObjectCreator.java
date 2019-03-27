@@ -6,17 +6,15 @@ import com.builtbroken.builder.data.GeneratedObject;
 import com.builtbroken.builder.pipe.nodes.building.PipeNodeObjectCreator;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.sun.xml.internal.bind.annotation.OverrideAnnotationOf;
-import junit.framework.TestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.LinkedList;
-import java.util.Queue;
 
 /**
  * Created by Dark(DarkGuardsman, Robert) on 2019-03-05.
  */
-public class TestObjectCreator extends TestCase
+public class TestObjectCreator
 {
     @Test
     public void testBuild()
@@ -43,12 +41,12 @@ public class TestObjectCreator extends TestCase
         LinkedList<Object> out = new LinkedList();
         pipeNodeObjectCreator.receive(object, object, out);
 
-        assertEquals(1, out.size());
+        Assertions.assertEquals(1, out.size());
 
-        assertTrue(out.get(0) instanceof GeneratedObject);
-        assertEquals(((GeneratedObject)out.get(0)).type, "mock");
-        assertEquals(((GeneratedObject)out.get(0)).jsonUsed, object);
-        assertTrue(((GeneratedObject)out.get(0)).objectCreated instanceof MockObject);
+        Assertions.assertTrue(out.get(0) instanceof GeneratedObject);
+        Assertions.assertEquals(((GeneratedObject)out.get(0)).type, "mock");
+        Assertions.assertEquals(((GeneratedObject)out.get(0)).jsonUsed, object);
+        Assertions.assertTrue(((GeneratedObject)out.get(0)).objectCreated instanceof MockObject);
     }
 
     private static class MockObject

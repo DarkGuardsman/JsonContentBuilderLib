@@ -4,13 +4,13 @@ import com.builtbroken.builder.converter.strut.array.JsonConverterArrayByte;
 import com.builtbroken.builder.converter.strut.array.JsonConverterArrayString;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import junit.framework.TestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Created by Dark(DarkGuardsman, Robert) on 2019-03-05.
  */
-public class TestStringArray extends TestCase
+public class TestStringArray
 {
 
     @Test
@@ -20,12 +20,12 @@ public class TestStringArray extends TestCase
         String[] array = new String[]{"a", "b", "e", "1"};
         JsonElement element = converter.toJson(array, null);
 
-        assertTrue(element instanceof JsonArray);
-        assertEquals(4, element.getAsJsonArray().size());
-        assertEquals("a", element.getAsJsonArray().get(0).getAsString());
-        assertEquals("b", element.getAsJsonArray().get(1).getAsString());
-        assertEquals("e", element.getAsJsonArray().get(2).getAsString());
-        assertEquals("1", element.getAsJsonArray().get(3).getAsString());
+        Assertions.assertTrue(element instanceof JsonArray);
+        Assertions.assertEquals(4, element.getAsJsonArray().size());
+        Assertions.assertEquals("a", element.getAsJsonArray().get(0).getAsString());
+        Assertions.assertEquals("b", element.getAsJsonArray().get(1).getAsString());
+        Assertions.assertEquals("e", element.getAsJsonArray().get(2).getAsString());
+        Assertions.assertEquals("1", element.getAsJsonArray().get(3).getAsString());
     }
 
     @Test
@@ -39,10 +39,10 @@ public class TestStringArray extends TestCase
         element.add("1");
 
         Object array = converter.fromJson(element, null);
-        assertTrue(array instanceof String[]);
-        assertEquals("g", ((String[])array)[0]);
-        assertEquals("a", ((String[])array)[1]);
-        assertEquals("f", ((String[])array)[2]);
-        assertEquals("1", ((String[])array)[3]);
+        Assertions.assertTrue(array instanceof String[]);
+        Assertions.assertEquals("g", ((String[])array)[0]);
+        Assertions.assertEquals("a", ((String[])array)[1]);
+        Assertions.assertEquals("f", ((String[])array)[2]);
+        Assertions.assertEquals("1", ((String[])array)[3]);
     }
 }

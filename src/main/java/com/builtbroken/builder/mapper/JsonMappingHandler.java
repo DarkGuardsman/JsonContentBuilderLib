@@ -34,6 +34,26 @@ public class JsonMappingHandler //TODO consider making per builder instance
             }
         } catch (Exception e)
         {
+            if (mapper == null)
+            {
+                throw new RuntimeException("JsonMappingHandler: Failed to map due to no mapper being found"
+                        + "\n Key: " + objectType
+                        + "\n Object: " + objectToMap
+                        + "\n Json: " + jsonToUse
+                        , e);
+            }
+            else if (loader == null)
+            {
+                throw new RuntimeException("JsonMappingHandler: Failed to map due to content loader being null", e);
+            }
+            else if (!links && loader.conversionHandler == null)
+            {
+                throw new RuntimeException("JsonMappingHandler: Failed to map due to content handler being null", e);
+            }
+            else if (links && loader.jsonObjectHandlerRegistry == null)
+            {
+                throw new RuntimeException("JsonMappingHandler: Failed to map due to object registry being null", e);
+            }
             throw new RuntimeException("JsonMappingHandler: Failed to map " + (links ? "links" : "data") + " to object. "
                     + "\n Key: " + objectType
                     + "\n Class: " + mapper.clazz

@@ -6,13 +6,13 @@ import com.builtbroken.builder.data.IJsonGeneratedObject;
 import com.builtbroken.builder.mapper.JsonMappingHandler;
 import com.builtbroken.builder.mapper.JsonObjectWiring;
 import com.google.gson.JsonObject;
-import junit.framework.TestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Created by Dark(DarkGuardsman, Robert) on 2019-03-11.
  */
-public class TestMethodWiring extends TestCase
+public class TestMethodWiring
 {
 
     protected static final String OBJECT_ID = "trees";
@@ -42,7 +42,7 @@ public class TestMethodWiring extends TestCase
         JsonMappingHandler.map(MAP_ID, object, json, ContentBuilderLib.getMainLoader(), true);
 
         //Test
-        assertEquals(clazzToWire, object.testField);
+        Assertions.assertEquals(clazzToWire, object.testField);
 
         //Cleanup
         ContentBuilderLib.destroy();

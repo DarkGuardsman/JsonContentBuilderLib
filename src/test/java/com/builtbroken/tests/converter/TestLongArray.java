@@ -1,16 +1,15 @@
 package com.builtbroken.tests.converter;
 
-import com.builtbroken.builder.converter.strut.array.JsonConverterArrayInt;
 import com.builtbroken.builder.converter.strut.array.JsonConverterArrayLong;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import junit.framework.TestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Created by Dark(DarkGuardsman, Robert) on 2019-03-05.
  */
-public class TestLongArray extends TestCase
+public class TestLongArray
 {
 
     @Test
@@ -20,12 +19,12 @@ public class TestLongArray extends TestCase
         long[] array = new long[]{2L, 5L, 9L, 1L};
         JsonElement element = converter.toJson(array, null);
 
-        assertTrue(element instanceof JsonArray);
-        assertEquals(4, element.getAsJsonArray().size());
-        assertEquals(2L, element.getAsJsonArray().get(0).getAsLong());
-        assertEquals(5L, element.getAsJsonArray().get(1).getAsLong());
-        assertEquals(9L, element.getAsJsonArray().get(2).getAsLong());
-        assertEquals(1L, element.getAsJsonArray().get(3).getAsLong());
+        Assertions.assertTrue(element instanceof JsonArray);
+        Assertions.assertEquals(4, element.getAsJsonArray().size());
+        Assertions.assertEquals(2L, element.getAsJsonArray().get(0).getAsLong());
+        Assertions.assertEquals(5L, element.getAsJsonArray().get(1).getAsLong());
+        Assertions.assertEquals(9L, element.getAsJsonArray().get(2).getAsLong());
+        Assertions.assertEquals(1L, element.getAsJsonArray().get(3).getAsLong());
     }
 
     @Test
@@ -39,10 +38,10 @@ public class TestLongArray extends TestCase
         element.add(7L);
 
         Object array = converter.fromJson(element, null);
-        assertTrue(array instanceof long[]);
-        assertEquals(3L, ((long[])array)[0]);
-        assertEquals(5L, ((long[])array)[1]);
-        assertEquals(6L, ((long[])array)[2]);
-        assertEquals(7L, ((long[])array)[3]);
+        Assertions.assertTrue(array instanceof long[]);
+        Assertions.assertEquals(3L, ((long[])array)[0]);
+        Assertions.assertEquals(5L, ((long[])array)[1]);
+        Assertions.assertEquals(6L, ((long[])array)[2]);
+        Assertions.assertEquals(7L, ((long[])array)[3]);
     }
 }

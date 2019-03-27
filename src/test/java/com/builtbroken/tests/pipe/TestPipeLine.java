@@ -4,15 +4,15 @@ import com.builtbroken.builder.ContentBuilderRefs;
 import com.builtbroken.builder.pipe.PipeLine;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import junit.framework.TestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 /**
  * Created by Dark(DarkGuardsman, Robert) on 2/26/19.
  */
-public class TestPipeLine extends TestCase
+public class TestPipeLine
 {
     @Test
     public void testPipeFlowJson()
@@ -42,8 +42,8 @@ public class TestPipeLine extends TestCase
 
         //Only run json pipe
         List<Object> out = pipeLine.handle(array, pipe -> pipe.pipeName != ContentBuilderRefs.PIPE_JSON);
-        assertNotNull(out);
-        assertEquals(3, out.size());
+        Assertions.assertNotNull(out);
+        Assertions.assertEquals(3, out.size());
         testPipeFlowJsonType(out.get(0), "tree");
         testPipeFlowJsonType(out.get(1), "log");
         testPipeFlowJsonType(out.get(2), "stick");
@@ -51,9 +51,9 @@ public class TestPipeLine extends TestCase
 
     private void testPipeFlowJsonType(Object object, String type)
     {
-        assertTrue(object instanceof JsonObject);
-        assertTrue(((JsonObject)object).has("type"));
-        assertEquals(((JsonObject)object).getAsJsonPrimitive("type").getAsString(), type);
-        assertFalse(((JsonObject)object).has("_Comment"));
+        Assertions.assertTrue(object instanceof JsonObject);
+        Assertions.assertTrue(((JsonObject)object).has("type"));
+        Assertions.assertEquals(((JsonObject)object).getAsJsonPrimitive("type").getAsString(), type);
+        Assertions.assertFalse(((JsonObject)object).has("_Comment"));
     }
 }
