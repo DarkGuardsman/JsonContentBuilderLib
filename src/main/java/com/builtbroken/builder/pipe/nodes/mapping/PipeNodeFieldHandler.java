@@ -33,7 +33,7 @@ public class PipeNodeFieldHandler extends PipeNode
                     generatedObjectData.jsonUsed, false);
 
             //Pass to next
-            objectsOut.add(currentObject);
+            objectsOut.add(generatedObjectData);
         }
         else
         {

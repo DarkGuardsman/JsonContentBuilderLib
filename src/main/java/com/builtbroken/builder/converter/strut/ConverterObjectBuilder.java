@@ -31,12 +31,13 @@ public class ConverterObjectBuilder<C extends IJsonGeneratedObject> extends Json
     @Override
     public boolean canSupport(Object object)
     {
-        return object.getClass() == clazz;
+        return false; //TODO find a way to we can convert to JSON easily
+        //return object.getClass() == clazz;
     }
 
     @Override
     public boolean canSupport(JsonElement json)
     {
-        return false; //TODO think of a way to validate?
+        return true; //TODO think of a way to validate?
     }
 }

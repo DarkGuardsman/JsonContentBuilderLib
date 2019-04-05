@@ -34,7 +34,7 @@ public class PipeNodeAutoWire extends PipeNode
 
 
             //Pass to next
-            objectsOut.add(currentObject);
+            objectsOut.add(generatedObjectData);
         }
         else
         {
