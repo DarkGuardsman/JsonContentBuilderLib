@@ -31,6 +31,9 @@ public class PipeNodeFieldHandler extends PipeNode
             //Map
             getContentLoader().jsonMappingHandler.map(generatedObjectData.type, generatedObjectData.objectCreated,
                     generatedObjectData.jsonUsed, false);
+
+            //Pass to next
+            objectsOut.add(currentObject);
         }
         else
         {

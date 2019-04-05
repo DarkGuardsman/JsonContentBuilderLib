@@ -3,6 +3,7 @@ package com.builtbroken.builder.pipe;
 import com.builtbroken.builder.ContentBuilderRefs;
 import com.builtbroken.builder.converter.ConversionHandler;
 import com.builtbroken.builder.loader.ContentLoader;
+import com.builtbroken.builder.pipe.nodes.building.PipeNodeObjectReg;
 import com.builtbroken.builder.pipe.nodes.mapping.PipeNodeAutoWire;
 import com.builtbroken.builder.pipe.nodes.mapping.PipeNodeFieldHandler;
 import com.builtbroken.builder.pipe.nodes.building.PipeNodeObjectCreator;
@@ -16,45 +17,79 @@ import java.util.*;
 import java.util.function.Function;
 
 /**
- * Instance of a series of pipes that are connected together.
+ * Handles the process of taking in JSON and converting them into completed objects.
  * <p>
- * Each pipe can have sub nodes and loop back on itself. An example
+ * Called a pipe due to the simi-linear nature of the flow of progression. It starts
+ * at the beginning as a raw JSON object tree. Then steps through the first pipe
+ * which cleans the JSON and formats it for processing. The next pipe then turns
+ * the JSON into an object or series of objects. The last pipe maps all data to
+ * the object, registers it to handlers, and wires the objects together.
+ * <p>
+ * In each of these pipes can exist a series of steps known as nodes. Each node
+ * represents a single step that can be completed on its own. Working together
+ * these nodes complete the objective of each pipe. With all pipes working together
+ * to meet the goal of the pipe line.
+ * <p>
+ * PipeLine -> Steps to fully complete the json
+ * Pipe -> Series of steps to finish 1 section
+ * Node -> Single step
+ * <p>
+ * As a note, Each pipe can have sub nodes and loop back on itself. An example
  * of this would be something going through the cleaner phase. Then
  * when it hits the builder phase it splits out into 10 sub JSONs. Each
- * of these sub JSONs would then loop back on the pipe to check if it
+ * of these sub JSONs may loop back on the pipe to check if it
  * needs to split again before moving through to the rest of the builder
  * phase.
+ * <p>
+ * The current version is not setup this way but it is possible. Hence the reason
+ * for having pipes that are separated from each other. This allows data to flow
+ * back through the pipe before moving on again. It also allows new pipes to be
+ * integrated into the process. Including testing tools, debug tools, or new processes
+ * to integrate with existing complex systems.
  * <p>
  * Created by Dark(DarkGuardsman, Robert) on 2/27/19.
  */
 public class PipeLine
 {
 
+    /**
+     * Pipes in the line, ordered
+     */
     public final LinkedList<Pipe> pipes = new LinkedList();
+    /**
+     * ID to pipe, used to lookup pipes for adding nodes
+     */
     public final HashMap<String, Pipe> id_to_pipe = new HashMap();
 
     public ContentLoader contentLoader;
 
+    /**
+     * Creates a default pipe line. It is recommended to use
+     * this unless something custom is needed outside the scope of the system.
+     *
+     * @return default line
+     */
     public static PipeLine newDefault()
     {
         PipeLine handler = new PipeLine();
 
         //Setup cleaner
         Pipe jsonPrepPipe = new Pipe(handler, ContentBuilderRefs.PIPE_JSON);
-        jsonPrepPipe.addNode(new PipeNodeCommentRemover());
-        jsonPrepPipe.addNode(new PipeNodeJsonSplitter());
+        jsonPrepPipe.addNode(new PipeNodeCommentRemover()); //cleanup
+        jsonPrepPipe.addNode(new PipeNodeJsonSplitter()); //breakdown
         handler.pipes.add(jsonPrepPipe);
 
         //Setup builder
         Pipe builderPipe = new Pipe(handler, ContentBuilderRefs.PIPE_BUILDER);
-        builderPipe.addNode(new PipeNodeObjectCreator(builderPipe));
+        builderPipe.addNode(new PipeNodeObjectCreator(builderPipe)); //Create json
+        builderPipe.addNode(new PipeNodeObjectReg(builderPipe)); //register to handlers
         handler.pipes.add(builderPipe);
 
         //Setup mapper
         Pipe mapperPipe = new Pipe(handler, ContentBuilderRefs.PIPE_MAPPER);
-        builderPipe.addNode(new PipeNodeFieldHandler(mapperPipe));
-        builderPipe.addNode(new PipeNodeAutoWire(mapperPipe));
-        builderPipe.addNode(new PipeNodeMappingValidator(mapperPipe));
+        mapperPipe.addNode(new PipeNodeFieldHandler(mapperPipe)); //map fields
+        mapperPipe.addNode(new PipeNodeAutoWire(mapperPipe)); //wire objects
+        mapperPipe.addNode(new PipeNodeMappingValidator(mapperPipe)); //validate
         handler.pipes.add(mapperPipe);
 
         return handler;

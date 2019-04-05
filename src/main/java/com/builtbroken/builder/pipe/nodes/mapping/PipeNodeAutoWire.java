@@ -31,6 +31,10 @@ public class PipeNodeAutoWire extends PipeNode
             //Map
             getContentLoader().jsonMappingHandler.map(generatedObjectData.type, generatedObjectData.objectCreated,
                     generatedObjectData.jsonUsed, true);
+
+
+            //Pass to next
+            objectsOut.add(currentObject);
         }
         else
         {
