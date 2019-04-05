@@ -2,15 +2,20 @@ package com.builtbroken.builder.loader;
 
 import com.builtbroken.builder.ContentBuilderLib;
 import com.builtbroken.builder.converter.ConversionHandler;
+import com.builtbroken.builder.converter.strut.ConverterObjectBuilder;
 import com.builtbroken.builder.data.DataFileLoad;
+import com.builtbroken.builder.data.IJsonGeneratedObject;
 import com.builtbroken.builder.handler.JsonObjectHandlerRegistry;
 import com.builtbroken.builder.mapper.JsonMappingHandler;
 import com.builtbroken.builder.pipe.PipeLine;
+import com.google.gson.JsonElement;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * Instance of a content loader.
@@ -91,6 +96,31 @@ public class ContentLoader
         this.pipeLine.contentLoader = this;
         this.conversionHandler = new ConversionHandler(ContentBuilderLib.getMainConverter(), name);
         this.jsonMappingHandler = new JsonMappingHandler(this);
+    }
+
+    public <C extends IJsonGeneratedObject> void registerObject(String type, Class<C> clazz, Function<JsonElement, C> factory)
+    {
+        if (clazz == null)
+        {
+            throw new IllegalArgumentException("ContentLoader: Can not provide an object type[" + type + "] for loading without a class");
+        }
+        else if (factory == null)
+        {
+            throw new IllegalArgumentException("ContentLoader: Can not provide an object type[" + type + "] for loading without a factory to create objects");
+        }
+        else if (type == null || type.trim().isEmpty())
+        {
+            throw new IllegalArgumentException("ContentLoader: Can not provide an object type[" + type + "] with an empty or null type name");
+        }
+        else if (type.split(":").length == 0)
+        {
+            throw new IllegalArgumentException("ContentLoader: Can not provide an object type[" + type + "] with an prefixing it with the package name. " +
+                    "Ex: java:int, armory:gun. This helps keep the keys unique between packages. If you wish to bypass this register a converter directly.");
+        }
+
+        //Register
+        conversionHandler.addConverter(new ConverterObjectBuilder<C>(type, clazz, factory));
+        jsonMappingHandler.register(clazz, type);
     }
 
     /**
