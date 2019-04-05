@@ -29,8 +29,8 @@ public class PipeNodeFieldHandler extends PipeNode
             final GeneratedObject generatedObjectData = (GeneratedObject) currentObject;
 
             //Map
-            JsonMappingHandler.map(generatedObjectData.type, generatedObjectData.objectCreated,
-                    generatedObjectData.jsonUsed, getContentLoader(), false);
+            getContentLoader().jsonMappingHandler.map(generatedObjectData.type, generatedObjectData.objectCreated,
+                    generatedObjectData.jsonUsed, false);
         }
         else
         {

@@ -29,8 +29,8 @@ public class PipeNodeAutoWire extends PipeNode
             final GeneratedObject generatedObjectData = (GeneratedObject) currentObject;
 
             //Map
-            JsonMappingHandler.map(generatedObjectData.type, generatedObjectData.objectCreated,
-                    generatedObjectData.jsonUsed, getContentLoader(), true);
+            getContentLoader().jsonMappingHandler.map(generatedObjectData.type, generatedObjectData.objectCreated,
+                    generatedObjectData.jsonUsed, true);
         }
         else
         {

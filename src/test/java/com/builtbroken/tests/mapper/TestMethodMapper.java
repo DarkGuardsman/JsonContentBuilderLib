@@ -5,7 +5,9 @@ import com.builtbroken.builder.mapper.JsonMapping;
 import com.builtbroken.builder.mapper.JsonMappingHandler;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -33,13 +35,9 @@ public class TestMethodMapper
         array.add("klj");
         json.add("test_array", array);
 
-        //Trigger setup
-        JsonMappingHandler.register(ClassForMappingTest.class, "testClass");
-        ContentBuilderLib.setup();
-
         //map
         ClassForMappingTest object = new ClassForMappingTest();
-        JsonMappingHandler.map("testClass", object, json, ContentBuilderLib.getMainLoader(), false);
+        ContentBuilderLib.getMainLoader().jsonMappingHandler.map("testClass", object, json, false);
 
         Assertions.assertEquals(object.testField, "trees");
         Assertions.assertEquals(object.testByteField, (byte) 3);
@@ -54,7 +52,19 @@ public class TestMethodMapper
         Assertions.assertEquals("1", object.testArrayField[0]);
         Assertions.assertEquals("hj", object.testArrayField[1]);
         Assertions.assertEquals("klj", object.testArrayField[2]);
+    }
 
+    @BeforeAll
+    public static void setup()
+    {
+        //Setup
+        ContentBuilderLib.setup();
+        ContentBuilderLib.getMainLoader().jsonMappingHandler.register(ClassForMappingTest.class, "testClass");
+    }
+
+    @AfterAll
+    public static void cleanup()
+    {
         //Cleanup
         ContentBuilderLib.destroy();
     }

@@ -28,7 +28,7 @@ public class PipeNodeMappingValidator extends PipeNode
             final GeneratedObject generatedObjectData = (GeneratedObject) currentObject;
 
             //Check validation of mappings
-            JsonMappingHandler.validate(generatedObjectData.type, generatedObjectData.objectCreated);
+            getContentLoader().jsonMappingHandler.validate(generatedObjectData.type, generatedObjectData.objectCreated);
         }
         else
         {

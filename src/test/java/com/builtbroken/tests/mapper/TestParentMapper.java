@@ -46,7 +46,7 @@ public class TestParentMapper
     public void testLayer1()
     {
         Layer1 object = new Layer1();
-        JsonMappingHandler.map(LAYER_1, object, testObject, ContentBuilderLib.getMainLoader(), false);
+        ContentBuilderLib.getMainLoader().jsonMappingHandler.map(LAYER_1, object, testObject, false);
         Assertions.assertEquals(JSON_ID_VAL, object.id);
         Assertions.assertEquals(JSON_PROP_A_VAL, object.propA);
     }
@@ -55,7 +55,7 @@ public class TestParentMapper
     public void testLayer2()
     {
         Layer2 object = new Layer2();
-        JsonMappingHandler.map(LAYER_2, object, testObject, ContentBuilderLib.getMainLoader(), false);
+        ContentBuilderLib.getMainLoader().jsonMappingHandler.map(LAYER_2, object, testObject, false);
         Assertions.assertEquals(JSON_ID_VAL, object.id);
         Assertions.assertEquals(JSON_PROP_A_VAL, object.propA);
 
@@ -67,7 +67,7 @@ public class TestParentMapper
     public void testLayer2A()
     {
         Layer2A object = new Layer2A();
-        JsonMappingHandler.map(LAYER_2, object, testObject, ContentBuilderLib.getMainLoader(), false);
+        ContentBuilderLib.getMainLoader().jsonMappingHandler.map(LAYER_2, object, testObject, false);
         Assertions.assertEquals(JSON_ID_VAL, object.id);
         Assertions.assertEquals(JSON_PROP_A_VAL, object.propA);
 
@@ -78,7 +78,7 @@ public class TestParentMapper
     public void testLayer3()
     {
         Layer3 object = new Layer3();
-        JsonMappingHandler.map(LAYER_2, object, testObject, ContentBuilderLib.getMainLoader(), false);
+        ContentBuilderLib.getMainLoader().jsonMappingHandler.map(LAYER_2, object, testObject, false);
         Assertions.assertEquals(JSON_ID_VAL, object.id);
         Assertions.assertEquals(JSON_PROP_A_VAL, object.propA);
 
@@ -99,10 +99,10 @@ public class TestParentMapper
     public static void setup()
     {
         ContentBuilderLib.setup();
-        JsonMappingHandler.register(Layer1.class, LAYER_1);
-        JsonMappingHandler.register(Layer2.class, LAYER_2);
-        JsonMappingHandler.register(Layer2A.class, LAYER_2A);
-        JsonMappingHandler.register(Layer3.class, LAYER_3);
+        ContentBuilderLib.getMainLoader().jsonMappingHandler.register(Layer1.class, LAYER_1);
+        ContentBuilderLib.getMainLoader().jsonMappingHandler.register(Layer2.class, LAYER_2);
+        ContentBuilderLib.getMainLoader().jsonMappingHandler.register(Layer2A.class, LAYER_2A);
+        ContentBuilderLib.getMainLoader().jsonMappingHandler.register(Layer3.class, LAYER_3);
 
         object = new JsonObject();
         object.addProperty(JSON_PROP_A, JSON_PROP_A_VAL);

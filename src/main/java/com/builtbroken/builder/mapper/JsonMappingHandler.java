@@ -1,7 +1,6 @@
 package com.builtbroken.builder.mapper;
 
 import com.builtbroken.builder.loader.ContentLoader;
-import com.builtbroken.builder.mapper.mappers.IJsonMapper;
 import com.builtbroken.builder.mapper.mappers.JsonClassMapper;
 import com.google.gson.JsonObject;
 
@@ -11,15 +10,30 @@ import java.util.HashMap;
  * Handles mapping JSON data to fields/methods
  * Created by Dark(DarkGuardsman, Robert) on 2019-03-11.
  */
-public class JsonMappingHandler //TODO consider making per builder instance
+public class JsonMappingHandler
 {
 
     //Class to mapper, not all mappers will have a matching key
-    private static final HashMap<Class, JsonClassMapper> clazzMappers = new HashMap();
+    private final HashMap<Class, JsonClassMapper> clazzMappers = new HashMap();
     //Key to class, a single class can have several keys
-    private static final HashMap<String, Class> keyToClass = new HashMap();
+    private final HashMap<String, Class> keyToClass = new HashMap();
 
-    public static void map(String objectType, Object objectToMap, JsonObject jsonToUse, ContentLoader loader, boolean links)
+    public final ContentLoader loader;
+
+    public JsonMappingHandler(ContentLoader loader)
+    {
+        this.loader = loader;
+    }
+
+    /**
+     * Called to map an object with its data from JSON
+     *
+     * @param objectType  - type, used to match object to its mapper
+     * @param objectToMap - object instance to map
+     * @param jsonToUse   - json to pull data from
+     * @param links       - true to link foreign objects, false to map internal objects
+     */
+    public void map(String objectType, Object objectToMap, JsonObject jsonToUse, boolean links)
     {
         final JsonClassMapper mapper = getMapper(objectType);
         try
@@ -63,12 +77,24 @@ public class JsonMappingHandler //TODO consider making per builder instance
         }
     }
 
-    public static void validate(String objectType, Object objectToMap)
+    /**
+     * Called to validate that an object has been mapped fully
+     *
+     * @param objectType  - type, used to match to mapper
+     * @param objectToMap - object to check
+     */
+    public void validate(String objectType, Object objectToMap)
     {
         getMapper(objectType).validate(objectToMap);
     }
 
-    private static JsonClassMapper getMapper(String objectType)
+    /**
+     * Gets a mapper for the type
+     *
+     * @param objectType - key
+     * @return mapper if found, or null
+     */
+    private JsonClassMapper getMapper(String objectType)
     {
         objectType = objectType.toLowerCase();
         if (keyToClass.containsKey(objectType))
@@ -104,10 +130,10 @@ public class JsonMappingHandler //TODO consider making per builder instance
     /**
      * Called to register a class for mapping
      *
-     * @param clazz
-     * @param keys
+     * @param clazz - class to map
+     * @param keys  - list of keys to use for this class
      */
-    public static void register(Class clazz, String... keys)
+    public void register(Class clazz, String... keys)
     {
         //Store keys
         for (String string : keys)
@@ -117,7 +143,12 @@ public class JsonMappingHandler //TODO consider making per builder instance
         mapClass(clazz);
     }
 
-    public static void mapClass(Class clazz)
+    /**
+     * Called to map a class, looks for parent classes to ensure we can map up the levels
+     *
+     * @param clazz - class to map
+     */
+    public void mapClass(Class clazz)
     {
         //Map classes, do separate from keys as we might have a parent class registered out of order
         if (!clazzMappers.containsKey(clazz))
