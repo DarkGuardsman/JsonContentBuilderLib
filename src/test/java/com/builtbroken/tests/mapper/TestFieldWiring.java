@@ -45,7 +45,7 @@ public class TestFieldWiring
     public static void setup()
     {
         //Setup
-        ContentBuilderLib.setup();
+        ContentBuilderLib.getMainLoader().load();
         ContentBuilderLib.getMainLoader().jsonMappingHandler.register(ClassForLinkTest.class, MAP_ID);
         ContentBuilderLib.getMainLoader().jsonMappingHandler.register(ClassToWire.class, TYPE_ID);
         ContentBuilderLib.getMainLoader().jsonObjectHandlerRegistry.createOrGetHandler(TYPE_ID);

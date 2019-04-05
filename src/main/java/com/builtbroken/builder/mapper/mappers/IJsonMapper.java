@@ -29,4 +29,9 @@ public interface IJsonMapper<O extends Object>
     boolean isValid(O object);
 
     String[] getKeys();
+
+    /**
+     * Called to destroy the map and release references
+     */
+    void destroy();
 }

@@ -175,4 +175,11 @@ public class JsonMappingHandler
             }
         }
     }
+
+    public void destroy()
+    {
+        clazzMappers.values().forEach(mapper -> mapper.destroy());
+        clazzMappers.clear();
+        keyToClass.clear();
+    }
 }

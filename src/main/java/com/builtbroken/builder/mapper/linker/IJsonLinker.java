@@ -41,4 +41,9 @@ public interface IJsonLinker<O extends Object>
      * @return
      */
     String[] getKeys();
+
+    /**
+     * Called to destroy the linker and release references
+     */
+    void destroy();
 }

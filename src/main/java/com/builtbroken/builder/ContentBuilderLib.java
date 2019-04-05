@@ -20,55 +20,33 @@ public class ContentBuilderLib
     private static ConversionHandler MAIN_CONVERTER;
     private static ContentLoader MAIN_LOADER;
 
-    private static boolean hasLoaded = false;
-    private static boolean hasSetup = false;
-
     /**
      * Call to setup all the defaults for the main loader
      */
-    public static void setup()
+    public static void setupDefault(ContentLoader loader)
     {
-        if (!hasSetup)
-        {
-            //Primitives
-            getMainConverter().addConverter(new JsonConverterByte());
-            getMainConverter().addConverter(new JsonConverterShort());
-            getMainConverter().addConverter(new JsonConverterInt());
-            getMainConverter().addConverter(new JsonConverterLong());
+        //Primitives
+        loader.conversionHandler.addConverter(new JsonConverterByte());
+        loader.conversionHandler.addConverter(new JsonConverterShort());
+        loader.conversionHandler.addConverter(new JsonConverterInt());
+        loader.conversionHandler.addConverter(new JsonConverterLong());
 
-            getMainConverter().addConverter(new JsonConverterFloat());
-            getMainConverter().addConverter(new JsonConverterDouble());
+        loader.conversionHandler.addConverter(new JsonConverterFloat());
+        loader.conversionHandler.addConverter(new JsonConverterDouble());
 
-            getMainConverter().addConverter(new JsonConverterString());
+        loader.conversionHandler.addConverter(new JsonConverterString());
 
-            //Arrays
-            getMainConverter().addConverter(new JsonConverterArray());
-            getMainConverter().addConverter(new JsonConverterArrayString());
+        //Arrays
+        loader.conversionHandler.addConverter(new JsonConverterArray());
+        loader.conversionHandler.addConverter(new JsonConverterArrayString());
 
-            getMainConverter().addConverter(new JsonConverterArrayByte());
-            getMainConverter().addConverter(new JsonConverterArrayInt());
-            getMainConverter().addConverter(new JsonConverterArrayShort());
-            getMainConverter().addConverter(new JsonConverterArrayLong());
+        loader.conversionHandler.addConverter(new JsonConverterArrayByte());
+        loader.conversionHandler.addConverter(new JsonConverterArrayInt());
+        loader.conversionHandler.addConverter(new JsonConverterArrayShort());
+        loader.conversionHandler.addConverter(new JsonConverterArrayLong());
 
-            getMainConverter().addConverter(new JsonConverterArrayFloat());
-            getMainConverter().addConverter(new JsonConverterArrayDouble());
-        }
-    }
-
-    /**
-     * Call to trigger the main loader
-     */
-    public static void load()
-    {
-        if (!hasSetup)
-        {
-            setup();
-        }
-        if (!hasLoaded)
-        {
-            getMainLoader().init();
-            getMainLoader().loadComplete();
-        }
+        loader.conversionHandler.addConverter(new JsonConverterArrayFloat());
+        loader.conversionHandler.addConverter(new JsonConverterArrayDouble());
     }
 
     /**

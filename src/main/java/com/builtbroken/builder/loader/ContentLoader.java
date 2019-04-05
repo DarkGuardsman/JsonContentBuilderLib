@@ -43,6 +43,9 @@ public class ContentLoader
      */
     public final JsonMappingHandler jsonMappingHandler;
 
+    private boolean hasSetup = false;
+    private boolean hasLoaded = false;
+
     /**
      * Creates a new content loader with a default pipe line.
      * <p>
@@ -75,6 +78,22 @@ public class ContentLoader
     }
 
     /**
+     * Call to trigger the main loader
+     */
+    public void load()
+    {
+        if (!hasSetup)
+        {
+            ContentBuilderLib.setupDefault(this);
+        }
+        if (!hasLoaded)
+        {
+            init();
+            loadComplete();
+        }
+    }
+
+    /**
      * Called to init the loader, use
      * this to reference resources, objects,
      * and validate settings.
@@ -104,5 +123,6 @@ public class ContentLoader
         pipeLine.destroy();
         conversionHandler.destroy();
         jsonObjectHandlerRegistry.destroy();
+        jsonMappingHandler.destroy();
     }
 }

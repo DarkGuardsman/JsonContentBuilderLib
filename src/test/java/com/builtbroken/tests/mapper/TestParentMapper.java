@@ -99,7 +99,7 @@ public class TestParentMapper
     @BeforeAll
     public static void setup()
     {
-        ContentBuilderLib.setup();
+        ContentBuilderLib.getMainLoader().load();
         ContentBuilderLib.getMainLoader().jsonMappingHandler.register(Layer1.class, LAYER_1);
         ContentBuilderLib.getMainLoader().jsonMappingHandler.register(Layer2.class, LAYER_2);
         ContentBuilderLib.getMainLoader().jsonMappingHandler.register(Layer2A.class, LAYER_2A);

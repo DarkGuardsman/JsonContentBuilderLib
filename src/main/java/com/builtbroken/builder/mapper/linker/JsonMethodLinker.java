@@ -70,4 +70,10 @@ public class JsonMethodLinker extends JsonLinker<Object>
         }
 
     }
+
+    @Override
+    public void destroy()
+    {
+
+    }
 }

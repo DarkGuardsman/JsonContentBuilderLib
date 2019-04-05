@@ -167,4 +167,13 @@ public class JsonClassMapper
     {
         this.parent = parent;
     }
+
+    public void destroy()
+    {
+        mappings.values().forEach(mappers -> mappers.destroy());
+        mappings.clear();
+
+        linkMappers.values().forEach(mappers -> mappers.destroy());
+        linkMappers.clear();
+    }
 }

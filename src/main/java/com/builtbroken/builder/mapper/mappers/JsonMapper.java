@@ -28,4 +28,10 @@ public abstract class JsonMapper<O extends Object> implements IJsonMapper<O>
     {
         return names;
     }
+
+    @Override
+    public void destroy()
+    {
+
+    }
 }

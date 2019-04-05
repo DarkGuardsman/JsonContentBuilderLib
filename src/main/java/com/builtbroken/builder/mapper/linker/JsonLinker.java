@@ -36,4 +36,10 @@ public abstract class JsonLinker<O extends Object> implements IJsonLinker<O>
     {
         return type;
     }
+
+    @Override
+    public void destroy()
+    {
+
+    }
 }

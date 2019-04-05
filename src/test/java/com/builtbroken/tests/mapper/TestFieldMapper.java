@@ -55,7 +55,7 @@ public class TestFieldMapper
     public static void setup()
     {
         //Setup
-        ContentBuilderLib.setup();
+        ContentBuilderLib.getMainLoader().load();
         ContentBuilderLib.getMainLoader().jsonMappingHandler.register(ClassForMappingTest.class, "testClass");
     }
 
