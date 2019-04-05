@@ -155,8 +155,9 @@ public class ContentLoader
 
     protected void locateFiles()
     {
-        //TODO thread locators
+        //TODO thread locators, each one should be able to run on its own
         //TODO thread loading, use a concurrent queue to pass data between several threads
+        //  If threaded, mapper has to wait until all objects are created or else it can fail
 
         for (IFileLocator locator : fileLocators)
         {

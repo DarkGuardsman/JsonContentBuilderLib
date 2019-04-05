@@ -1,0 +1,24 @@
+[
+  {
+    "type": "recipe.crafting.shapeless",
+    "items" : [
+      "cobblestone",
+      "cobblestone",
+      "stick",
+      "cobblestone",
+      "cobblestone"
+    ]
+  },
+  {
+    "type": "recipe.crafting.grid",
+    "grid" : [
+      ".C.",
+      "CSC",
+      ".C."
+    ],
+    "items" : {
+      "C" : "cobblestone",
+      "S" : "stick"
+    }
+  }
+]
