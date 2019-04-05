@@ -2,7 +2,6 @@ package com.builtbroken.tests.mapper;
 
 import com.builtbroken.builder.ContentBuilderLib;
 import com.builtbroken.builder.mapper.JsonMapping;
-import com.builtbroken.builder.mapper.JsonMappingHandler;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.junit.jupiter.api.AfterAll;
@@ -58,7 +57,7 @@ public class TestMethodMapper
     public static void setup()
     {
         //Setup
-        ContentBuilderLib.getMainLoader().load();
+        ContentBuilderLib.getMainLoader().setup();
         ContentBuilderLib.getMainLoader().jsonMappingHandler.register(ClassForMappingTest.class, "testClass");
     }
 

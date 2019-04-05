@@ -29,7 +29,7 @@ public class TestContentBuilderLib
     @Test
     public void testDestroy()
     {
-        ContentBuilderLib.getMainLoader().load();
+        ContentBuilderLib.getMainLoader().setup();
         ContentBuilderLib.destroy();
 
         //assertEquals(0, ContentBuilderLib.getMainLoader().pipeLine.pipes.size());

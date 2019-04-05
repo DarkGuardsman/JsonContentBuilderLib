@@ -2,7 +2,6 @@ package com.builtbroken.tests.mapper;
 
 import com.builtbroken.builder.ContentBuilderLib;
 import com.builtbroken.builder.mapper.JsonMapping;
-import com.builtbroken.builder.mapper.JsonMappingHandler;
 import com.builtbroken.tests.JAssert;
 import com.builtbroken.tests.UnitTestHelpers;
 import com.google.gson.JsonObject;
@@ -99,7 +98,7 @@ public class TestParentMapper
     @BeforeAll
     public static void setup()
     {
-        ContentBuilderLib.getMainLoader().load();
+        ContentBuilderLib.getMainLoader().setup();
         ContentBuilderLib.getMainLoader().jsonMappingHandler.register(Layer1.class, LAYER_1);
         ContentBuilderLib.getMainLoader().jsonMappingHandler.register(Layer2.class, LAYER_2);
         ContentBuilderLib.getMainLoader().jsonMappingHandler.register(Layer2A.class, LAYER_2A);
