@@ -2,9 +2,15 @@ package com.builtbroken.builder.loader;
 
 import com.builtbroken.builder.ContentBuilderLib;
 import com.builtbroken.builder.converter.ConversionHandler;
+import com.builtbroken.builder.data.DataFileLoad;
 import com.builtbroken.builder.handler.JsonObjectHandlerRegistry;
 import com.builtbroken.builder.mapper.JsonMappingHandler;
 import com.builtbroken.builder.pipe.PipeLine;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 
 /**
  * Instance of a content loader.
@@ -43,6 +49,16 @@ public class ContentLoader
      */
     public final JsonMappingHandler jsonMappingHandler;
 
+    /**
+     * Locators to find files that contain, or can be turned into, JSON data for loading
+     */
+    protected List<IFileLocator> fileLocators = new ArrayList();
+
+    /**
+     * Files loaded using the locators
+     */
+    protected Queue<DataFileLoad> loadedFiles = new LinkedList();
+
     private boolean hasSetup = false;
     private boolean hasLoaded = false;
 
@@ -78,9 +94,10 @@ public class ContentLoader
     }
 
     /**
-     * Call to trigger the main loader
+     * Call to setup the loader and get it ready
+     * to called {@link #load()}
      */
-    public void load()
+    public void setup()
     {
         if (!hasSetup)
         {
@@ -94,11 +111,42 @@ public class ContentLoader
     }
 
     /**
+     * Called to load files using this content loader.
+     * Make sure to called {@link #setup()}
+     */
+    public void load()
+    {
+        locateFiles();
+        processFiles();
+    }
+
+    protected void locateFiles()
+    {
+        //TODO thread locators
+        //TODO thread loading, use a concurrent queue to pass data between several threads
+
+        for (IFileLocator locator : fileLocators)
+        {
+            loadedFiles.addAll(locator.search());
+        }
+    }
+
+    protected void processFiles()
+    {
+        for (DataFileLoad fileLoad : loadedFiles)
+        {
+            //TODO validate
+            //TODO try-catch with file details
+            List<Object> out = pipeLine.handle(fileLoad.element, null); //TODO add metadata
+        }
+    }
+
+    /**
      * Called to init the loader, use
      * this to reference resources, objects,
      * and validate settings.
      */
-    public void init()
+    protected void init()
     {
         pipeLine.init();
     }
@@ -108,7 +156,7 @@ public class ContentLoader
      * this to reference resources, objects,
      * and validate settings.
      */
-    public void loadComplete()
+    protected void loadComplete()
     {
         pipeLine.loadComplete();
     }
@@ -120,9 +168,19 @@ public class ContentLoader
      */
     public void destroy()
     {
+        clean();
+
         pipeLine.destroy();
         conversionHandler.destroy();
         jsonObjectHandlerRegistry.destroy();
         jsonMappingHandler.destroy();
+    }
+
+    /**
+     * Called to clear extra data
+     */
+    public void clean()
+    {
+        loadedFiles.clear();
     }
 }
