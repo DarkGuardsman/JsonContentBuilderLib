@@ -121,6 +121,9 @@ public class ContentLoader
         //Register
         conversionHandler.addConverter(new ConverterObjectBuilder<C>(type, clazz, factory));
         jsonMappingHandler.register(clazz, type);
+
+        //Make sure we have a handler
+        jsonObjectHandlerRegistry.createOrGetHandler(type);
     }
 
     /**
