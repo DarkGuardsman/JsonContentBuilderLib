@@ -7,6 +7,7 @@ import com.google.gson.JsonElement;
 import org.junit.jupiter.api.Assertions;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -36,10 +37,12 @@ public class UnitTestHelpers
         return files.get(0).element;
     }
 
+
+
     public static JsonArray createJsonStringArray(String... items)
     {
         JsonArray array = new JsonArray();
-        for(String s : items)
+        for (String s : items)
         {
             array.add(s);
         }
@@ -49,7 +52,7 @@ public class UnitTestHelpers
     public static JsonArray createJsonIntArray(int... items)
     {
         JsonArray array = new JsonArray();
-        for(int s : items)
+        for (int s : items)
         {
             array.add(s);
         }

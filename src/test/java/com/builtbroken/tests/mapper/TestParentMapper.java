@@ -3,6 +3,7 @@ package com.builtbroken.tests.mapper;
 import com.builtbroken.builder.ContentBuilderLib;
 import com.builtbroken.builder.mapper.JsonMapping;
 import com.builtbroken.builder.mapper.JsonMappingHandler;
+import com.builtbroken.tests.JAssert;
 import com.builtbroken.tests.UnitTestHelpers;
 import com.google.gson.JsonObject;
 import org.junit.jupiter.api.*;
@@ -67,7 +68,7 @@ public class TestParentMapper
     public void testLayer2A()
     {
         Layer2A object = new Layer2A();
-        ContentBuilderLib.getMainLoader().jsonMappingHandler.map(LAYER_2, object, testObject, false);
+        ContentBuilderLib.getMainLoader().jsonMappingHandler.map(LAYER_2A, object, testObject, false);
         Assertions.assertEquals(JSON_ID_VAL, object.id);
         Assertions.assertEquals(JSON_PROP_A_VAL, object.propA);
 
@@ -78,14 +79,14 @@ public class TestParentMapper
     public void testLayer3()
     {
         Layer3 object = new Layer3();
-        ContentBuilderLib.getMainLoader().jsonMappingHandler.map(LAYER_2, object, testObject, false);
+        ContentBuilderLib.getMainLoader().jsonMappingHandler.map(LAYER_3, object, testObject, false);
         Assertions.assertEquals(JSON_ID_VAL, object.id);
         Assertions.assertEquals(JSON_PROP_A_VAL, object.propA);
 
         Assertions.assertEquals(JSON_PROP_B_VAL, object.propB);
         Assertions.assertEquals(JSON_PROP_D_VAL, object.propD);
 
-        Assertions.assertEquals(JSON_PROP_C_VAL, object.propC);
+        JAssert.assertArrayEquals(JSON_PROP_C_VAL, object.propC);
     }
 
     @AfterEach
