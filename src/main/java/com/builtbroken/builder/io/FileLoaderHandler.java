@@ -108,7 +108,7 @@ public class FileLoaderHandler
             }
             else
             {
-                loadResourcesFromFile(currentFolder, dataLoaded);
+                loadResourcesFromFile(subFolderFile, dataLoaded);
             }
         }
     }

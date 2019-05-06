@@ -15,7 +15,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 /**
  * Instance of a content loader.
@@ -63,6 +62,10 @@ public class ContentLoader
      * Files loaded using the locators
      */
     protected Queue<DataFileLoad> loadedFiles = new LinkedList();
+
+    public int filesLocated = 0;
+    public int filesProcessed = 0;
+    public int objectsGenerated = 0;
 
     private boolean hasSetup = false;
     private boolean hasLoaded = false;
@@ -127,6 +130,16 @@ public class ContentLoader
     }
 
     /**
+     * Adds a file locator to search for json files
+     *
+     * @param locator
+     */
+    public void addFileLocator(IFileLocator locator)
+    {
+        fileLocators.add(locator);
+    }
+
+    /**
      * Call to setup the loader and get it ready
      * to called {@link #load()}
      */
@@ -163,15 +176,21 @@ public class ContentLoader
         {
             loadedFiles.addAll(locator.search());
         }
+
+        filesLocated = loadedFiles.size();
     }
 
     protected void processFiles()
     {
         for (DataFileLoad fileLoad : loadedFiles)
         {
+            filesProcessed++;
+
             //TODO validate
             //TODO try-catch with file details
             List<Object> out = pipeLine.handle(fileLoad.element, null); //TODO add metadata
+
+            objectsGenerated += out.size();
         }
     }
 

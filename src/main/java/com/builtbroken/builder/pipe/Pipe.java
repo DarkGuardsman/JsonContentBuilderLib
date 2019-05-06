@@ -115,7 +115,7 @@ public class Pipe
             node.receive(jsonData, currentObject, queueOut);
         } catch (Exception e)
         {
-            throw new RuntimeException("Unexpected error while processing node in pipeline[" + pipeName + "], Node: " + node.getUniqueID() + " Class: " + node.getClass());
+            throw new RuntimeException("Unexpected error while processing node in pipeline[" + pipeName + "], Node: " + node.getUniqueID() + " Class: " + node.getClass(), e);
             //TODO add way for loader to provide more information about error
             //TODO format error to look nice in output log to better improve error handling by developers
         }
