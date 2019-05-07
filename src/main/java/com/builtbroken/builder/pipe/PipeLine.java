@@ -13,6 +13,8 @@ import com.builtbroken.builder.pipe.nodes.json.PipeNodeJsonSplitter;
 import com.builtbroken.builder.pipe.nodes.mapping.PipeNodeMappingValidator;
 import com.google.gson.JsonElement;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Function;
 
@@ -139,7 +141,8 @@ public class PipeLine
      *                       an entire pipe from the start but shouldn't be run through the previous pipes.
      * @return
      */
-    public List<Object> handle(JsonElement jsonData, Function<Pipe, Boolean> shouldSkipPipe) //TODO need a set return type other than object, something that is <Type, Data>
+    @Nonnull
+    public List<Object> handle(@Nonnull JsonElement jsonData, @Nullable Function<Pipe, Boolean> shouldSkipPipe) //TODO need a set return type other than object, something that is <Type, Data>
     {
         final List<Object> builtObjects = new ArrayList();
         final Queue<Object> currentIN = new LinkedList();
