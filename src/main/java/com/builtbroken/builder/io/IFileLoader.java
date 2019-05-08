@@ -3,13 +3,11 @@ package com.builtbroken.builder.io;
 import com.builtbroken.builder.data.DataFileLoad;
 import com.builtbroken.builder.data.FileSource;
 import com.builtbroken.builder.loader.file.FileCheckFunction;
-import com.google.gson.JsonElement;
-import com.sun.istack.internal.NotNull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.Reader;
-import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -34,7 +32,7 @@ public interface IFileLoader
      * @param fileCheckFunction - function to use to verify if the file or part of the file should be loaded
      * @return list of json read
      */
-    default void loadFile(@Nullable FileSource fileSource, @NotNull Reader reader, @NotNull Consumer<DataFileLoad> fileConsumer, @Nullable FileCheckFunction fileCheckFunction)
+    default void loadFile(@Nullable FileSource fileSource, @Nonnull Reader reader, @Nonnull Consumer<DataFileLoad> fileConsumer, @Nullable FileCheckFunction fileCheckFunction)
     {
 
     }
@@ -46,7 +44,7 @@ public interface IFileLoader
      * @param fileConsumer      - handler for loaded files
      * @param fileCheckFunction - function to use to verify if the file or part of the file should be loaded
      */
-    default void loadFile(@NotNull File file, @NotNull Consumer<DataFileLoad> fileConsumer, @Nullable FileCheckFunction fileCheckFunction)
+    default void loadFile(@Nonnull File file, @Nonnull Consumer<DataFileLoad> fileConsumer, @Nullable FileCheckFunction fileCheckFunction)
     {
 
     }

@@ -8,8 +8,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.internal.Streams;
 import com.google.gson.stream.JsonReader;
-import com.sun.istack.internal.NotNull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.Reader;
@@ -30,7 +30,7 @@ public class FileLoaderJSON implements IFileLoader
     }
 
     @Override
-    public void loadFile(@Nullable FileSource source, @NotNull Reader reader, @NotNull Consumer<DataFileLoad> fileConsumer, @Nullable FileCheckFunction fileCheckFunction)
+    public void loadFile(@Nullable FileSource source, @Nonnull Reader reader, @Nonnull Consumer<DataFileLoad> fileConsumer, @Nullable FileCheckFunction fileCheckFunction)
     {
         JsonReader jsonReader = new JsonReader(reader);
         fileConsumer.accept(new DataFileLoad(source, Streams.parse(jsonReader)));

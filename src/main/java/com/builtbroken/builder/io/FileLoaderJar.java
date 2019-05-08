@@ -4,8 +4,8 @@ import com.builtbroken.builder.data.DataFileLoad;
 import com.builtbroken.builder.data.FileSource;
 import com.builtbroken.builder.loader.file.FileCheckFunction;
 import com.google.gson.JsonElement;
-import com.sun.istack.internal.NotNull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.*;
 import java.net.*;
@@ -17,7 +17,6 @@ import java.util.jar.JarFile;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-import java.util.zip.ZipInputStream;
 
 /**
  * Created by Dark(DarkGuardsman, Robert) on 2/21/19.
@@ -32,7 +31,7 @@ public class FileLoaderJar implements IFileLoader
     }
 
     @Override
-    public void loadFile(@NotNull File file, @NotNull Consumer<DataFileLoad> fileConsumer, @Nullable FileCheckFunction fileCheckFunction)
+    public void loadFile(@Nonnull File file, @Nonnull Consumer<DataFileLoad> fileConsumer, @Nullable FileCheckFunction fileCheckFunction)
     {
         try
         {
