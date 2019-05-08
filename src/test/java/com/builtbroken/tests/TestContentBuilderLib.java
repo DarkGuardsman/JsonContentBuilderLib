@@ -2,7 +2,10 @@ package com.builtbroken.tests;
 
 import com.builtbroken.builder.ContentBuilderLib;
 import com.builtbroken.builder.converter.IJsonConverter;
+import com.builtbroken.builder.data.IJsonGeneratedObject;
 import com.builtbroken.builder.loader.FileLocatorSimple;
+import com.builtbroken.builder.mapper.JsonMapping;
+import com.builtbroken.builder.mapper.JsonObjectWiring;
 import com.builtbroken.tests.pipe.TestPipeLine;
 import com.google.gson.JsonElement;
 import org.junit.jupiter.api.Assertions;
@@ -39,8 +42,9 @@ public class TestContentBuilderLib
         final File file = new File(System.getProperty("user.dir"), "src/test/resources/test/full_load_test");
         ContentBuilderLib.getMainLoader().addFileLocator(new FileLocatorSimple(file));
 
-        ContentBuilderLib.getMainLoader().registerObject("tree", TestPipeLine.TreeTest.class, (json) -> new TestPipeLine.TreeTest());
-
+        ContentBuilderLib.getMainLoader().registerObject("tree", TreeTest.class, (json) -> new TreeTest());
+        ContentBuilderLib.getMainLoader().registerObject("log", LogTest.class, (json) -> new LogTest());
+        ContentBuilderLib.getMainLoader().registerObject("stick", StickTest.class, (json) -> new StickTest());
 
         //Setup and run
         ContentBuilderLib.getMainLoader().setup();
@@ -49,7 +53,7 @@ public class TestContentBuilderLib
         //check
         Assertions.assertEquals(1, ContentBuilderLib.getMainLoader().filesLocated);
         Assertions.assertEquals(1, ContentBuilderLib.getMainLoader().filesProcessed);
-        //Assertions.assertEquals(6, ContentBuilderLib.getMainLoader().filesLocated);
+        Assertions.assertEquals(6, ContentBuilderLib.getMainLoader().objectsGenerated);
 
 
         //Cleanup
@@ -65,5 +69,53 @@ public class TestContentBuilderLib
         //assertEquals(0, ContentBuilderLib.getMainLoader().pipeLine.pipes.size());
         //assertEquals(0, ContentBuilderLib.getMainLoader().pipeLine.id_to_pipe.size());
         Assertions.assertEquals(0, ContentBuilderLib.getMainLoader().conversionHandler.getConverters().size());
+    }
+
+    private static abstract class TreeComponent  implements IJsonGeneratedObject
+    {
+        @JsonMapping(keys = "i", type = "int")
+        public int i;
+
+        @JsonMapping(keys = "name", type = "string")
+        public String name;
+
+        @Override
+        public String getJsonUniqueID()
+        {
+            return name + "_" + i;
+        }
+    }
+
+    public static class TreeTest extends TreeComponent
+    {
+        @JsonObjectWiring(jsonFields = "child", objectType = "log")
+        public TestPipeLine.LogTest log;
+
+        @Override
+        public String getJsonType()
+        {
+            return "tree";
+        }
+    }
+
+    public static class LogTest extends TreeComponent
+    {
+        @JsonObjectWiring(jsonFields = "child", objectType = "stick")
+        public TestPipeLine.StickTest stick;
+
+        @Override
+        public String getJsonType()
+        {
+            return "log";
+        }
+    }
+
+    public static class StickTest extends TreeComponent
+    {
+        @Override
+        public String getJsonType()
+        {
+            return "stick";
+        }
     }
 }

@@ -2,47 +2,47 @@
   {
     "type": "tree",
     "data": {
-      "leaves": false,
-      "bark": true,
-      "spawn_rate": 0.34,
-      "drops": {
-        "type": "armory:ammo",
-        "id": "12g.normal"
-      }
+      "i": 0,
+      "name" : "one",
+      "child" : "two"
     }
   },
   {
-    "type": "ammo",
+    "type": "log",
     "data": {
-      "name": "12g.normal",
-      "ammo_type": "12g"
+      "i": 1,
+      "name" : "two",
+      "child" : "three"
     }
   },
   {
-    "type": "sentry",
+    "type": "stick",
     "data": {
-      "weapon": "12g.pump"
+      "i": 2,
+      "name" : "three"
     }
   },
   {
-    "type": "gun",
+    "type": "tree",
     "data": {
-      "name": "12g.pump",
-      "ammo": "12g"
+      "i": 0,
+      "name" : "1",
+      "child" : "2"
     }
   },
   {
-    "type": "ammo_type",
+    "type": "log",
     "data": {
-      "name": "12g"
+      "i": 1,
+      "name" : "2",
+      "child" : "3"
     }
   },
   {
-    "type": "ammo_mag",
+    "type": "stick",
     "data": {
-      "type": "internal",
-      "name": "12g.tube.internal",
-      "ammo_type": "12g"
+      "i": 2,
+      "name" : "3"
     }
   }
 ]
