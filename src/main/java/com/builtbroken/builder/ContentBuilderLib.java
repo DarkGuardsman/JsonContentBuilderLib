@@ -3,6 +3,7 @@ package com.builtbroken.builder;
 import com.builtbroken.builder.converter.ConversionHandler;
 import com.builtbroken.builder.converter.primitives.*;
 import com.builtbroken.builder.converter.strut.array.*;
+import com.builtbroken.builder.converter.strut.map.JsonConverterMap;
 import com.builtbroken.builder.loader.ContentLoader;
 
 
@@ -47,6 +48,9 @@ public class ContentBuilderLib
 
         loader.conversionHandler.addConverter(new JsonConverterArrayFloat());
         loader.conversionHandler.addConverter(new JsonConverterArrayDouble());
+
+        //Data Structures
+        loader.conversionHandler.addConverter(new JsonConverterMap());
     }
 
     /**
