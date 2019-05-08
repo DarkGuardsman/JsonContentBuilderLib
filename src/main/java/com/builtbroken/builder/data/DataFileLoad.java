@@ -2,6 +2,9 @@ package com.builtbroken.builder.data;
 
 import com.google.gson.JsonElement;
 
+import java.io.File;
+import java.net.URL;
+
 /**
  * Created by Dark(DarkGuardsman, Robert) on 2/19/19.
  */
@@ -10,12 +13,18 @@ public class DataFileLoad
     public final FileSource fileSource;
     public final JsonElement element;
 
-    public DataFileLoad(String fileName, JsonElement element)
+    public DataFileLoad(File file, JsonElement element)
     {
-        fileSource = new FileSource();
-        fileSource.file = fileName;
+        fileSource = new FileSource(file);
         this.element = element;
     }
+
+    public DataFileLoad(URL file, JsonElement element)
+    {
+        fileSource = new FileSource(file);
+        this.element = element;
+    }
+
     public DataFileLoad(FileSource fileSource, JsonElement element)
     {
         this.fileSource = fileSource;

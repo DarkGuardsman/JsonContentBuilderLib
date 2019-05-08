@@ -1,13 +1,11 @@
 package com.builtbroken.tests;
 
 import com.builtbroken.builder.ContentBuilderLib;
-import com.builtbroken.builder.converter.IJsonConverter;
 import com.builtbroken.builder.data.IJsonGeneratedObject;
-import com.builtbroken.builder.loader.FileLocatorSimple;
+import com.builtbroken.builder.loader.file.FileLocatorSimple;
 import com.builtbroken.builder.mapper.JsonMapping;
 import com.builtbroken.builder.mapper.JsonObjectWiring;
 import com.builtbroken.tests.pipe.TestPipeLine;
-import com.google.gson.JsonElement;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

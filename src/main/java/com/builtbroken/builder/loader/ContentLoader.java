@@ -6,6 +6,7 @@ import com.builtbroken.builder.converter.strut.ConverterObjectBuilder;
 import com.builtbroken.builder.data.DataFileLoad;
 import com.builtbroken.builder.data.IJsonGeneratedObject;
 import com.builtbroken.builder.handler.JsonObjectHandlerRegistry;
+import com.builtbroken.builder.loader.file.IFileLocator;
 import com.builtbroken.builder.mapper.JsonMappingHandler;
 import com.builtbroken.builder.pipe.PipeLine;
 import com.google.gson.JsonElement;

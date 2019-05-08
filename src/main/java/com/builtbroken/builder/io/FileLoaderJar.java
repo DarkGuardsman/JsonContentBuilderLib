@@ -1,11 +1,17 @@
 package com.builtbroken.builder.io;
 
+import com.builtbroken.builder.data.DataFileLoad;
+import com.builtbroken.builder.data.FileSource;
+import com.builtbroken.builder.loader.file.FileCheckFunction;
 import com.google.gson.JsonElement;
+import com.sun.istack.internal.NotNull;
 
+import javax.annotation.Nullable;
 import java.io.*;
 import java.net.*;
 import java.nio.file.*;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.stream.Stream;
@@ -26,9 +32,8 @@ public class FileLoaderJar implements IFileLoader
     }
 
     @Override
-    public List<JsonElement> loadFile(File file)
+    public void loadFile(@NotNull File file, @NotNull Consumer<DataFileLoad> fileConsumer, @Nullable FileCheckFunction fileCheckFunction)
     {
-        List<JsonElement> elements = new ArrayList();
         try
         {
             //Loop all entries in jar
@@ -49,7 +54,7 @@ public class FileLoaderJar implements IFileLoader
                         if (loader.useReader())
                         {
                             InputStreamReader stream = new InputStreamReader(zipFile.getInputStream(entry));
-                            elements.addAll(loader.loadFile(stream));
+                            loader.loadFile(new FileSource(file.getAbsolutePath(), entry.getName(), "zip"), stream, fileConsumer, fileCheckFunction);
                             stream.close();
                         }
                     }
@@ -60,7 +65,6 @@ public class FileLoaderJar implements IFileLoader
         {
             e.printStackTrace();
         }
-        return elements;
     }
 
     @Override
@@ -153,7 +157,9 @@ public class FileLoaderJar implements IFileLoader
                 String decodedPath = URLDecoder.decode(jarPath, "UTF-8");
 
                 //open jar and get entities
-                return loadFile(new File(decodedPath));
+                List<JsonElement> list = new ArrayList();
+                loadFile(new File(decodedPath), dataFileLoad -> list.add(dataFileLoad.element), null);
+                return list;
             }
             else
             {
@@ -184,7 +190,7 @@ public class FileLoaderJar implements IFileLoader
                     if (loader.useReader())
                     {
                         BufferedReader stream = Files.newBufferedReader(nextPath);
-                        elements.addAll(loader.loadFile(stream));
+                        loader.loadFile(new FileSource(nextPath.toString(), name, "path"), stream, (dataFileLoad -> elements.add(dataFileLoad.element)), null);
                         stream.close();
                     }
                 }
