@@ -95,7 +95,7 @@ public class FileLoaderHandler //TODO make this instance based instead of global
                     //Ex: /contents instead of C:/user/install/folder/contents
                 }
             }
-            else
+            else if (fileCheckFunction == null || fileCheckFunction.loadFile(subFolderFile, null))
             {
                 loadResourcesFromFile(subFolderFile, fileConsumer, fileCheckFunction);
             }
@@ -166,7 +166,7 @@ public class FileLoaderHandler //TODO make this instance based instead of global
 
                 } catch (Exception e)
                 {
-                    throw new RuntimeException("FileLaoderHandler: Unexpected error reading file " + file);
+                    throw new RuntimeException("FileLoaderHandler: Unexpected error reading file " + file);
                 }
             }
             else
