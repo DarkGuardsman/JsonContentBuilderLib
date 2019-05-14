@@ -23,10 +23,14 @@ public class ContentBuilderRefs
     public static final String PIPE_WIRE_MAPPER = PIPE_MAPPER + ":wires";
 
     //==== JSON IDs ======
-    public static final String CONSTRUCTOR_DATA = "constructor";
+    public static final String JSON_CONSTRUCTOR = "constructor";
+    public static final String JSON_TYPE = "type"; //Can be changed per loader
+    public static final String JSON_DATA = "data"; //Can be changed per loader
 
     //==== IDS ======
     public static final String MAIN_LOADER = "main";
-    public static final String JSON_TYPE = "type"; //Can be changed per loader
-    public static final String JSON_DATA = "data"; //Can be changed per loader
+
+
+    //==== DATA =====
+    public static final String ANY = "*";
 }

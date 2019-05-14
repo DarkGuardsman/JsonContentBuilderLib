@@ -1,14 +1,12 @@
 package com.builtbroken.builder.mapper.mappers;
 
+import com.builtbroken.builder.ContentBuilderRefs;
 import com.builtbroken.builder.converter.ConversionHandler;
 import com.builtbroken.builder.handler.JsonObjectHandlerRegistry;
 import com.builtbroken.builder.mapper.anno.JsonConstructor;
 import com.builtbroken.builder.mapper.anno.JsonMapping;
 import com.builtbroken.builder.mapper.anno.JsonObjectWiring;
-import com.builtbroken.builder.mapper.builder.IJsonBuilder;
-import com.builtbroken.builder.mapper.builder.JsonBuilder;
-import com.builtbroken.builder.mapper.builder.JsonBuilderConstructor;
-import com.builtbroken.builder.mapper.builder.JsonBuilderMethod;
+import com.builtbroken.builder.mapper.builder.*;
 import com.builtbroken.builder.mapper.linker.IJsonLinker;
 import com.builtbroken.builder.mapper.linker.JsonFieldLinker;
 import com.builtbroken.builder.mapper.linker.JsonMethodLinker;
@@ -22,6 +20,8 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * Created by Dark(DarkGuardsman, Robert) on 2019-03-11.
@@ -61,17 +61,18 @@ public class JsonClassMapper
                             + " Field: " + field.toString());
                 }
 
-                JsonFieldMapper mapper = new JsonFieldMapper(clazz, field, mapping);
+                final JsonFieldMapper mapper = new JsonFieldMapper(clazz, field, mapping);
                 for (String key : mapping.keys())
                 {
                     mappings.put(key.toLowerCase(), mapper);
+                    System.out.println("JsonClassMapper[" + clazz + "] MAP: " + key + " -> " + field);
                 }
             }
 
             final JsonObjectWiring objectWiring = field.getAnnotation(JsonObjectWiring.class);
             if (objectWiring != null)
             {
-                if(mapping != null)
+                if (mapping != null)
                 {
                     throw new RuntimeException("JsonClassMapper: A field can be a mapping injection point"
                             + " or an auto wire injection point, not both. "
@@ -85,10 +86,55 @@ public class JsonClassMapper
                             + " Field: " + field.toString());
                 }
 
-                JsonFieldLinker linker = new JsonFieldLinker(field, objectWiring);
+                final JsonFieldLinker linker = new JsonFieldLinker(field, objectWiring);
                 for (String key : linker.getKeys())
                 {
                     linkMappers.put(key.toLowerCase(), linker);
+                    System.out.println("JsonClassMapper[" + clazz + "] LINK: " + key + " -> " + field);
+                }
+            }
+
+            final JsonConstructor jsonConstructor = field.getAnnotation(JsonConstructor.class);
+            if (jsonConstructor != null)
+            {
+                if (!Modifier.isStatic(field.getModifiers()))
+                {
+                    throw new RuntimeException("JsonClassMapper: Can't apply an object constructor to a non-static field. "
+                            + " Class: " + clazz
+                            + " Field: " + field.toString());
+                }
+
+                final String key = jsonConstructor.type().toLowerCase();
+
+                if (field.getType().isAssignableFrom(Supplier.class))
+                {
+                    System.out.println("JsonClassMapper[" + clazz + "] SUPPLY: " + key + " -> " + field);
+                    //Could have used a default constructor but ok
+                    jsonBuilders.put(key, new JsonBuilderSupplier(key, () ->
+                    {
+                        try
+                        {
+                            return ((Supplier) field.get(null)).get();
+                        } catch (Exception e)
+                        {
+                            throw new RuntimeException("JsonClassMapper: Unexpected error invoking supplier to create new object", e);
+                        }
+                    }));
+                }
+                else if (field.getType().isAssignableFrom(Function.class))
+                {
+                    System.out.println("JsonClassMapper[" + clazz + "] CREATE: " + key + " -> " + field);
+                    //Could have used a default constructor but ok
+                    jsonBuilders.put(key, new JsonBuilderFunction(key, (json) ->
+                    {
+                        try
+                        {
+                            return ((Function) field.get(null)).apply(json);
+                        } catch (Exception e)
+                        {
+                            throw new RuntimeException("JsonClassMapper: Unexpected error invoking lambda function to create new object", e);
+                        }
+                    }));
                 }
             }
         }
@@ -109,9 +155,10 @@ public class JsonClassMapper
                             + " Method: " + method.toString());
                 }
 
-                JsonMethodMapper mapper = new JsonMethodMapper(method, mapping);
+                final JsonMethodMapper mapper = new JsonMethodMapper(method, mapping);
                 for (String key : mapping.keys())
                 {
+                    System.out.println("JsonClassMapper[" + clazz + "] MAP: " + key + " -> " + method);
                     mappings.put(key.toLowerCase(), mapper);
                 }
             }
@@ -135,9 +182,10 @@ public class JsonClassMapper
                             + " Method: " + method.toString());
                 }
 
-                JsonMethodLinker linker = new JsonMethodLinker(method, objectWiring);
+                final JsonMethodLinker linker = new JsonMethodLinker(method, objectWiring);
                 for (String key : linker.getKeys())
                 {
+                    System.out.println("JsonClassMapper[" + clazz + "] LINK: " + key + " -> " + method);
                     linkMappers.put(key.toLowerCase(), linker);
                 }
             }
@@ -159,6 +207,7 @@ public class JsonClassMapper
                 if (method.getParameterCount() == 1 && method.getParameterTypes()[0].isAssignableFrom(JsonElement.class))
                 {
                     //Json only constructor
+                    System.out.println("JsonClassMapper[" + clazz + "] CREATE_J: " + key + " -> " + method);
                     jsonBuilders.put(key, new JsonBuilderMethod(clazz, key, method, null, false));
                 }
                 else if (method.getParameterCount() > 0)
@@ -187,11 +236,13 @@ public class JsonClassMapper
                     }
 
                     //Mapper constructor
+                    System.out.println("JsonClassMapper[" + clazz + "] CREATE_P: " + key + " -> " + method);
                     jsonBuilders.put(key, new JsonBuilderMethod(clazz, key, method, mappers, jsonConstructor.useConstructorData()));
                 }
                 else
                 {
                     //Default constructor
+                    System.out.println("JsonClassMapper[" + clazz + "] CREATE_D: " + key + " -> " + method);
                     jsonBuilders.put(key, new JsonBuilderMethod(clazz, key, method, null, false));
                 }
 
@@ -203,13 +254,14 @@ public class JsonClassMapper
         for (Constructor constructor : constructors)
         {
             final JsonConstructor jsonConstructor = (JsonConstructor) constructor.getAnnotation(JsonConstructor.class);
-            if(jsonConstructor != null)
+            if (jsonConstructor != null)
             {
                 final String key = jsonConstructor.type().toLowerCase();
 
                 if (constructor.getParameterCount() == 1 && constructor.getParameterTypes()[0].isAssignableFrom(JsonElement.class))
                 {
                     //Json only constructor
+                    System.out.println("JsonClassMapper[" + clazz + "] CREATE_J: " + key + " -> " + constructor);
                     jsonBuilders.put(key, new JsonBuilderConstructor(clazz, key, constructor, null, false));
                 }
                 else if (constructor.getParameterCount() > 0)
@@ -238,11 +290,13 @@ public class JsonClassMapper
                     }
 
                     //Mapper constructor
+                    System.out.println("JsonClassMapper[" + clazz + "] CREATE_P: " + key + " -> " + constructor);
                     jsonBuilders.put(key, new JsonBuilderConstructor(clazz, key, constructor, mappers, jsonConstructor.useConstructorData()));
                 }
                 else
                 {
                     //Default constructor
+                    System.out.println("JsonClassMapper[" + clazz + "] CREATE_D: " + key + " -> " + constructor);
                     jsonBuilders.put(key, new JsonBuilderConstructor(clazz, key, constructor, null, false));
                 }
             }
@@ -325,7 +379,12 @@ public class JsonClassMapper
 
     public IJsonBuilder getBuilder(String type)
     {
-        return jsonBuilders.get(type.toLowerCase());
+        IJsonBuilder builder = jsonBuilders.get(type.toLowerCase());
+        if (builder == null)
+        {
+            builder = jsonBuilders.get(ContentBuilderRefs.ANY);
+        }
+        return builder;
     }
 
     public void destroy()

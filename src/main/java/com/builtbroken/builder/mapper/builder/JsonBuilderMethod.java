@@ -11,7 +11,7 @@ import java.lang.reflect.Method;
 /**
  * Created by Dark(DarkGuardsman, Robert) on 2019-05-14.
  */
-public class JsonBuilderMethod extends JsonBuilder
+public class JsonBuilderMethod extends JsonBuilderMapper
 {
     protected final Method method;
 

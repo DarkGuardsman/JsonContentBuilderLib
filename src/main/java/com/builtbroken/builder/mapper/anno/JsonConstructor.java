@@ -1,5 +1,7 @@
 package com.builtbroken.builder.mapper.anno;
 
+import com.builtbroken.builder.ContentBuilderRefs;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -21,14 +23,14 @@ import java.lang.annotation.Target;
  * Created by Dark(DarkGuardsman, Robert) on 2019-05-14.
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(value = {ElementType.CONSTRUCTOR, ElementType.METHOD})
+@Target(value = {ElementType.CONSTRUCTOR, ElementType.METHOD, ElementType.FIELD})
 public @interface JsonConstructor
 {
 
     /**
      * Json Object type to build as, use this to allow a java object to support building different json objects
      */
-    String type() default "*";
+    String type() default ContentBuilderRefs.ANY;
 
     /**
      * Set to true to use the constructor object from the JSON data.

@@ -1,11 +1,8 @@
 package com.builtbroken.builder.mapper.builder;
 
-import com.builtbroken.builder.ContentBuilderRefs;
 import com.builtbroken.builder.converter.ConversionHandler;
 import com.builtbroken.builder.mapper.anno.JsonMapping;
-import com.builtbroken.builder.mapper.mappers.IJsonMapper;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Constructor;
@@ -14,7 +11,7 @@ import java.lang.reflect.InvocationTargetException;
 /**
  * Created by Dark(DarkGuardsman, Robert) on 2019-05-14.
  */
-public class JsonBuilderConstructor extends JsonBuilder
+public class JsonBuilderConstructor extends JsonBuilderMapper
 {
     protected final Constructor constructor;
 
