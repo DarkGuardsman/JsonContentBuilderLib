@@ -7,6 +7,7 @@ import com.builtbroken.builder.mapper.anno.JsonMapping;
 import com.builtbroken.builder.mapper.anno.JsonObjectWiring;
 import com.builtbroken.builder.mapper.builder.IJsonBuilder;
 import com.builtbroken.builder.mapper.builder.JsonBuilder;
+import com.builtbroken.builder.mapper.builder.JsonBuilderConstructor;
 import com.builtbroken.builder.mapper.builder.JsonBuilderMethod;
 import com.builtbroken.builder.mapper.linker.IJsonLinker;
 import com.builtbroken.builder.mapper.linker.JsonFieldLinker;
@@ -15,6 +16,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -174,6 +176,56 @@ public class JsonClassMapper
                     jsonBuilders.put(key, new JsonBuilderMethod(clazz, key, method, null, false));
                 }
 
+            }
+        }
+
+        //Handle Constructors
+        final Constructor[] constructors = clazz.getDeclaredConstructors();
+        for (Constructor constructor : constructors)
+        {
+            final JsonConstructor jsonConstructor = (JsonConstructor) constructor.getAnnotation(JsonConstructor.class);
+            if(jsonConstructor != null)
+            {
+                final String key = jsonConstructor.type().toLowerCase();
+
+                if (constructor.getParameterCount() == 1 && constructor.getParameterTypes()[0].isAssignableFrom(JsonElement.class))
+                {
+                    //Json only constructor
+                    jsonBuilders.put(key, new JsonBuilderConstructor(clazz, key, constructor, null, false));
+                }
+                else if (constructor.getParameterCount() > 0)
+                {
+                    //Locate all mappings
+                    final JsonMapping[] mappers = new JsonMapping[constructor.getParameterCount()];
+                    final Annotation[][] paraAnnos = constructor.getParameterAnnotations();
+                    for (int para = 0; para < mappers.length; para++)
+                    {
+                        for (Annotation annotation : paraAnnos[para])
+                        {
+                            if (annotation instanceof JsonMapping)
+                            {
+                                mappers[para] = (JsonMapping) annotation;
+                                break;
+                            }
+                        }
+
+                        if (mappers[para] == null)
+                        {
+                            new RuntimeException("JsonClassMapper: All constructor parameters require JsonMapping annotation "
+                                    + "when used with JsonConstructor annotation."
+                                    + " Class: " + clazz
+                                    + " Constructor: " + constructor);
+                        }
+                    }
+
+                    //Mapper constructor
+                    jsonBuilders.put(key, new JsonBuilderConstructor(clazz, key, constructor, mappers, jsonConstructor.useConstructorData()));
+                }
+                else
+                {
+                    //Default constructor
+                    jsonBuilders.put(key, new JsonBuilderConstructor(clazz, key, constructor, null, false));
+                }
             }
         }
         return this;
