@@ -10,15 +10,15 @@ import com.builtbroken.builder.mapper.anno.JsonTemplate;
 public class CreationData
 {
 
-    @JsonMapping(keys = "creation_date")
+    @JsonMapping(keys = "creation_date", type = "string")
     public String createdOn;
 
-    @JsonMapping(keys = "last_update_date")
+    @JsonMapping(keys = "last_update_date", type = "string")
     public String updatedLast;
 
-    @JsonMapping(keys = "program_used")
+    @JsonMapping(keys = "program_used", type = "string")
     public String program;
 
-    @JsonMapping(keys = "version")
+    @JsonMapping(keys = "version", type = "string")
     public String version;
 }

@@ -15,7 +15,7 @@ public class AuthorData
     public final String url;
 
     @JsonConstructor
-    public AuthorData(@JsonMapping(keys = "name") String name, @JsonMapping(keys = "url") String url)
+    public AuthorData(@JsonMapping(keys = "name", type = "string") String name, @JsonMapping(keys = "url", type = "string") String url)
     {
         this.name = name;
         this.url = url;

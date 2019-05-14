@@ -29,9 +29,9 @@ public @interface JsonMapping
     String[] keys();
 
     /**
-     * Data type to load data as, optional for boolean and strings
+     * Data type to use for conversion process
      */
-    String type() default "*"; //* acts as a indicator to attempt to match field
+    String type();
 
     /**
      * Arguments to pass into type converter, optional in most cases
