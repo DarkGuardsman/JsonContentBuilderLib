@@ -133,14 +133,15 @@ public class JsonMappingHandler
      * @param clazz - class to map
      * @param keys  - list of keys to use for this class
      */
-    public void register(Class clazz, String... keys)
+    public JsonClassMapper register(Class clazz, String... keys)
     {
         //Store keys
         for (String string : keys)
         {
-            keyToClass.put(string.toLowerCase(), clazz);
+            keyToClass.put(string.toLowerCase(), clazz); //TODO scan for overlap
         }
         mapClass(clazz);
+        return clazzMappers.get(clazz);
     }
 
     /**

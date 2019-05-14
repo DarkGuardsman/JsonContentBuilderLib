@@ -5,6 +5,9 @@ import com.builtbroken.builder.converter.primitives.*;
 import com.builtbroken.builder.converter.strut.array.*;
 import com.builtbroken.builder.converter.strut.map.JsonConverterMap;
 import com.builtbroken.builder.loader.ContentLoader;
+import com.builtbroken.builder.mapper.JsonTemplateMapper;
+
+import java.util.HashMap;
 
 
 /**
@@ -18,8 +21,15 @@ import com.builtbroken.builder.loader.ContentLoader;
 public class ContentBuilderLib
 {
 
+    /**
+     * Set to false to disable the default class mapping to find {@link com.builtbroken.builder.mapper.anno.JsonTemplate}
+     */
+    public static boolean enableClassMapping = true;
+
     private static ConversionHandler MAIN_CONVERTER;
     private static ContentLoader MAIN_LOADER;
+
+    private static final HashMap<String, ContentLoader> loaders = new HashMap();
 
     /**
      * Call to setup all the defaults for the main loader
@@ -53,12 +63,37 @@ public class ContentBuilderLib
         loader.conversionHandler.addConverter(new JsonConverterMap());
     }
 
+    public static void setup()
+    {
+        //init main loader
+        getMainLoader();
+
+        if(enableClassMapping)
+        {
+            //Run class loader
+            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+            JsonTemplateMapper.locateAllTemplates(classLoader);
+        }
+
+
+        //Setup main loader
+        getMainLoader().setup();
+    }
+
+    public static void main(String... args)
+    {
+        setup();
+    }
+
     /**
      * Used entirely by JUnit testing to destroy
      * the main loader after each test
      */
     public static void destroy()
     {
+        loaders.values().forEach(loader -> loader.destroy());
+        loaders.clear();
+
         if (MAIN_LOADER != null)
         {
             MAIN_LOADER.destroy();
@@ -71,11 +106,39 @@ public class ContentBuilderLib
         MAIN_CONVERTER = null;
     }
 
+    /**
+     * Called to add a loader to the public space. This is
+     * required for some automatic features to function.
+     * Such as {@link com.builtbroken.builder.mapper.anno.JsonTemplate}
+     * automatic registration to a loader.
+     *
+     * @param loader - loader to add
+     */
+    public static void addLoader(ContentLoader loader)
+    {
+        loaders.put(loader.name.toLowerCase(), loader);
+    }
+
+    /**
+     * Gets publicly exposed loaders
+     *
+     * @param id - unique id of the loader
+     * @return loader, "main" will always return {@link #getMainLoader()}
+     */
+    public static ContentLoader getLoader(String id)
+    {
+        if (id.equalsIgnoreCase(ContentBuilderRefs.MAIN_LOADER))
+        {
+            return getMainLoader();
+        }
+        return loaders.get(id.toLowerCase());
+    }
+
     public static ConversionHandler getMainConverter()
     {
         if (MAIN_CONVERTER == null)
         {
-            MAIN_CONVERTER = new ConversionHandler(null, "main");
+            MAIN_CONVERTER = new ConversionHandler(null, ContentBuilderRefs.MAIN_LOADER);
         }
         return MAIN_CONVERTER;
     }
@@ -84,7 +147,8 @@ public class ContentBuilderLib
     {
         if (MAIN_LOADER == null)
         {
-            MAIN_LOADER = new ContentLoader("main");
+            MAIN_LOADER = new ContentLoader(ContentBuilderRefs.MAIN_LOADER);
+            addLoader(MAIN_LOADER);
         }
         return MAIN_LOADER;
     }

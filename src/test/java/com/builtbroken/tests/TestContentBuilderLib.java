@@ -40,9 +40,9 @@ public class TestContentBuilderLib
         final File file = new File(System.getProperty("user.dir"), "src/test/resources/test/full_load_test");
         ContentBuilderLib.getMainLoader().addFileLocator(new FileLocatorSimple(file));
 
-        ContentBuilderLib.getMainLoader().registerObject("tree", TreeTest.class, (json) -> new TreeTest());
-        ContentBuilderLib.getMainLoader().registerObject("log", LogTest.class, (json) -> new LogTest());
-        ContentBuilderLib.getMainLoader().registerObject("stick", StickTest.class, (json) -> new StickTest());
+        ContentBuilderLib.getMainLoader().registerObjectTemplate("tree", TreeTest.class, (json) -> new TreeTest());
+        ContentBuilderLib.getMainLoader().registerObjectTemplate("log", LogTest.class, (json) -> new LogTest());
+        ContentBuilderLib.getMainLoader().registerObjectTemplate("stick", StickTest.class, (json) -> new StickTest());
 
         //Setup and run
         ContentBuilderLib.getMainLoader().setup();

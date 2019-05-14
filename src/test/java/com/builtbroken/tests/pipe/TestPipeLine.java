@@ -23,9 +23,9 @@ public class TestPipeLine
     public static void setup()
     {
         ContentBuilderLib.getMainLoader().setup();
-        ContentBuilderLib.getMainLoader().registerObject("tree", TreeTest.class, (json) -> new TreeTest());
-        ContentBuilderLib.getMainLoader().registerObject("log", LogTest.class, (json) -> new LogTest());
-        ContentBuilderLib.getMainLoader().registerObject("stick", StickTest.class, (json) -> new StickTest());
+        ContentBuilderLib.getMainLoader().registerObjectTemplate("tree", TreeTest.class, (json) -> new TreeTest());
+        ContentBuilderLib.getMainLoader().registerObjectTemplate("log", LogTest.class, (json) -> new LogTest());
+        ContentBuilderLib.getMainLoader().registerObjectTemplate("stick", StickTest.class, (json) -> new StickTest());
     }
 
     @AfterAll

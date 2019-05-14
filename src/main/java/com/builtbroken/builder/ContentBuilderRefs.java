@@ -23,4 +23,7 @@ public class ContentBuilderRefs
 
     //==== JSON IDs ======
     public static final String CONSTRUCTOR_DATA = "constructor";
+
+    //==== IDS ======
+    public static final String MAIN_LOADER = "main";
 }

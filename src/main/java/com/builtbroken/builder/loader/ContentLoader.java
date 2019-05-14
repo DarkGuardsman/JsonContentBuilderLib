@@ -8,9 +8,13 @@ import com.builtbroken.builder.data.IJsonGeneratedObject;
 import com.builtbroken.builder.handler.JsonObjectHandlerRegistry;
 import com.builtbroken.builder.loader.file.IFileLocator;
 import com.builtbroken.builder.mapper.JsonMappingHandler;
+import com.builtbroken.builder.mapper.anno.JsonMapping;
+import com.builtbroken.builder.mapper.builder.IJsonBuilder;
+import com.builtbroken.builder.mapper.mappers.JsonClassMapper;
 import com.builtbroken.builder.pipe.PipeLine;
 import com.google.gson.JsonElement;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -29,6 +33,7 @@ import java.util.function.Function;
  */
 public class ContentLoader
 {
+
     /**
      * Unique name of the content loader
      */
@@ -116,15 +121,19 @@ public class ContentLoader
         this.jsonMappingHandler = new JsonMappingHandler(this);
     }
 
-    public <C extends IJsonGeneratedObject> void registerObject(String type, Class<C> clazz, Function<JsonElement, C> factory)
+    /**
+     * Called to register a class as an object template
+     *
+     * @param type    - name of the template, Ex: armory:sword
+     * @param clazz   - clazz that the template is created as
+     * @param factory - builder to generate the template, can be null if the class uses {@link com.builtbroken.builder.mapper.anno.JsonConstructor}
+     * @param <C>     - its expected the class be instance of IJsonGeneratedObject
+     */
+    public <C extends IJsonGeneratedObject> void registerObjectTemplate(String type, Class<C> clazz, Function<JsonElement, C> factory)
     {
         if (clazz == null)
         {
             throw new IllegalArgumentException("ContentLoader: Can not provide an object type[" + type + "] for loading without a class");
-        }
-        else if (factory == null)
-        {
-            throw new IllegalArgumentException("ContentLoader: Can not provide an object type[" + type + "] for loading without a factory to create objects");
         }
         else if (type == null || type.trim().isEmpty())
         {
@@ -136,9 +145,34 @@ public class ContentLoader
                     "Ex: java:int, armory:gun. This helps keep the keys unique between packages. If you wish to bypass this register a converter directly.");
         }
 
+        //Map
+        final JsonClassMapper mapper = jsonMappingHandler.register(clazz, type);
+
+        //Check for factory
+        if (factory == null)
+        {
+            final IJsonBuilder builder = mapper.getBuilder(type);
+            if (builder == null)
+            {
+                throw new IllegalArgumentException("ContentLoader: Can not provide an object type[" + type + "] for loading without a factory to create objects");
+            }
+
+            //Generate factory for class
+            factory = (jsonElement) ->
+            {
+                try
+                {
+                    return (C) builder.newObject(jsonElement, conversionHandler);
+                } catch (Exception e)
+                {
+                    throw new RuntimeException("Failed to build object of type[" + type + "]" + clazz, e);
+                }
+            };
+        }
+
         //Register
         conversionHandler.addConverter(new ConverterObjectBuilder<C>(type, clazz, factory));
-        jsonMappingHandler.register(clazz, type);
+
 
         //Make sure we have a handler
         jsonObjectHandlerRegistry.createOrGetHandler(type);
@@ -272,8 +306,7 @@ public class ContentLoader
 
                 //Count file is completed
                 filesProcessed++;
-            }
-            catch (Exception e)
+            } catch (Exception e)
             {
                 new RuntimeException("ContentLoader: Unexpected error while processing data file load: " + fileLoad, e);
             }

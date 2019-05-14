@@ -252,6 +252,11 @@ public class JsonClassMapper
         this.parent = parent;
     }
 
+    public IJsonBuilder getBuilder(String type)
+    {
+        return jsonBuilders.get(type.toLowerCase());
+    }
+
     public void destroy()
     {
         mappings.values().forEach(mappers -> mappers.destroy());
