@@ -51,7 +51,7 @@ public class TestMethodConstructor
         Assertions.assertTrue(((GeneratedObject) object).objectCreated instanceof ClassForMappingTest);
 
         //Validate the data mapped via the constructor
-        final ClassForMappingTest testObject = (ClassForMappingTest) object;
+        final ClassForMappingTest testObject = (ClassForMappingTest) ((GeneratedObject) object).objectCreated;
         Assertions.assertEquals(testObject.testField, TREE_VALUE);
         Assertions.assertEquals(testObject.testField2, COUNT_VALUE);
     }
@@ -71,14 +71,14 @@ public class TestMethodConstructor
         ContentBuilderLib.destroy();
     }
 
-    private static class ClassForMappingTest implements IJsonGeneratedObject
+    public static class ClassForMappingTest implements IJsonGeneratedObject
     {
         public String testField;
-        public String testField2;
+        public int testField2;
 
         @JsonConstructor(type = TYPE)
-        public static ClassForMappingTest newObj(@JsonMapping(keys = TREE) String testField,
-                                                 @JsonMapping(keys = COUNT) String testField2)
+        public static ClassForMappingTest newObj(@JsonMapping(keys = TREE, type = "string") String testField,
+                                                 @JsonMapping(keys = COUNT, type = "int") int testField2)
         {
             ClassForMappingTest classForMappingTest = new ClassForMappingTest();
             classForMappingTest.testField = testField;

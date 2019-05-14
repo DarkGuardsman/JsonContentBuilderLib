@@ -40,7 +40,7 @@ public abstract class JsonBuilder implements IJsonBuilder
     protected Object[] buildParameters(ConversionHandler converter, JsonObject object)
     {
         //Get json object, if set to use constructor data select the object
-        final JsonObject jsonObject = useConstructorData
+        final JsonObject jsonObject = !useConstructorData
                 ? object
                 : object.get(ContentBuilderRefs.CONSTRUCTOR_DATA).getAsJsonObject();
 
