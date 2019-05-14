@@ -53,6 +53,7 @@ public class TestContentBuilderLib
         Assertions.assertEquals(1, ContentBuilderLib.getMainLoader().filesProcessed);
         Assertions.assertEquals(6, ContentBuilderLib.getMainLoader().objectsGenerated);
 
+        //TODO fix, information is not actually mapped due to being nested inside data{}
 
         //Cleanup
         ContentBuilderLib.destroy();

@@ -26,7 +26,7 @@ public class PipeNodeObjectCreator extends PipeNode
      * If you plan to support more than 1 field for types. Create a wrapper Pipe Node that stores more than
      * 1 version of this class or create a completely new pipe node that maps several fields to the type.
      */
-    public String type_key = "type";
+    public String type_key = ContentBuilderRefs.JSON_TYPE;
 
     public PipeNodeObjectCreator(Pipe pipe)
     {

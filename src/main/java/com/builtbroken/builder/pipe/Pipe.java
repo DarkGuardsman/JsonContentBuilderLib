@@ -9,6 +9,7 @@ import com.google.gson.JsonObject;
 import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.Queue;
+import java.util.function.BiConsumer;
 
 /**
  * Series of pipe nodes that all match the same over all goal.
@@ -47,6 +48,8 @@ public class Pipe
     private final Queue<Object> queueOut = new LinkedList();
     private final Queue<Object> queueIn = new LinkedList();
 
+    protected BiConsumer<String, String> logger;
+
     public Pipe(PipeLine pipeLine, String pipeName)
     {
         this.pipeLine = pipeLine;
@@ -60,7 +63,9 @@ public class Pipe
      */
     public void init()
     {
+        getLogger().accept("Init", "Start");
         nodes.forEach(node -> node.init());
+        getLogger().accept("Init", "End");
     }
 
     /**
@@ -70,7 +75,9 @@ public class Pipe
      */
     public void loadComplete()
     {
+        getLogger().accept("Load", "Start");
         nodes.forEach(node -> node.onLoadComplete());
+        getLogger().accept("Load", "End");
     }
 
     /**
@@ -82,6 +89,8 @@ public class Pipe
      */
     public void processSet(JsonElement jsonData, Object currentObject, Queue<Object> objectsOut)
     {
+        getLogger().accept("Process", jsonData + "  " + currentObject);
+
         //Start
         queueIn.clear();
         queueOut.clear();
@@ -106,10 +115,12 @@ public class Pipe
 
         //Last run add everything
         objectsOut.addAll(queueOut);
+        getLogger().accept("Process", "End " + objectsOut.size());
     }
 
     private void handleNodeStep(IPipeNode node, JsonElement jsonData, Object currentObject, Queue<Object> queueOut)
     {
+        getLogger().accept("Node[" + node.getUniqueID() + "]", jsonData + " " + currentObject);
         try
         {
             node.receive(jsonData, currentObject, queueOut);
@@ -123,6 +134,7 @@ public class Pipe
 
     public void addNode(IPipeNode node)
     {
+        getLogger().accept("AddNode", node.toString());
         nodes.add(node);
     }
 
@@ -139,5 +151,24 @@ public class Pipe
     public ConversionHandler getConverter()
     {
         return pipeLine != null ? pipeLine.getConverter() : null;
+    }
+
+    public BiConsumer<String, String> getLogger()
+    {
+        if (logger == null)
+        {
+            logger = (prefix, msg) ->
+            {
+                if (getPipeLine() != null)
+                {
+                    getPipeLine().getLogger().accept("Pipe[" + pipeName + "] >> " + prefix, msg);
+                }
+                else
+                {
+                    System.out.println("Pipe[" + pipeName + "]: " + prefix + " >> " + msg);
+                }
+            };
+        }
+        return logger;
     }
 }

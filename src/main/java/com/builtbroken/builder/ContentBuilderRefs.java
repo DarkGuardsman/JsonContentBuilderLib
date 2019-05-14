@@ -26,4 +26,6 @@ public class ContentBuilderRefs
 
     //==== IDS ======
     public static final String MAIN_LOADER = "main";
+    public static final String JSON_TYPE = "type"; //Can be changed per loader
+    public static final String JSON_DATA = "data"; //Can be changed per loader
 }

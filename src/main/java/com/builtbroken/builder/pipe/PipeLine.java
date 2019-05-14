@@ -16,6 +16,7 @@ import com.google.gson.JsonElement;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 /**
@@ -65,6 +66,8 @@ public class PipeLine
 
     public ContentLoader contentLoader;
 
+    protected BiConsumer<String, String> logger;
+
     /**
      * Creates a default pipe line. It is recommended to use
      * this unless something custom is needed outside the scope of the system.
@@ -104,9 +107,35 @@ public class PipeLine
      */
     public void init()
     {
+        //DEBUG
+        getLogger().accept("init", "start");
+
+        //INIT
         //TODO sort out pipes and nodes so they run in order
         pipes.removeIf(pipe -> pipe == null);
         pipes.forEach(pipe -> pipe.init());
+
+        //DEBUG
+        getLogger().accept("init", "end");
+    }
+
+    public BiConsumer<String, String> getLogger()
+    {
+        if (logger == null)
+        {
+            logger = (prefix, msg) ->
+            {
+                if (getLoader() != null)
+                {
+                    getLoader().getLogger().accept("PipeLine >> " + prefix, msg);
+                }
+                else
+                {
+                    System.out.println("PipeLine:" + prefix + " >> " + msg);
+                }
+            };
+        }
+        return logger;
     }
 
     /**
@@ -116,7 +145,14 @@ public class PipeLine
      */
     public void loadComplete()
     {
+        //DEBUG
+        getLogger().accept("load", "start");
+
+        //Load
         pipes.forEach(pipe -> pipe.loadComplete());
+
+        //DEBUG
+        getLogger().accept("load", "end");
     }
 
     /**
@@ -127,6 +163,10 @@ public class PipeLine
      */
     public void add(String key, IPipeNode node)
     {
+        //DEBUG
+        getLogger().accept("addNodeToPipe", "KEY: " + key + "  NODE: " + node);
+
+        //ADD
         if (id_to_pipe.containsKey(key.toLowerCase()))
         {
             id_to_pipe.get(key.toLowerCase()).addNode(node);
@@ -144,6 +184,11 @@ public class PipeLine
     @Nonnull
     public List<Object> handle(@Nonnull JsonElement jsonData, @Nullable Function<Pipe, Boolean> shouldSkipPipe) //TODO need a set return type other than object, something that is <Type, Data>
     {
+        //DEBUG
+        getLogger().accept("handle", "start " + jsonData
+                + "\n " + shouldSkipPipe);
+
+        //HANDLE
         final List<Object> builtObjects = new ArrayList();
         final Queue<Object> currentIN = new LinkedList();
         final Queue<Object> currentOut = new LinkedList();
@@ -156,13 +201,20 @@ public class PipeLine
             //Check if we should run this pipe
             if (shouldSkipPipe == null || !shouldSkipPipe.apply(pipe))
             {
+
                 //Add previous out to next pipe input
                 currentIN.addAll(currentOut);
                 currentOut.clear();
 
+                //DEBUG
+                getLogger().accept("handle >> pipe", pipe.pipeName + " IN: " + currentIN.size());
+
                 //loop inputs
                 while (currentIN.peek() != null)
                 {
+                    //DEBUG
+                    getLogger().accept("handle >> pipe", pipe.pipeName + " NEXT: " + currentIN.peek());
+
                     pipe.processSet(jsonData, currentIN.poll(), currentOut);
                 }
             }
@@ -171,6 +223,10 @@ public class PipeLine
         //Output
         builtObjects.addAll(currentOut);
         builtObjects.removeIf(o -> o == null);
+
+        //DEBUG
+        getLogger().accept("init", "end " + builtObjects.size());
+
         return builtObjects;
     }
 

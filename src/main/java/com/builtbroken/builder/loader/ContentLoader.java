@@ -8,13 +8,11 @@ import com.builtbroken.builder.data.IJsonGeneratedObject;
 import com.builtbroken.builder.handler.JsonObjectHandlerRegistry;
 import com.builtbroken.builder.loader.file.IFileLocator;
 import com.builtbroken.builder.mapper.JsonMappingHandler;
-import com.builtbroken.builder.mapper.anno.JsonMapping;
 import com.builtbroken.builder.mapper.builder.IJsonBuilder;
 import com.builtbroken.builder.mapper.mappers.JsonClassMapper;
 import com.builtbroken.builder.pipe.PipeLine;
 import com.google.gson.JsonElement;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -178,7 +176,7 @@ public class ContentLoader
         jsonObjectHandlerRegistry.createOrGetHandler(type);
 
         //DEBUG-LOGGING
-        logger.accept("registerObject", "Type: '" + type + "' Class: '" + clazz + "'");
+        getLogger().accept("registerObject", "Type: '" + type + "' Class: '" + clazz + "'");
     }
 
     /**
@@ -188,7 +186,7 @@ public class ContentLoader
      */
     public void addFileLocator(IFileLocator locator)
     {
-        logger.accept("addFileLocator", "" + locator);
+        getLogger().accept("addFileLocator", "" + locator);
         fileLocators.add(locator);
     }
 
@@ -199,13 +197,13 @@ public class ContentLoader
     public void setup()
     {
         //DEBUG-LOGGING
-        logger.accept("setup", "start");
+        getLogger().accept("setup", "start");
 
         //Trigger setup defaults if not run
         if (!hasSetup)
         {
             //DEBUG-LOGGING
-            logger.accept("setup", "setup phase has not run, applying defaults");
+            getLogger().accept("setup", "setup phase has not run, applying defaults");
 
             //Defaults
             ContentBuilderLib.setupDefault(this);
@@ -215,7 +213,7 @@ public class ContentLoader
         if (!hasLoaded)
         {
             //DEBUG-LOGGING
-            logger.accept("setup", "load phase has not run, triggering init");
+            getLogger().accept("setup", "load phase has not run, triggering init");
 
             //Run
             init();
@@ -223,7 +221,7 @@ public class ContentLoader
         }
 
         //DEBUG-LOGGING
-        logger.accept("setup", "end");
+        getLogger().accept("setup", "end");
     }
 
     /**
@@ -233,14 +231,14 @@ public class ContentLoader
     public void load()
     {
         //DEBUG-LOGGING
-        logger.accept("load", "start");
+        getLogger().accept("load", "start");
 
         //Run
         locateFiles();
         processFiles();
 
         //DEBUG-LOGGING
-        logger.accept("load", "end");
+        getLogger().accept("load", "end");
     }
 
     protected void locateFiles()
@@ -255,30 +253,30 @@ public class ContentLoader
         //          goes for any information that might depend on accessing or editing other objects.
 
         //DEBUG-LOGGING
-        logger.accept("locateFiles", "start");
+        getLogger().accept("locateFiles", "start");
 
         //Loop loaders to find files to process
         for (IFileLocator locator : fileLocators)
         {
             //DEBUG-LOGGING
             final int prev = loadedFiles.size();
-            logger.accept("locateFiles", locator.toString() + " start search");
+            getLogger().accept("locateFiles", locator.toString() + " start search");
 
             //Do search
             loadedFiles.addAll(locator.search());
 
             //DEBUG-LOGGING
             final int found = (loadedFiles.size() - prev);
-            logger.accept("locateFiles", locator.toString() + " found " + found + " new file" + (found > 1 ? "s" : ""));
+            getLogger().accept("locateFiles", locator.toString() + " found " + found + " new file" + (found > 1 ? "s" : ""));
 
-            logger.accept("locateFiles", locator.toString() + " end search");
+            getLogger().accept("locateFiles", locator.toString() + " end search");
         }
 
         filesLocated = loadedFiles.size();
 
         //DEBUG-LOGGING
-        logger.accept("locateFiles", "located " + filesLocated + " file" + (filesLocated > 1 ? "s" : ""));
-        logger.accept("locateFiles", "end");
+        getLogger().accept("locateFiles", "located " + filesLocated + " file" + (filesLocated > 1 ? "s" : ""));
+        getLogger().accept("locateFiles", "end");
     }
 
     protected void processFiles()
@@ -288,7 +286,7 @@ public class ContentLoader
             try
             {
                 //DEBUG-LOGGING
-                logger.accept("processing", "[" + filesProcessed + "]  start processing data load: " + fileLoad);
+                getLogger().accept("processing", "[" + filesProcessed + "]  start processing data load: " + fileLoad);
 
                 final List<Object> out = pipeLine.handle(fileLoad.element, null); //TODO add metadata
 
@@ -299,10 +297,10 @@ public class ContentLoader
                 objectsGenerated += out.size();
 
                 //DEBUG-LOGGING
-                logger.accept("processing", "[" + filesProcessed + "]  generated " + out.size() + " object" + (out.size() > 1 ? "s" : ""));
+                getLogger().accept("processing", "[" + filesProcessed + "]  generated " + out.size() + " object" + (out.size() > 1 ? "s" : ""));
 
                 //DEBUG-LOGGING
-                logger.accept("processing", "[" + filesProcessed + "] end processing data load: " + fileLoad);
+                getLogger().accept("processing", "[" + filesProcessed + "] end processing data load: " + fileLoad);
 
                 //Count file is completed
                 filesProcessed++;
@@ -321,12 +319,12 @@ public class ContentLoader
     protected void init()
     {
         //DEBUG-LOGGING
-        logger.accept("init", "start");
+        getLogger().accept("init", "start");
 
         pipeLine.init();
 
         //DEBUG-LOGGING
-        logger.accept("init", "end");
+        getLogger().accept("init", "end");
     }
 
     /**
@@ -337,12 +335,12 @@ public class ContentLoader
     protected void loadComplete()
     {
         //DEBUG-LOGGING
-        logger.accept("loadComplete", "start");
+        getLogger().accept("loadComplete", "start");
 
         pipeLine.loadComplete();
 
         //DEBUG-LOGGING
-        logger.accept("loadComplete", "end");
+        getLogger().accept("loadComplete", "end");
     }
 
     /**
@@ -353,7 +351,7 @@ public class ContentLoader
     public void destroy()
     {
         //DEBUG-LOGGING
-        logger.accept("destroy", "start");
+        getLogger().accept("destroy", "start");
 
         clean();
 
@@ -363,7 +361,7 @@ public class ContentLoader
         jsonMappingHandler.destroy();
 
         //DEBUG-LOGGING
-        logger.accept("destroy", "end");
+        getLogger().accept("destroy", "end");
     }
 
     /**
@@ -372,11 +370,16 @@ public class ContentLoader
     public void clean()
     {
         //DEBUG-LOGGING
-        logger.accept("clean", "start");
+        getLogger().accept("clean", "start");
 
         loadedFiles.clear();
 
         //DEBUG-LOGGING
-        logger.accept("clean", "end");
+        getLogger().accept("clean", "end");
+    }
+
+    public BiConsumer<String, String> getLogger()
+    {
+        return logger;
     }
 }
