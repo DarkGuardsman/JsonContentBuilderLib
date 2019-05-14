@@ -7,9 +7,16 @@ import com.google.gson.JsonElement;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.*;
-import java.net.*;
-import java.nio.file.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.jar.JarEntry;
@@ -60,7 +67,8 @@ public class FileLoaderJar implements IFileLoader
                 }
             }
             zipFile.close();
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             e.printStackTrace();
         }
@@ -135,7 +143,8 @@ public class FileLoaderJar implements IFileLoader
             {
                 System.out.println("Could not locate folder[ " + folder + " ]"); //TODO logger or error handler
             }
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             throw new RuntimeException("Failed to load resources from class path.  Class='" + clazz + "' folder= '" + folder + "'", e);
         }
@@ -164,7 +173,8 @@ public class FileLoaderJar implements IFileLoader
             {
                 return walkPaths(Paths.get(url.toURI()));
             }
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             throw new RuntimeException("Failed to detect files from URL = " + url, e);
         }

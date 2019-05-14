@@ -46,7 +46,8 @@ public class JsonMappingHandler
             {
                 mapper.mapDataLinks(jsonToUse, objectToMap, loader.jsonObjectHandlerRegistry);
             }
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             if (mapper == null)
             {

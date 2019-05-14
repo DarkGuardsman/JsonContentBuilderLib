@@ -3,7 +3,6 @@ package com.builtbroken.builder.io;
 import com.builtbroken.builder.data.DataFileLoad;
 import com.builtbroken.builder.data.FileSource;
 import com.builtbroken.builder.loader.file.FileCheckFunction;
-import com.google.common.collect.Lists;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.internal.Streams;
@@ -11,10 +10,8 @@ import com.google.gson.stream.JsonReader;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.File;
 import java.io.Reader;
 import java.io.StringReader;
-import java.util.List;
 import java.util.function.Consumer;
 
 /**

@@ -2,7 +2,6 @@ package com.builtbroken.builder.pipe.nodes.mapping;
 
 import com.builtbroken.builder.ContentBuilderRefs;
 import com.builtbroken.builder.data.GeneratedObject;
-import com.builtbroken.builder.mapper.JsonMappingHandler;
 import com.builtbroken.builder.pipe.Pipe;
 import com.builtbroken.builder.pipe.nodes.NodeType;
 import com.builtbroken.builder.pipe.nodes.PipeNode;
@@ -23,7 +22,7 @@ public class PipeNodeMappingValidator extends PipeNode
     @Override
     public void receive(JsonElement data, Object currentObject, Queue<Object> objectsOut)
     {
-        if(currentObject instanceof GeneratedObject)
+        if (currentObject instanceof GeneratedObject)
         {
             final GeneratedObject generatedObjectData = (GeneratedObject) currentObject;
 

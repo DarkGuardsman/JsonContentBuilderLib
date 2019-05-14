@@ -4,7 +4,6 @@ import com.builtbroken.builder.converter.ConversionHandler;
 import com.builtbroken.builder.loader.ContentLoader;
 import com.builtbroken.builder.pipe.nodes.IPipeNode;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 import java.util.LinkedList;
 import java.util.ListIterator;
@@ -124,7 +123,8 @@ public class Pipe
         try
         {
             node.receive(jsonData, currentObject, queueOut);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             throw new RuntimeException("Unexpected error while processing node in pipeline[" + pipeName + "], Node: " + node.getUniqueID() + " Class: " + node.getClass(), e);
             //TODO add way for loader to provide more information about error

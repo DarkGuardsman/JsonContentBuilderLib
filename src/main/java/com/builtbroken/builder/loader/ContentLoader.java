@@ -8,7 +8,6 @@ import com.builtbroken.builder.data.IJsonGeneratedObject;
 import com.builtbroken.builder.handler.JsonObjectHandlerRegistry;
 import com.builtbroken.builder.loader.file.IFileLocator;
 import com.builtbroken.builder.mapper.JsonMappingHandler;
-import com.builtbroken.builder.mapper.anno.JsonConstructor;
 import com.builtbroken.builder.mapper.anno.JsonTemplate;
 import com.builtbroken.builder.mapper.builder.IJsonBuilder;
 import com.builtbroken.builder.mapper.mappers.JsonClassMapper;
@@ -124,8 +123,8 @@ public class ContentLoader
     /**
      * Called to register a class as an object template
      *
-     * @param clazz   - clazz that the template is created as, must contain {@link com.builtbroken.builder.mapper.anno.JsonTemplate}
-     * @param <C>     - its expected the class be instance of IJsonGeneratedObject
+     * @param clazz - clazz that the template is created as, must contain {@link com.builtbroken.builder.mapper.anno.JsonTemplate}
+     * @param <C>   - its expected the class be instance of IJsonGeneratedObject
      */
     public <C extends IJsonGeneratedObject> void registerObjectTemplate(Class<C> clazz)
     {
@@ -182,7 +181,8 @@ public class ContentLoader
                 try
                 {
                     return (C) builder.newObject(jsonElement, conversionHandler);
-                } catch (Exception e)
+                }
+                catch (Exception e)
                 {
                     throw new RuntimeException("Failed to build object of type[" + type + "]" + clazz, e);
                 }
@@ -325,7 +325,8 @@ public class ContentLoader
 
                 //Count file is completed
                 filesProcessed++;
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 new RuntimeException("ContentLoader: Unexpected error while processing data file load: " + fileLoad, e);
             }

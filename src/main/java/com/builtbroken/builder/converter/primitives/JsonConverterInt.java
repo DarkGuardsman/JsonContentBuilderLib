@@ -1,6 +1,5 @@
 package com.builtbroken.builder.converter.primitives;
 
-import com.builtbroken.builder.converter.JsonConverter;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 

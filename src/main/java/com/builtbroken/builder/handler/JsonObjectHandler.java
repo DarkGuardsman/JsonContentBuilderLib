@@ -1,6 +1,5 @@
 package com.builtbroken.builder.handler;
 
-import com.builtbroken.builder.data.GeneratedObject;
 import com.builtbroken.builder.data.IJsonGeneratedObject;
 
 import java.util.HashMap;

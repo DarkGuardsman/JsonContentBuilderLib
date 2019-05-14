@@ -59,7 +59,8 @@ public class JsonMethodLinker extends JsonLinker<Object>
             {
                 throw new RuntimeException("JsonFieldLinker currently only supports using a string as a link key");
             }
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             throw new RuntimeException("JsonMethodMapper: Failed to link json object to " +
                     "method " + method.getName()

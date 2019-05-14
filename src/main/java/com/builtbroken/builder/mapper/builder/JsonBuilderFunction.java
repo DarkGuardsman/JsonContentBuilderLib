@@ -5,7 +5,6 @@ import com.google.gson.JsonElement;
 
 import javax.annotation.Nonnull;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 /**
  * Created by Dark(DarkGuardsman, Robert) on 2019-05-14.

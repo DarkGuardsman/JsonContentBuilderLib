@@ -4,7 +4,6 @@ import com.builtbroken.builder.converter.ConversionHandler;
 import com.google.gson.JsonElement;
 
 import javax.annotation.Nonnull;
-import java.lang.reflect.InvocationTargetException;
 import java.util.function.Supplier;
 
 /**

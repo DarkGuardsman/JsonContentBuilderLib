@@ -3,13 +3,13 @@ package com.builtbroken.builder.pipe;
 import com.builtbroken.builder.ContentBuilderRefs;
 import com.builtbroken.builder.converter.ConversionHandler;
 import com.builtbroken.builder.loader.ContentLoader;
+import com.builtbroken.builder.pipe.nodes.IPipeNode;
+import com.builtbroken.builder.pipe.nodes.building.PipeNodeObjectCreator;
 import com.builtbroken.builder.pipe.nodes.building.PipeNodeObjectReg;
+import com.builtbroken.builder.pipe.nodes.json.PipeNodeCommentRemover;
+import com.builtbroken.builder.pipe.nodes.json.PipeNodeJsonSplitter;
 import com.builtbroken.builder.pipe.nodes.mapping.PipeNodeAutoWire;
 import com.builtbroken.builder.pipe.nodes.mapping.PipeNodeFieldHandler;
-import com.builtbroken.builder.pipe.nodes.building.PipeNodeObjectCreator;
-import com.builtbroken.builder.pipe.nodes.json.PipeNodeCommentRemover;
-import com.builtbroken.builder.pipe.nodes.IPipeNode;
-import com.builtbroken.builder.pipe.nodes.json.PipeNodeJsonSplitter;
 import com.builtbroken.builder.pipe.nodes.mapping.PipeNodeMappingValidator;
 import com.google.gson.JsonElement;
 

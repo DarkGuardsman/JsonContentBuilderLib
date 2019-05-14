@@ -47,9 +47,10 @@ public class JsonFieldMapper extends JsonMapper<Object>
             {
                 throw new RuntimeException("Failed to generate object");
             }
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
-            if(objectToSetFieldOn.getClass() != clazz || !objectToSetFieldOn.getClass().isAssignableFrom(clazz))
+            if (objectToSetFieldOn.getClass() != clazz || !objectToSetFieldOn.getClass().isAssignableFrom(clazz))
             {
                 throw new RuntimeException("JsonMethodMapper: Failed to map json data to field due to it's class not matching. "
                         + "\n FIELD:    " + field.getName() + "  T:" + field.getType()
@@ -77,7 +78,8 @@ public class JsonFieldMapper extends JsonMapper<Object>
         try
         {
             return !required || field.get(object) != null;
-        } catch (IllegalAccessException e)
+        }
+        catch (IllegalAccessException e)
         {
             return false;
         }

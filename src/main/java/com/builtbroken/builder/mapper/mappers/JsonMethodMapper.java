@@ -43,7 +43,8 @@ public class JsonMethodMapper extends JsonMapper<Object>
             {
                 throw new RuntimeException("Failed to generate object");
             }
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             throw new RuntimeException("JsonMethodMapper: Failed to map json data to " +
                     "method " + method.getName()

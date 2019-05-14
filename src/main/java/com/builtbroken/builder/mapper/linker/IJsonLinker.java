@@ -1,6 +1,5 @@
 package com.builtbroken.builder.mapper.linker;
 
-import com.builtbroken.builder.converter.ConversionHandler;
 import com.builtbroken.builder.handler.JsonObjectHandlerRegistry;
 import com.google.gson.JsonElement;
 

@@ -25,7 +25,7 @@ public class PipeNodeCommentRemover implements IPipeNode
         {
             cleanObject(data.getAsJsonObject(), 0);
         }
-        else if(data.isJsonArray())
+        else if (data.isJsonArray())
         {
             cleanArray(data.getAsJsonArray(), 0);
         }

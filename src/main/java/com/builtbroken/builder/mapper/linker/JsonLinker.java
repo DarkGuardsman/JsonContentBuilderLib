@@ -1,7 +1,5 @@
 package com.builtbroken.builder.mapper.linker;
 
-import com.builtbroken.builder.mapper.mappers.IJsonMapper;
-
 /**
  * Created by Dark(DarkGuardsman, Robert) on 2019-03-11.
  */

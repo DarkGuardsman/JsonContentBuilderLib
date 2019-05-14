@@ -23,7 +23,7 @@ public abstract class JsonConverterNumber extends JsonConverter<Number>
     @Override
     public boolean canSupport(JsonElement json)
     {
-        if(json instanceof JsonPrimitive)
+        if (json instanceof JsonPrimitive)
         {
             return json.getAsJsonPrimitive().isNumber();
         }

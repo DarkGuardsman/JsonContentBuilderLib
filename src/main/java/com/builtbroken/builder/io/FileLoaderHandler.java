@@ -3,15 +3,15 @@ package com.builtbroken.builder.io;
 import com.builtbroken.builder.data.DataFileLoad;
 import com.builtbroken.builder.data.FileSource;
 import com.builtbroken.builder.loader.file.FileCheckFunction;
-import com.google.gson.JsonElement;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.*;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 /**
  * Handles loading all files from the file system into data structures for use
@@ -121,7 +121,8 @@ public class FileLoaderHandler //TODO make this instance based instead of global
             {
                 getLoaderFor(extension).loadFile(null, new InputStreamReader(resource.openStream()),
                         fileConsumer, fileCheckFunction);
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 throw new RuntimeException("FileLaoderHandler: Unexpected error reading url resource " + resource);
             }
@@ -164,7 +165,8 @@ public class FileLoaderHandler //TODO make this instance based instead of global
                 {
                     loader.loadFile(new FileSource(file), stream, fileConsumer, fileCheckFunction);
 
-                } catch (Exception e)
+                }
+                catch (Exception e)
                 {
                     throw new RuntimeException("FileLoaderHandler: Unexpected error reading file " + file);
                 }

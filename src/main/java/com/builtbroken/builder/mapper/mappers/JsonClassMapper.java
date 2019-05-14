@@ -116,7 +116,8 @@ public class JsonClassMapper
                         try
                         {
                             return ((Supplier) field.get(null)).get();
-                        } catch (Exception e)
+                        }
+                        catch (Exception e)
                         {
                             throw new RuntimeException("JsonClassMapper: Unexpected error invoking supplier to create new object", e);
                         }
@@ -131,7 +132,8 @@ public class JsonClassMapper
                         try
                         {
                             return ((Function) field.get(null)).apply(json);
-                        } catch (Exception e)
+                        }
+                        catch (Exception e)
                         {
                             throw new RuntimeException("JsonClassMapper: Unexpected error invoking lambda function to create new object", e);
                         }
@@ -312,7 +314,8 @@ public class JsonClassMapper
                 try
                 {
                     return clazz.newInstance();
-                } catch (Exception e)
+                }
+                catch (Exception e)
                 {
                     throw new RuntimeException("JsonClassMapper: Unexpected error using creating object of type[" + type + "] using default method for clazz " + clazz, e);
 
