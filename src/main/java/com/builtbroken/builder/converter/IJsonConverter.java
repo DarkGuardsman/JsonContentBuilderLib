@@ -1,27 +1,13 @@
 package com.builtbroken.builder.converter;
 
+import com.builtbroken.builder.data.IJsonUnique;
 import com.google.gson.JsonElement;
 
 /**
  * Created by Dark(DarkGuardsman, Robert) on 2019-03-05.
  */
-public interface IJsonConverter<O extends Object>
+public interface IJsonConverter<O extends Object> extends IJsonUnique
 {
-
-    /**
-     * Used to ID the conversion type
-     * <p>
-     * Ex:
-     * "software:type.subType"
-     * "armory:ammo.type"
-     * "atomicscience:fuel.rod"
-     * "java:array"
-     * "java:map.hash"
-     *
-     * @return unique id
-     */
-    String getUniqueID();
-
     /**
      * Get alterative names this convert can use.
      * <p>

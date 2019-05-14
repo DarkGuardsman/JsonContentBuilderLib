@@ -2,16 +2,22 @@ package com.builtbroken.builder.mapper.mappers;
 
 import com.builtbroken.builder.converter.ConversionHandler;
 import com.builtbroken.builder.handler.JsonObjectHandlerRegistry;
+import com.builtbroken.builder.mapper.anno.JsonConstructor;
 import com.builtbroken.builder.mapper.anno.JsonMapping;
 import com.builtbroken.builder.mapper.anno.JsonObjectWiring;
+import com.builtbroken.builder.mapper.builder.IJsonBuilder;
+import com.builtbroken.builder.mapper.builder.JsonBuilder;
+import com.builtbroken.builder.mapper.builder.JsonBuilderMethod;
 import com.builtbroken.builder.mapper.linker.IJsonLinker;
 import com.builtbroken.builder.mapper.linker.JsonFieldLinker;
 import com.builtbroken.builder.mapper.linker.JsonMethodLinker;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,6 +29,7 @@ public class JsonClassMapper
 
     private final HashMap<String, IJsonMapper> mappings = new HashMap();
     private final HashMap<String, IJsonLinker> linkMappers = new HashMap();
+    private final HashMap<String, IJsonBuilder> jsonBuilders = new HashMap();
 
     private JsonClassMapper parent;
     public final Class clazz;
@@ -69,26 +76,104 @@ public class JsonClassMapper
         final Method[] methods = clazz.getDeclaredMethods();
         for (Method method : methods)
         {
-            JsonMapping mapping = method.getAnnotation(JsonMapping.class);
+            //Mapping handling
+            final JsonMapping mapping = method.getAnnotation(JsonMapping.class);
             if (mapping != null)
             {
+                //Error
+                if (Modifier.isStatic(method.getModifiers()))
+                {
+                    throw new RuntimeException("JsonClassMapper: Mapping can not be applied to a static method. "
+                            + " Class: " + clazz
+                            + " Method: " + method.toString());
+                }
+
                 JsonMethodMapper mapper = new JsonMethodMapper(method, mapping);
                 for (String key : mapping.keys())
                 {
                     mappings.put(key.toLowerCase(), mapper);
                 }
             }
-            else
+
+            //Wiring handling
+            final JsonObjectWiring objectWiring = method.getAnnotation(JsonObjectWiring.class);
+            if (objectWiring != null)
             {
-                JsonObjectWiring objectWiring = method.getAnnotation(JsonObjectWiring.class);
-                if (objectWiring != null)
+                //Error
+                if (mapping != null)
                 {
-                    JsonMethodLinker linker = new JsonMethodLinker(method, objectWiring);
-                    for (String key : linker.getKeys())
-                    {
-                        linkMappers.put(key.toLowerCase(), linker);
-                    }
+                    throw new RuntimeException("JsonClassMapper: A method can be a mapping injection point"
+                            + " or an auto wire injection point, not both. "
+                            + " Class: " + clazz
+                            + " Method: " + method.toString());
                 }
+                else if (Modifier.isStatic(method.getModifiers()))
+                {
+                    throw new RuntimeException("JsonClassMapper: Autowiring can not be applied to a static method. "
+                            + " Class: " + clazz
+                            + " Method: " + method.toString());
+                }
+
+                JsonMethodLinker linker = new JsonMethodLinker(method, objectWiring);
+                for (String key : linker.getKeys())
+                {
+                    linkMappers.put(key.toLowerCase(), linker);
+                }
+            }
+
+            //Construction handling
+            final JsonConstructor jsonConstructor = method.getAnnotation(JsonConstructor.class);
+            if (jsonConstructor != null)
+            {
+                //Error
+                if (!Modifier.isStatic(method.getModifiers()))
+                {
+                    throw new RuntimeException("JsonClassMapper: Can't apply an object constructor to a non-static method. "
+                            + " Class: " + clazz
+                            + " Method: " + method.toString());
+                }
+
+                final String key = jsonConstructor.type().toLowerCase();
+
+                if (method.getParameterCount() == 1 && method.getParameterTypes()[0].isAssignableFrom(JsonElement.class))
+                {
+                    //Json only constructor
+                    jsonBuilders.put(key, new JsonBuilderMethod(clazz, key, method, null, false));
+                }
+                else if (method.getParameterCount() > 0)
+                {
+                    //Locate all mappings
+                    final JsonMapping[] mappers = new JsonMapping[method.getParameterCount()];
+                    final Annotation[][] paraAnnos = method.getParameterAnnotations();
+                    for (int para = 0; para < mappers.length; para++)
+                    {
+                        for (Annotation annotation : paraAnnos[para])
+                        {
+                            if (annotation instanceof JsonMapping)
+                            {
+                                mappers[para] = (JsonMapping) annotation;
+                                break;
+                            }
+                        }
+
+                        if (mappers[para] == null)
+                        {
+                            new RuntimeException("JsonClassMapper: All method parameters require JsonMapping annotation "
+                                    + "when used with JsonConstructor annotation."
+                                    + " Class: " + clazz
+                                    + " Method: " + method);
+                        }
+                    }
+
+                    //Mapper constructor
+                    jsonBuilders.put(key, new JsonBuilderMethod(clazz, key, method, mappers, jsonConstructor.useConstructorData()));
+                }
+                else
+                {
+                    //Default constructor
+                    jsonBuilders.put(key, new JsonBuilderMethod(clazz, key, method, null, false));
+                }
+
             }
         }
         return this;

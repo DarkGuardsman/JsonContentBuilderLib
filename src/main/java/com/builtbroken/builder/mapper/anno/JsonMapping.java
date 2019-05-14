@@ -6,12 +6,20 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation added to methods and fields to indicate how to inject JSON
- * data.
+ * Annotation used to understand how to map json information to
+ * fields, methods, or parameters in constructors.
+ * <p>
+ * When used on a field it will set the field with the generated object
+ * <p>
+ * When used on a method it will invoke the method with the generated object
+ * <p>
+ * When used on a parameter in a constructor it will map that parameter
+ * to json data requested. Not yet supported for methods.
+ * <p>
  * Created by Dark(DarkGuardsman, Robert) on 2019-03-11.
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(value = {ElementType.FIELD, ElementType.METHOD})
+@Target(value = {ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER})
 public @interface JsonMapping
 {
 

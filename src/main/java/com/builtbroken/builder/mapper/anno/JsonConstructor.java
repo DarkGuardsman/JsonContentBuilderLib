@@ -29,4 +29,15 @@ public @interface JsonConstructor
      * Json Object type to build as, use this to allow a java object to support building different json objects
      */
     String type() default "*";
+
+    /**
+     * Set to true to use the constructor object from the JSON data.
+     * By default the Json data is designed with a type, and data set for reading information.
+     * Normally it would read from the data set but if the data needs to be separate for some reason
+     * then this can be used as a quick switch. Anything more complex should use the pipeline to
+     * define a custom read of the JSON file.
+     *
+     * @return
+     */
+    boolean useConstructorData() default false;
 }
