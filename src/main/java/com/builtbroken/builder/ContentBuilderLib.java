@@ -4,9 +4,12 @@ import com.builtbroken.builder.converter.ConversionHandler;
 import com.builtbroken.builder.converter.primitives.*;
 import com.builtbroken.builder.converter.strut.array.*;
 import com.builtbroken.builder.converter.strut.map.JsonConverterMap;
+import com.builtbroken.builder.data.IJsonGeneratedObject;
 import com.builtbroken.builder.loader.ContentLoader;
+import com.builtbroken.builder.mapper.anno.JsonTemplate;
 
 import java.util.HashMap;
+import java.util.ServiceLoader;
 
 
 /**
@@ -19,6 +22,7 @@ import java.util.HashMap;
  */
 public class ContentBuilderLib
 {
+
     private static ConversionHandler MAIN_CONVERTER;
     private static ContentLoader MAIN_LOADER;
 
@@ -63,6 +67,41 @@ public class ContentBuilderLib
 
         //Data Structures
         loader.conversionHandler.addConverter(new JsonConverterMap());
+    }
+
+    /**
+     * Called to do the setup of the entire system and all loaders
+     */
+    public static void setup()
+    {
+        //Make sure main loader exists
+        getMainLoader();
+
+        //Load templates from services
+        final ServiceLoader<IJsonGeneratedObject> templates = ServiceLoader.load(IJsonGeneratedObject.class);
+        for (IJsonGeneratedObject generatedObject : templates)
+        {
+            final Class<? extends IJsonGeneratedObject> clazz = generatedObject.getClass();
+            final JsonTemplate jsonConstructor = clazz.getAnnotation(JsonTemplate.class);
+            if (jsonConstructor != null)
+            {
+                getMainLoader().registerObjectTemplate(jsonConstructor.type(), clazz, null);
+            }
+            else
+            {
+                getMainLoader().registerObjectTemplate(generatedObject.getJsonType(), clazz, null);
+            }
+        }
+
+        loaders.values().forEach(loader -> loader.setup());
+    }
+
+    /**
+     * Called to trigger all loaders to load data
+     */
+    public static void load()
+    {
+        loaders.values().forEach(loader -> loader.load());
     }
 
     /**

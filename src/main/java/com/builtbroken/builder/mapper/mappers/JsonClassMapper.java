@@ -6,6 +6,7 @@ import com.builtbroken.builder.handler.JsonObjectHandlerRegistry;
 import com.builtbroken.builder.mapper.anno.JsonConstructor;
 import com.builtbroken.builder.mapper.anno.JsonMapping;
 import com.builtbroken.builder.mapper.anno.JsonObjectWiring;
+import com.builtbroken.builder.mapper.anno.JsonTemplate;
 import com.builtbroken.builder.mapper.builder.*;
 import com.builtbroken.builder.mapper.linker.IJsonLinker;
 import com.builtbroken.builder.mapper.linker.JsonFieldLinker;
@@ -301,6 +302,24 @@ public class JsonClassMapper
                 }
             }
         }
+
+        final JsonTemplate jsonTemplate = (JsonTemplate) clazz.getAnnotation(JsonTemplate.class);
+        if (jsonTemplate != null && jsonTemplate.useDefaultConstructor())
+        {
+            final String type = jsonTemplate.type().toLowerCase();
+            jsonBuilders.put(type, new JsonBuilderSupplier(type, () ->
+            {
+                try
+                {
+                    return clazz.newInstance();
+                } catch (Exception e)
+                {
+                    throw new RuntimeException("JsonClassMapper: Unexpected error using creating object of type[" + type + "] using default method for clazz " + clazz, e);
+
+                }
+            }));
+        }
+
         return this;
     }
 
