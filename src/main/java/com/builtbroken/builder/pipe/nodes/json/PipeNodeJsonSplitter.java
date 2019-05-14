@@ -5,6 +5,7 @@ import com.builtbroken.builder.pipe.nodes.IPipeNode;
 import com.builtbroken.builder.pipe.nodes.NodeType;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import java.util.Queue;
 
@@ -15,6 +16,7 @@ import java.util.Queue;
  */
 public class PipeNodeJsonSplitter implements IPipeNode
 {
+
     @Override
     public void receive(JsonElement data, Object currentObject, Queue<Object> objectsOut)
     {
@@ -31,6 +33,10 @@ public class PipeNodeJsonSplitter implements IPipeNode
                     throw new IllegalArgumentException("PipeNodeJsonSplitter: Can only split by objects in an array. Primitives and arrays are not considered there own objects for the pipe.");
                 }
             }
+        }
+        else if (currentObject instanceof JsonObject)
+        {
+            objectsOut.add(currentObject);
         }
     }
 
