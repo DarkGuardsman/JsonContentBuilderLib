@@ -18,7 +18,7 @@ public class PipeNodeAutoWire extends PipeNode
 
     public PipeNodeAutoWire(Pipe pipe)
     {
-        super(pipe, NodeType.MAPPER, ContentBuilderRefs.PIPE_LINK_MAPPER);
+        super(pipe, NodeType.MAPPER, ContentBuilderRefs.PIPE_WIRE_MAPPER);
     }
 
     @Override
