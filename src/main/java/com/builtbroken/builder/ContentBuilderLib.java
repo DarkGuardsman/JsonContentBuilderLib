@@ -5,7 +5,6 @@ import com.builtbroken.builder.converter.primitives.*;
 import com.builtbroken.builder.converter.strut.array.*;
 import com.builtbroken.builder.converter.strut.map.JsonConverterMap;
 import com.builtbroken.builder.loader.ContentLoader;
-import com.builtbroken.builder.mapper.JsonTemplateMapper;
 
 import java.util.HashMap;
 
@@ -20,12 +19,6 @@ import java.util.HashMap;
  */
 public class ContentBuilderLib
 {
-
-    /**
-     * Set to false to disable the default class mapping to find {@link com.builtbroken.builder.mapper.anno.JsonTemplate}
-     */
-    public static boolean enableClassMapping = true;
-
     private static ConversionHandler MAIN_CONVERTER;
     private static ContentLoader MAIN_LOADER;
 
@@ -61,28 +54,6 @@ public class ContentBuilderLib
 
         //Data Structures
         loader.conversionHandler.addConverter(new JsonConverterMap());
-    }
-
-    public static void setup()
-    {
-        //init main loader
-        getMainLoader();
-
-        if(enableClassMapping)
-        {
-            //Run class loader
-            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-            JsonTemplateMapper.locateAllTemplates(classLoader);
-        }
-
-
-        //Setup main loader
-        getMainLoader().setup();
-    }
-
-    public static void main(String... args)
-    {
-        setup();
     }
 
     /**
