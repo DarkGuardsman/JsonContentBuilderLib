@@ -51,25 +51,44 @@ public class JsonClassMapper
             //      However, both can share keys as they can't overlap.
             //      Ex: data field to store the ID
             //          wire to store the reference of the ID
-            JsonMapping mapping = field.getAnnotation(JsonMapping.class);
+            final JsonMapping mapping = field.getAnnotation(JsonMapping.class);
             if (mapping != null)
             {
+                if (Modifier.isStatic(field.getModifiers()))
+                {
+                    throw new RuntimeException("JsonClassMapper: Mapping can not be applied to a static field. "
+                            + " Class: " + clazz
+                            + " Field: " + field.toString());
+                }
+
                 JsonFieldMapper mapper = new JsonFieldMapper(clazz, field, mapping);
                 for (String key : mapping.keys())
                 {
                     mappings.put(key.toLowerCase(), mapper);
                 }
             }
-            else
+
+            final JsonObjectWiring objectWiring = field.getAnnotation(JsonObjectWiring.class);
+            if (objectWiring != null)
             {
-                JsonObjectWiring objectWiring = field.getAnnotation(JsonObjectWiring.class);
-                if (objectWiring != null)
+                if(mapping != null)
                 {
-                    JsonFieldLinker linker = new JsonFieldLinker(field, objectWiring);
-                    for (String key : linker.getKeys())
-                    {
-                        linkMappers.put(key.toLowerCase(), linker);
-                    }
+                    throw new RuntimeException("JsonClassMapper: A field can be a mapping injection point"
+                            + " or an auto wire injection point, not both. "
+                            + " Class: " + clazz
+                            + " Field: " + field.toString());
+                }
+                else if (Modifier.isStatic(field.getModifiers()))
+                {
+                    throw new RuntimeException("JsonClassMapper: Auto wiring can not be applied to a static field. "
+                            + " Class: " + clazz
+                            + " Field: " + field.toString());
+                }
+
+                JsonFieldLinker linker = new JsonFieldLinker(field, objectWiring);
+                for (String key : linker.getKeys())
+                {
+                    linkMappers.put(key.toLowerCase(), linker);
                 }
             }
         }
