@@ -3,7 +3,7 @@ package com.builtbroken.builder.mapper.linker;
 import com.builtbroken.builder.data.IJsonGeneratedObject;
 import com.builtbroken.builder.handler.IJsonObjectHandler;
 import com.builtbroken.builder.handler.JsonObjectHandlerRegistry;
-import com.builtbroken.builder.mapper.JsonObjectWiring;
+import com.builtbroken.builder.mapper.anno.JsonObjectWiring;
 import com.google.gson.JsonElement;
 
 import java.lang.reflect.Field;

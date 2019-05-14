@@ -1,7 +1,7 @@
 package com.builtbroken.builder.mapper.mappers;
 
 import com.builtbroken.builder.converter.ConversionHandler;
-import com.builtbroken.builder.mapper.JsonMapping;
+import com.builtbroken.builder.mapper.anno.JsonMapping;
 import com.google.gson.JsonElement;
 
 import java.lang.reflect.Field;

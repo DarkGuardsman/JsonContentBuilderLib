@@ -1,7 +1,7 @@
 package com.builtbroken.tests.mapper;
 
 import com.builtbroken.builder.ContentBuilderLib;
-import com.builtbroken.builder.mapper.JsonMapping;
+import com.builtbroken.builder.mapper.anno.JsonMapping;
 import com.builtbroken.tests.UnitTestHelpers;
 import com.google.gson.JsonObject;
 import org.junit.jupiter.api.AfterAll;

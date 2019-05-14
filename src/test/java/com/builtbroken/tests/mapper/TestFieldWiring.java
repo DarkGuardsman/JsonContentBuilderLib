@@ -3,7 +3,7 @@ package com.builtbroken.tests.mapper;
 import com.builtbroken.builder.ContentBuilderLib;
 import com.builtbroken.builder.data.GeneratedObject;
 import com.builtbroken.builder.data.IJsonGeneratedObject;
-import com.builtbroken.builder.mapper.JsonObjectWiring;
+import com.builtbroken.builder.mapper.anno.JsonObjectWiring;
 import com.google.gson.JsonObject;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;

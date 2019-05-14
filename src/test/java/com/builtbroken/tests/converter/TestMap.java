@@ -2,9 +2,7 @@ package com.builtbroken.tests.converter;
 
 import com.builtbroken.builder.converter.ConversionHandler;
 import com.builtbroken.builder.converter.primitives.JsonConverterString;
-import com.builtbroken.builder.converter.strut.array.JsonConverterArrayString;
 import com.builtbroken.builder.converter.strut.map.JsonConverterMap;
-import com.builtbroken.builder.mapper.JsonObjectWiring;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

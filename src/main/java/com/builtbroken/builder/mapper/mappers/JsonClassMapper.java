@@ -2,11 +2,10 @@ package com.builtbroken.builder.mapper.mappers;
 
 import com.builtbroken.builder.converter.ConversionHandler;
 import com.builtbroken.builder.handler.JsonObjectHandlerRegistry;
-import com.builtbroken.builder.mapper.JsonMapping;
-import com.builtbroken.builder.mapper.JsonObjectWiring;
+import com.builtbroken.builder.mapper.anno.JsonMapping;
+import com.builtbroken.builder.mapper.anno.JsonObjectWiring;
 import com.builtbroken.builder.mapper.linker.IJsonLinker;
 import com.builtbroken.builder.mapper.linker.JsonFieldLinker;
-import com.builtbroken.builder.mapper.linker.JsonLinker;
 import com.builtbroken.builder.mapper.linker.JsonMethodLinker;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

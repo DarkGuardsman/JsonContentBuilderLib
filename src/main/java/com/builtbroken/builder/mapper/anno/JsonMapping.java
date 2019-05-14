@@ -1,4 +1,4 @@
-package com.builtbroken.builder.mapper;
+package com.builtbroken.builder.mapper.anno;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
