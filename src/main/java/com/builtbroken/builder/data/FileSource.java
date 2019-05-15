@@ -33,4 +33,10 @@ public class FileSource
         fileName = file.getName();
         type = "file";
     }
+
+    @Override
+    public String toString()
+    {
+        return "FileSource[" + filePath + ", " + fileName + ", " + type + "]";
+    }
 }

@@ -10,6 +10,7 @@ import java.net.URL;
  */
 public class DataFileLoad
 {
+
     public final FileSource fileSource;
     public final JsonElement element;
 
@@ -29,5 +30,11 @@ public class DataFileLoad
     {
         this.fileSource = fileSource;
         this.element = element;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "DataFileLoad[" + fileSource + "]@" + hashCode();
     }
 }
