@@ -60,48 +60,7 @@ public class JsonFieldMapper extends JsonMapper<Object>
                 //Special handling for collections
                 if (type.equalsIgnoreCase(ConverterRefs.LIST)) //TODO create a handler set for special cases, interface on converter? or separate reg?
                 {
-                    if (Collection.class.isAssignableFrom(field.getType()))
-                    {
-                        final Collection storedValue = (Collection) field.get(objectToSetFieldOn);
-                        if (storedValue != null)
-                        {
-                            //Add all
-                            storedValue.addAll((Collection) valueToSet);
-
-                            //Clear for better GC
-                            ((Collection) valueToSet).clear();
-                        }
-                        else
-                        {
-                            throw new RuntimeException("JsonFieldMapper: Fields using 'LIST' conversion type must be"
-                                    + " initialized for mapping to work as expected."
-                                    + " CLASS: " + clazz
-                                    + " FIELD: " + field);
-                        }
-                    }
-                    //Extra way to apply collections
-                    else if (Consumer.class.isAssignableFrom(field.getType()))
-                    {
-                        final Consumer consumer = (Consumer) field.get(objectToSetFieldOn);
-                        if (consumer != null)
-                        {
-                            ((Collection) valueToSet).forEach(e -> consumer.accept(e));
-                        }
-                        else
-                        {
-                            throw new RuntimeException("JsonFieldMapper: Fields using 'LIST' conversion type must be"
-                                    + " initialized for mapping to work as expected."
-                                    + " CLASS: " + clazz
-                                    + " FIELD: " + field);
-                        }
-                    }
-                    else
-                    {
-                        throw new RuntimeException("JsonFieldMapper: Fields using 'LIST' conversion type must be"
-                                + " of type Collection or a subclass of Collection such as List."
-                                + " CLASS: " + clazz
-                                + " FIELD: " + field);
-                    }
+                    handleLists(objectToSetFieldOn, valueToSet);
                 }
                 else
                 {
@@ -184,6 +143,52 @@ public class JsonFieldMapper extends JsonMapper<Object>
                         + " FIELD: " + field
                         + " JSON: " + data);
             }
+        }
+    }
+
+    private void handleLists(Object objectToSetFieldOn, Object valueToSet) throws IllegalAccessException
+    {
+        if (Collection.class.isAssignableFrom(field.getType()))
+        {
+            final Collection storedValue = (Collection) field.get(objectToSetFieldOn);
+            if (storedValue != null)
+            {
+                //Add all
+                storedValue.addAll((Collection) valueToSet);
+
+                //Clear for better GC
+                ((Collection) valueToSet).clear();
+            }
+            else
+            {
+                throw new RuntimeException("JsonFieldMapper: Fields using 'LIST' conversion type must be"
+                        + " initialized for mapping to work as expected."
+                        + " CLASS: " + clazz
+                        + " FIELD: " + field);
+            }
+        }
+        //Extra way to apply collections
+        else if (Consumer.class.isAssignableFrom(field.getType()))
+        {
+            final Consumer consumer = (Consumer) field.get(objectToSetFieldOn);
+            if (consumer != null)
+            {
+                ((Collection) valueToSet).forEach(e -> consumer.accept(e));
+            }
+            else
+            {
+                throw new RuntimeException("JsonFieldMapper: Fields using 'LIST' conversion type must be"
+                        + " initialized for mapping to work as expected."
+                        + " CLASS: " + clazz
+                        + " FIELD: " + field);
+            }
+        }
+        else
+        {
+            throw new RuntimeException("JsonFieldMapper: Fields using 'LIST' conversion type must be"
+                    + " of type Collection or a subclass of Collection such as List."
+                    + " CLASS: " + clazz
+                    + " FIELD: " + field);
         }
     }
 
