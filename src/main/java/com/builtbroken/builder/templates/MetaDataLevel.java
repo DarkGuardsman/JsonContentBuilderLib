@@ -18,9 +18,10 @@ package com.builtbroken.builder.templates;
  * <p>
  * Created by Dark(DarkGuardsman, Robert) on 2019-05-15.
  */
-public enum MetaDataType
+public enum MetaDataLevel
 {
     FILE,
     FOLDER,
-    PROJECT
+    PROJECT,
+    OBJECT
 }

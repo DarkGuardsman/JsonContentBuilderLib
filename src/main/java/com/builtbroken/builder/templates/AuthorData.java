@@ -3,6 +3,7 @@ package com.builtbroken.builder.templates;
 import com.builtbroken.builder.ContentBuilderRefs;
 import com.builtbroken.builder.converter.ConverterRefs;
 import com.builtbroken.builder.data.IJsonGeneratedObject;
+import com.builtbroken.builder.mapper.anno.JsonConstructor;
 import com.builtbroken.builder.mapper.anno.JsonMapping;
 import com.builtbroken.builder.mapper.anno.JsonTemplate;
 
@@ -11,14 +12,14 @@ import com.builtbroken.builder.mapper.anno.JsonTemplate;
  * <p>
  * Created by Dark(DarkGuardsman, Robert) on 2019-05-14.
  */
-@JsonTemplate(type = ContentBuilderRefs.TYPE_AUTHOR_DATA, useDefaultConstructor = true)
+@JsonTemplate(type = ContentBuilderRefs.TYPE_AUTHOR_DATA)
 public class AuthorData implements IJsonGeneratedObject
 {
 
     /**
      * Author's name
      */
-    @JsonMapping(keys = "name", type = ConverterRefs.STRING, required = true)
+
     public String name;
 
     /**
@@ -35,15 +36,24 @@ public class AuthorData implements IJsonGeneratedObject
     public String url;
 
     /**
-     * Type of author data used to track if this is for a single file, package, or project
+     * Level the author data represents
      */
-    @JsonMapping(keys = "meta_type", type = ConverterRefs.STRING, required = true)
-    public MetaDataType type;
+    public MetaDataLevel level;
+
+    @JsonConstructor
+    public static AuthorData create(@JsonMapping(keys = "name", type = ConverterRefs.STRING, required = true) String name,
+                                    @JsonMapping(keys = "level", type = ConverterRefs.ENUM, required = true) MetaDataLevel type)
+    {
+        AuthorData data = new AuthorData();
+        data.name = name;
+        data.level = type;
+        return data;
+    }
 
     @Override
     public String getJsonType()
     {
-        return ContentBuilderRefs.TYPE_AUTHOR_DATA + "." + type;
+        return ContentBuilderRefs.TYPE_AUTHOR_DATA + "." + level.name().toLowerCase();
     }
 
     @Override

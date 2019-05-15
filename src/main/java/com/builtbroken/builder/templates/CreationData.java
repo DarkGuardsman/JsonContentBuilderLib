@@ -3,6 +3,7 @@ package com.builtbroken.builder.templates;
 import com.builtbroken.builder.ContentBuilderRefs;
 import com.builtbroken.builder.converter.ConverterRefs;
 import com.builtbroken.builder.data.IJsonGeneratedObject;
+import com.builtbroken.builder.mapper.anno.JsonConstructor;
 import com.builtbroken.builder.mapper.anno.JsonMapping;
 import com.builtbroken.builder.mapper.anno.JsonTemplate;
 
@@ -11,15 +12,13 @@ import com.builtbroken.builder.mapper.anno.JsonTemplate;
  * <p>
  * Created by Dark(DarkGuardsman, Robert) on 2019-05-14.
  */
-@JsonTemplate(type = ContentBuilderRefs.TYPE_CREATION_DATA, useDefaultConstructor = true)
+@JsonTemplate(type = ContentBuilderRefs.TYPE_CREATION_DATA)
 public class CreationData implements IJsonGeneratedObject
 {
 
-    @JsonMapping(keys = "name", type = ConverterRefs.STRING, required = true)
     public String name;
 
-    @JsonMapping(keys = "meta_type", type = ConverterRefs.ENUM, required = true)
-    public MetaDataType type;
+    public MetaDataLevel level;
 
     @JsonMapping(keys = "creation_date", type = ConverterRefs.STRING)
     public String createdOn;
@@ -33,10 +32,21 @@ public class CreationData implements IJsonGeneratedObject
     @JsonMapping(keys = "version", type = ConverterRefs.STRING)
     public String version;
 
+    @JsonConstructor
+    public static CreationData create(@JsonMapping(keys = "name", type = ConverterRefs.STRING, required = true) String name,
+                                      @JsonMapping(keys = "level", type = ConverterRefs.ENUM, required = true) MetaDataLevel level)
+    {
+        CreationData creationData = new CreationData();
+        creationData.name = name;
+        creationData.level = level;
+
+        return creationData;
+    }
+
     @Override
     public String getJsonType()
     {
-        return ContentBuilderRefs.TYPE_CREATION_DATA + "." + type.name().toLowerCase();
+        return ContentBuilderRefs.TYPE_CREATION_DATA + "." + level.name().toLowerCase();
     }
 
     @Override
