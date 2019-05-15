@@ -44,15 +44,6 @@ public class ContentBuilderLib
 
         loader.conversionHandler.addConverter(new JsonConverterString());
 
-        //TODO add char -> string or int
-        //TODO add stack -> JsonArray
-        //TODO add queue -> JsonArray
-        //TODO add linked list -> JsonArray
-        //TODO add tree -> nested JsonObject
-        //TODO add array list -> JsonArray
-        //TODO add generic collection support via add -> JsonArray or JsonObject matching same field input
-        //TODO add java date -> JsonObject
-
         //Arrays
         loader.conversionHandler.addConverter(new JsonConverterArray());
         loader.conversionHandler.addConverter(new JsonConverterArrayString());
