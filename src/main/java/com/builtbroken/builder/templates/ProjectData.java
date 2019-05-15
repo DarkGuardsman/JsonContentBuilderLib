@@ -44,6 +44,12 @@ public class ProjectData implements IJsonGeneratedObject
     public AuthorData authorData;
 
     /**
+     * Version of the project
+     */
+    @JsonObjectWiring(jsonFields = "name", objectType = ContentBuilderRefs.TYPE_VERSION_DATA + "." + ContentBuilderRefs.TYPE_PROJECT_DATA)
+    public VersionData versionData;
+
+    /**
      * Files or folders to include as part of the project
      */
     @JsonMapping(keys = "include", type = ConverterRefs.LIST)
