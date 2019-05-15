@@ -324,11 +324,11 @@ public class ContentLoader
                 getLogger().accept("processing", "[" + filesProcessed + "] end processing data load: " + fileLoad);
 
                 //Count file is completed
-                filesProcessed++;
+                filesProcessed += 1;
             }
             catch (Exception e)
             {
-                new RuntimeException("ContentLoader: Unexpected error while processing data file load: " + fileLoad, e);
+                throw new RuntimeException("ContentLoader: Unexpected error while processing data file load: " + fileLoad, e);
             }
         }
     }
