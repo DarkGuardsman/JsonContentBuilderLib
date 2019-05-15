@@ -2,8 +2,18 @@ package com.builtbroken.builder.mapper.builder;
 
 import com.builtbroken.builder.ContentBuilderRefs;
 import com.builtbroken.builder.converter.ConversionHandler;
+import com.builtbroken.builder.converter.ConverterRefs;
 import com.builtbroken.builder.mapper.anno.JsonMapping;
+import com.builtbroken.builder.mapper.mappers.JsonMapper;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Parameter;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * Created by Dark(DarkGuardsman, Robert) on 2019-05-14.
@@ -13,10 +23,10 @@ public abstract class JsonBuilderMapper extends JsonBuilder
 
     protected final Class clazz;
 
-    protected final JsonMapping[] mappers;
+    protected final BiFunction<JsonObject, ConversionHandler, Object>[] mappers;
     protected final boolean useConstructorData;
 
-    public JsonBuilderMapper(Class clazz, String type, JsonMapping[] mappers, boolean useConstructorData)
+    public JsonBuilderMapper(Class clazz, String type, BiFunction<JsonObject, ConversionHandler, Object>[] mappers, boolean useConstructorData)
     {
         super(type);
         this.clazz = clazz;
@@ -48,17 +58,59 @@ public abstract class JsonBuilderMapper extends JsonBuilder
         final Object[] args = new Object[mappers.length];
         for (int i = 0; i < mappers.length; i++)
         {
-            final JsonMapping mapper = mappers[i];
-            for (String key : mapper.keys())
+            final BiFunction<JsonObject, ConversionHandler, Object> mapper = mappers[i];
+            final Object out = mapper.apply(jsonObject, converter);
+            if(out != null)
             {
-                args[i] = converter.fromJson(mapper.type(), jsonObject.get(key), mapper.args());
-                if (args[i] != null)
-                {
-                    break;
-                }
+                args[i] = out;
             }
         }
 
         return args;
+    }
+
+
+    public static BiFunction<JsonObject, ConversionHandler, Object> get(Class<?> paraClazz, JsonMapping mapper, Supplier<String> error)
+    {
+        return (jsonObject, converter) ->
+        {
+            final String type = mapper.type();
+            Object object = null;
+            for (final String key : mapper.keys())
+            {
+                final JsonElement json = jsonObject.get(key);
+
+                if(json != null)
+                {
+                    //Special handling for enum
+                    if (type.equalsIgnoreCase(ConverterRefs.ENUM))
+                    {
+                        try
+                        {
+                            object = JsonMapper.getEnumValue(paraClazz, json);
+                        } catch (Exception e)
+                        {
+                            throw new RuntimeException("JsonBuilderMapper: Failed to get enum due", e);
+                        }
+                    }
+                    //Normal handling
+                    else
+                    {
+                        object = converter.fromJson(type, json, mapper.args());
+                    }
+                }
+
+                if (json != null)
+                {
+                    break;
+                }
+            }
+
+            if(object == null && mapper.required())
+            {
+                throw new RuntimeException("JsonBuilderMapper: Failed to load required json field while mapping for a builder. " + error.get());
+            }
+            return object;
+        };
     }
 }

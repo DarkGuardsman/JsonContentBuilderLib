@@ -3,10 +3,12 @@ package com.builtbroken.builder.mapper.builder;
 import com.builtbroken.builder.converter.ConversionHandler;
 import com.builtbroken.builder.mapper.anno.JsonMapping;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.function.BiFunction;
 
 /**
  * Created by Dark(DarkGuardsman, Robert) on 2019-05-14.
@@ -15,7 +17,7 @@ public class JsonBuilderConstructor extends JsonBuilderMapper
 {
     protected final Constructor constructor;
 
-    public JsonBuilderConstructor(Class clazz, String type, Constructor constructor, JsonMapping[] mappers, boolean useConstructorData)
+    public JsonBuilderConstructor(Class clazz, String type, Constructor constructor, BiFunction<JsonObject, ConversionHandler, Object>[] mappers, boolean useConstructorData)
     {
         super(clazz, type, mappers, useConstructorData);
         this.constructor = constructor;

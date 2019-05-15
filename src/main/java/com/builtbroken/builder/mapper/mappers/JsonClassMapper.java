@@ -21,6 +21,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -228,15 +229,21 @@ public class JsonClassMapper
                 else if (method.getParameterCount() > 0)
                 {
                     //Locate all mappings
-                    final JsonMapping[] mappers = new JsonMapping[method.getParameterCount()];
+                    final BiFunction<JsonObject, ConversionHandler, Object>[] mappers = new BiFunction[method.getParameterCount()];
                     final Annotation[][] paraAnnos = method.getParameterAnnotations();
                     for (int para = 0; para < mappers.length; para++)
                     {
+                        final int paraC = para;
+                        final Class<?> paraClazz = method.getParameterTypes()[para];
                         for (Annotation annotation : paraAnnos[para])
                         {
                             if (annotation instanceof JsonMapping)
                             {
-                                mappers[para] = (JsonMapping) annotation;
+                                if (annotation instanceof JsonMapping)
+                                {
+                                    mappers[para] = JsonBuilderMapper.get(paraClazz, (JsonMapping) annotation, () -> "CLAZZ: " + clazz + " METHOD: " + method + " PARA: " + paraC);
+                                    break;
+                                }
                                 break;
                             }
                         }
@@ -282,15 +289,17 @@ public class JsonClassMapper
                 else if (constructor.getParameterCount() > 0)
                 {
                     //Locate all mappings
-                    final JsonMapping[] mappers = new JsonMapping[constructor.getParameterCount()];
+                    final BiFunction<JsonObject, ConversionHandler, Object>[] mappers = new BiFunction[constructor.getParameterCount()];
                     final Annotation[][] paraAnnos = constructor.getParameterAnnotations();
                     for (int para = 0; para < mappers.length; para++)
                     {
+                        final int paraC = para;
+                        final Class<?> paraClazz = constructor.getParameterTypes()[para];
                         for (Annotation annotation : paraAnnos[para])
                         {
                             if (annotation instanceof JsonMapping)
                             {
-                                mappers[para] = (JsonMapping) annotation;
+                                mappers[para] = JsonBuilderMapper.get(paraClazz, (JsonMapping) annotation, () -> "CLAZZ: " + clazz + " CONSTRUCTOR: " + constructor + " PARA: " + paraC);
                                 break;
                             }
                         }
