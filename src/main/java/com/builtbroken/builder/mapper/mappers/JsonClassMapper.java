@@ -157,8 +157,14 @@ public class JsonClassMapper
                             + " Class: " + clazz
                             + " Method: " + method.toString());
                 }
+                else if(method.getParameterCount() != 1)
+                {
+                    throw new RuntimeException("JsonClassMapper: Mapping only supports a single parameter for input. "
+                            + " Class: " + clazz
+                            + " Method: " + method.toString());
+                }
 
-                final JsonMethodMapper mapper = new JsonMethodMapper(method, mapping);
+                final JsonMethodMapper mapper = new JsonMethodMapper(clazz, method, mapping);
                 for (String key : mapping.keys())
                 {
                     System.out.println("JsonClassMapper[" + clazz + "] MAP: " + key + " -> " + method);
@@ -181,6 +187,12 @@ public class JsonClassMapper
                 else if (Modifier.isStatic(method.getModifiers()))
                 {
                     throw new RuntimeException("JsonClassMapper: Autowiring can not be applied to a static method. "
+                            + " Class: " + clazz
+                            + " Method: " + method.toString());
+                }
+                else if(method.getParameterCount() != 1)
+                {
+                    throw new RuntimeException("JsonClassMapper: Autowiring only supports a single parameter for input. "
                             + " Class: " + clazz
                             + " Method: " + method.toString());
                 }

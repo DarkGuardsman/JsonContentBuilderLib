@@ -45,35 +45,36 @@ public class JsonFieldMapper extends JsonMapper<Object>
             field.setAccessible(true);
 
             //Enums are handled in a special way to avoid needing to specify the class in the args
-            if(field.getType().isEnum()) //TODO convert to special case injection
+            if(type.equalsIgnoreCase(ConverterRefs.ENUM)) //TODO convert to special case injection
             {
                 handleEnum(objectToSetFieldOn, data);
-                return;
-            }
-
-            //Convert data
-            valueToSet = converter.fromJson(type, data, args);
-
-            //validate
-            if (valueToSet != null) //TODO make throw errors if fails to generate instead of NPE check
-            {
-                //Special handling for collections
-                if (type.equalsIgnoreCase(ConverterRefs.LIST)) //TODO create a handler set for special cases, interface on converter? or separate reg?
-                {
-                    handleLists(objectToSetFieldOn, valueToSet);
-                }
-                else
-                {
-                    //Do Set
-                    field.set(objectToSetFieldOn, valueToSet);
-                }
             }
             else
             {
-                throw new RuntimeException("JsonFieldMapper: Failed to generate object using "
-                        + " TYPE: " + type
-                        + " ARGS: " + args
-                        + " JSON: " + data);
+                //Convert data
+                valueToSet = converter.fromJson(type, data, args);
+
+                //validate
+                if (valueToSet != null) //TODO make throw errors if fails to generate instead of NPE check
+                {
+                    //Special handling for collections
+                    if (type.equalsIgnoreCase(ConverterRefs.LIST)) //TODO create a handler set for special cases, interface on converter? or separate reg?
+                    {
+                        handleLists(objectToSetFieldOn, valueToSet);
+                    }
+                    else
+                    {
+                        //Do Set
+                        field.set(objectToSetFieldOn, valueToSet);
+                    }
+                }
+                else
+                {
+                    throw new RuntimeException("JsonFieldMapper: Failed to generate object using "
+                            + " TYPE: " + type
+                            + " ARGS: " + args
+                            + " JSON: " + data);
+                }
             }
         } catch (Exception e)
         {

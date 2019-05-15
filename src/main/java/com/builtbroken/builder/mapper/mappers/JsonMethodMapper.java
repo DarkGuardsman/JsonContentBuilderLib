@@ -1,10 +1,13 @@
 package com.builtbroken.builder.mapper.mappers;
 
 import com.builtbroken.builder.converter.ConversionHandler;
+import com.builtbroken.builder.converter.ConverterRefs;
 import com.builtbroken.builder.mapper.anno.JsonMapping;
 import com.google.gson.JsonElement;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.Arrays;
 
 /**
@@ -12,17 +15,18 @@ import java.util.Arrays;
  */
 public class JsonMethodMapper extends JsonMapper<Object>
 {
-
+    private final Class clazz;
     private final Method method;
 
-    public JsonMethodMapper(Method method, JsonMapping mapping)
+    public JsonMethodMapper(Class clazz, Method method, JsonMapping mapping)
     {
-        this(method, mapping.keys(), mapping.type(), mapping.args());
+        this(clazz, method, mapping.keys(), mapping.type(), mapping.args());
     }
 
-    public JsonMethodMapper(Method method, String[] names, String type, String[] args)
+    public JsonMethodMapper(Class clazz, Method method, String[] names, String type, String[] args)
     {
         super(names, type, args);
+        this.clazz = clazz;
         this.method = method;
     }
 
@@ -33,15 +37,24 @@ public class JsonMethodMapper extends JsonMapper<Object>
         {
             method.setAccessible(true);
 
-            final Object generatedObject = converter.fromJson(type, data, args);
-            //TODO make throw errors if fails to generate instead of NPE check
-            if (generatedObject != null)
+            //Special case for enums
+            if(type.equalsIgnoreCase(ConverterRefs.ENUM))
             {
-                method.invoke(object, generatedObject);
+                handleEnum(object, data);
             }
+            //Normal handling
             else
             {
-                throw new RuntimeException("Failed to generate object");
+                final Object generatedObject = converter.fromJson(type, data, args);
+                //TODO make throw errors if fails to generate instead of NPE check
+                if (generatedObject != null)
+                {
+                    method.invoke(object, generatedObject);
+                }
+                else
+                {
+                    throw new RuntimeException("Failed to generate object");
+                }
             }
         }
         catch (Exception e)
@@ -55,5 +68,53 @@ public class JsonMethodMapper extends JsonMapper<Object>
                     e);
         }
 
+    }
+
+    private void handleEnum(Object objectToSetFieldOn, JsonElement data) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException
+    {
+        final Class type = method.getParameterTypes()[0];
+        if(type.isEnum()) //TODO convert to special case injection
+        {
+            if(!data.isJsonPrimitive())
+            {
+                throw new RuntimeException("JsonFieldMapper: Fields using 'ENUM' conversion type require"
+                        + " json to be a primitive such as String or Integer"
+                        + " CLASS: " + clazz
+                        + " METHOD: " + method
+                        + " JSON: " + data);
+            }
+
+
+            final Class<? extends Enum> enumClass = clazz.asSubclass(Enum.class);
+
+            final Method method = enumClass.getDeclaredMethod("values");
+            final Enum[] ens = (Enum[])method.invoke(null);
+
+            if(data.getAsJsonPrimitive().isString())
+            {
+                final String value = data.getAsString();
+                for (Enum en : ens)
+                {
+                    if (en.name().equalsIgnoreCase(value))
+                    {
+                        method.invoke(objectToSetFieldOn, en);
+                        break;
+                    }
+                }
+            }
+            else if(data.getAsJsonPrimitive().isNumber())
+            {
+                //Not even going to check bounds, its broken either way if not in bounds
+                method.invoke(objectToSetFieldOn, ens[data.getAsJsonPrimitive().getAsInt()]);
+            }
+            else
+            {
+                throw new RuntimeException("JsonFieldMapper: Fields using 'ENUM' conversion type require"
+                        + " json to be a String or Integer"
+                        + " CLASS: " + clazz
+                        + " METHOD: " + method
+                        + " JSON: " + data);
+            }
+        }
     }
 }
