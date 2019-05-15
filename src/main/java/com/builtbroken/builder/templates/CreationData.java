@@ -1,5 +1,7 @@
 package com.builtbroken.builder.templates;
 
+import com.builtbroken.builder.ContentBuilderRefs;
+import com.builtbroken.builder.converter.ConverterRefs;
 import com.builtbroken.builder.data.IJsonGeneratedObject;
 import com.builtbroken.builder.mapper.anno.JsonMapping;
 import com.builtbroken.builder.mapper.anno.JsonTemplate;
@@ -9,32 +11,32 @@ import com.builtbroken.builder.mapper.anno.JsonTemplate;
  * <p>
  * Created by Dark(DarkGuardsman, Robert) on 2019-05-14.
  */
-@JsonTemplate(type = "metadata", useDefaultConstructor = true)
+@JsonTemplate(type = ContentBuilderRefs.TYPE_CREATION_DATA, useDefaultConstructor = true)
 public class CreationData implements IJsonGeneratedObject
 {
 
-    @JsonMapping(keys = "name", type = "string", required = true)
+    @JsonMapping(keys = "name", type = ConverterRefs.STRING, required = true)
     public String name;
 
-    @JsonMapping(keys = "meta_type", type = "enum", required = true)
+    @JsonMapping(keys = "meta_type", type = ConverterRefs.ENUM, required = true)
     public MetaDataType type;
 
-    @JsonMapping(keys = "creation_date", type = "string")
+    @JsonMapping(keys = "creation_date", type = ConverterRefs.STRING)
     public String createdOn;
 
-    @JsonMapping(keys = "last_update_date", type = "string")
+    @JsonMapping(keys = "last_update_date", type = ConverterRefs.STRING)
     public String updatedLast;
 
-    @JsonMapping(keys = "program_used", type = "string")
+    @JsonMapping(keys = "program_used", type = ConverterRefs.STRING)
     public String program;
 
-    @JsonMapping(keys = "version", type = "string")
+    @JsonMapping(keys = "version", type = ConverterRefs.STRING)
     public String version;
 
     @Override
     public String getJsonType()
     {
-        return "metadata." + type.name().toLowerCase();
+        return ContentBuilderRefs.TYPE_CREATION_DATA + "." + type.name().toLowerCase();
     }
 
     @Override

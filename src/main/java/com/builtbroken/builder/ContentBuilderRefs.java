@@ -34,7 +34,7 @@ public class ContentBuilderRefs
     public static final String TYPE_AUTHOR_DATA = "author";
     public static final String TYPE_CREATION_DATA = "metadata";
     public static final String TYPE_PROJECT_DATA = "project";
-
+    public static final String TYPE_VERSION_DATA = "version";
 
     //==== DATA =====
     public static final String ANY = "*";
