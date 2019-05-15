@@ -85,10 +85,10 @@ public class JsonMethodMapper extends JsonMapper<Object>
             }
 
 
-            final Class<? extends Enum> enumClass = clazz.asSubclass(Enum.class);
+            final Class<? extends Enum> enumClass = type.asSubclass(Enum.class);
 
-            final Method method = enumClass.getDeclaredMethod("values");
-            final Enum[] ens = (Enum[])method.invoke(null);
+            final Method valuesMethod = enumClass.getDeclaredMethod("values");
+            final Enum[] ens = (Enum[])valuesMethod.invoke(null);
 
             if(data.getAsJsonPrimitive().isString())
             {
@@ -104,15 +104,16 @@ public class JsonMethodMapper extends JsonMapper<Object>
             }
             else if(data.getAsJsonPrimitive().isNumber())
             {
+                Enum value = ens[data.getAsJsonPrimitive().getAsInt()];
                 //Not even going to check bounds, its broken either way if not in bounds
-                method.invoke(objectToSetFieldOn, ens[data.getAsJsonPrimitive().getAsInt()]);
+                method.invoke(objectToSetFieldOn, value);
             }
             else
             {
                 throw new RuntimeException("JsonFieldMapper: Fields using 'ENUM' conversion type require"
                         + " json to be a String or Integer"
                         + " CLASS: " + clazz
-                        + " METHOD: " + method
+                        + " METHOD: " + valuesMethod
                         + " JSON: " + data);
             }
         }
