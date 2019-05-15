@@ -51,7 +51,7 @@ public class JsonFieldMapper extends JsonMapper<Object>
                 //Special handling for collections
                 if (type.equalsIgnoreCase(ConverterRefs.LIST)) //TODO create a handler set for special cases, interface on converter? or separate reg?
                 {
-                    if (field.getType().isAssignableFrom(Collection.class))
+                    if (Collection.class.isAssignableFrom(field.getType()))
                     {
                         final Collection storedValue = (Collection) field.get(objectToSetFieldOn);
                         if (storedValue != null)
@@ -71,7 +71,7 @@ public class JsonFieldMapper extends JsonMapper<Object>
                         }
                     }
                     //Extra way to apply collections
-                    else if (field.getType().isAssignableFrom(Consumer.class))
+                    else if (Consumer.class.isAssignableFrom(field.getType()))
                     {
                         final Consumer consumer = (Consumer) field.get(objectToSetFieldOn);
                         if (consumer != null)
