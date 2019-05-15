@@ -47,7 +47,7 @@ public class JsonFieldMapper extends JsonMapper<Object>
             //Enums are handled in a special way to avoid needing to specify the class in the args
             if(type.equalsIgnoreCase(ConverterRefs.ENUM)) //TODO convert to special case injection
             {
-                handleEnum(objectToSetFieldOn, data);
+                field.set(objectToSetFieldOn, getEnumValue(field.getType(), data));
             }
             else
             {
@@ -97,53 +97,6 @@ public class JsonFieldMapper extends JsonMapper<Object>
                     + "\n VALUE:    " + valueToSet + "  C: " + (valueToSet != null ? valueToSet.getClass() : "Nil")
                     + "\n JSON:     " + data,
                     e);
-        }
-    }
-
-    private void handleEnum(Object objectToSetFieldOn, JsonElement data) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException
-    {
-        if(field.getType().isEnum()) //TODO convert to special case injection
-        {
-            if(!data.isJsonPrimitive())
-            {
-                throw new RuntimeException("JsonFieldMapper: Fields using 'ENUM' conversion type require"
-                        + " json to be a primitive such as String or Integer"
-                        + " CLASS: " + clazz
-                        + " FIELD: " + field
-                        + " JSON: " + data);
-            }
-
-
-            final Class<? extends Enum> enumClass = field.getType().asSubclass(Enum.class);
-
-            final Method method = enumClass.getDeclaredMethod("values");
-            final Enum[] ens = (Enum[])method.invoke(null);
-
-            if(data.getAsJsonPrimitive().isString())
-            {
-                final String value = data.getAsString();
-                for (Enum en : ens)
-                {
-                    if (en.name().equalsIgnoreCase(value))
-                    {
-                        field.set(objectToSetFieldOn, en);
-                        break;
-                    }
-                }
-            }
-            else if(data.getAsJsonPrimitive().isNumber())
-            {
-                //Not even going to check bounds, its broken either way if not in bounds
-                field.set(objectToSetFieldOn, ens[data.getAsJsonPrimitive().getAsInt()]);
-            }
-            else
-            {
-                throw new RuntimeException("JsonFieldMapper: Fields using 'ENUM' conversion type require"
-                        + " json to be a String or Integer"
-                        + " CLASS: " + clazz
-                        + " FIELD: " + field
-                        + " JSON: " + data);
-            }
         }
     }
 
