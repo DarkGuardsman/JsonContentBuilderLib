@@ -16,11 +16,7 @@ import java.util.*;
  */
 public class JsonConverterList extends JsonConverter<Collection>
 {
-
     private ConversionHandler handler;
-
-    public String json_key = "key";
-    public String json_value = "value";
 
     public JsonConverterList()
     {
@@ -47,7 +43,7 @@ public class JsonConverterList extends JsonConverter<Collection>
 
 
     @Override
-    public JsonElement toJson(Collection objects, String[] args)
+    public JsonArray toJson(Collection objects, String[] args)
     {
         JsonArray array = new JsonArray();
         if (args == null || args.length == 0)
@@ -80,7 +76,7 @@ public class JsonConverterList extends JsonConverter<Collection>
     }
 
     @Override
-    public Collection fromJson(JsonElement data, String[] args)
+    public List fromJson(JsonElement data, String[] args)
     {
         if (args == null || args.length == 0)
         {
