@@ -34,16 +34,18 @@ public class JsonObjectHandlerRegistry
      */
     public void onCreated(GeneratedObject object)
     {
-        final String type = object.type.toLowerCase();
-        if (object.objectCreated instanceof IJsonGeneratedObject)
+        final Object objectCreated = object.objectCreated;
+        if (objectCreated instanceof IJsonGeneratedObject)
         {
-            if (handlers.containsKey(type))
-            {
-                handlers.get(type).onCreated((IJsonGeneratedObject) object.objectCreated);
-            }
+            final IJsonGeneratedObject jsonGeneratedObject = (IJsonGeneratedObject) objectCreated;
+            final String type = jsonGeneratedObject.getJsonType().toLowerCase();
+
+            //Create handler if we have none
+            createOrGetHandler(type).onCreated(jsonGeneratedObject);
         }
         else
         {
+            final String type = object.type.toLowerCase();
             if (!unknownObjects.containsKey(type))
             {
                 unknownObjects.put(type, new ArrayList());
