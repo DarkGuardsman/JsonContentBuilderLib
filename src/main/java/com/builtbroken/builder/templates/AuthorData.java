@@ -1,43 +1,52 @@
 package com.builtbroken.builder.templates;
 
 import com.builtbroken.builder.data.IJsonGeneratedObject;
-import com.builtbroken.builder.mapper.anno.JsonConstructor;
 import com.builtbroken.builder.mapper.anno.JsonMapping;
 import com.builtbroken.builder.mapper.anno.JsonTemplate;
 
 /**
+ * Used to store author information about a folder containing JSON or a single json
+ * <p>
  * Created by Dark(DarkGuardsman, Robert) on 2019-05-14.
  */
 @JsonTemplate(type = "author")
 public class AuthorData implements IJsonGeneratedObject
 {
 
-    public final String name;
-    public final String url;
+    /**
+     * Author's name
+     */
+    @JsonMapping(keys = "name", type = "string", required = true)
+    public String name;
 
-    //exists for service loader
-    public AuthorData()
-    {
-        name = "service";
-        url = "local";
-    }
+    /**
+     * Group of the author data. For a single file this will be null, for package it will
+     * be the unique package name, and for project it will be the project's name.
+     */
+    @JsonMapping(keys = "group", type = "string")
+    public String group;
 
-    @JsonConstructor
-    public AuthorData(@JsonMapping(keys = "name", type = "string") String name, @JsonMapping(keys = "url", type = "string") String url)
-    {
-        this.name = name;
-        this.url = url;
-    }
+    /**
+     * Author's personal URL or contract information
+     */
+    @JsonMapping(keys = "url", type = "string")
+    public String url;
+
+    /**
+     * Type of author data used to track if this is for a single file, package, or project
+     */
+    @JsonMapping(keys = "meta_type", type = "enum", required = true)
+    public MetaDataType type;
 
     @Override
     public String getJsonType()
     {
-        return "author";
+        return "author." + type;
     }
 
     @Override
     public String getJsonUniqueID()
     {
-        return name;
+        return group != null ? group : name;
     }
 }

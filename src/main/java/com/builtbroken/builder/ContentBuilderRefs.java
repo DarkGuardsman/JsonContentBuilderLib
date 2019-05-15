@@ -30,6 +30,11 @@ public class ContentBuilderRefs
     //==== IDS ======
     public static final String MAIN_LOADER = "main";
 
+    //==== JSON Object Types used by project
+    public static final String TYPE_AUTHOR_DATA = "author";
+    public static final String TYPE_CREATION_DATA = "metadata";
+    public static final String TYPE_PROJECT_DATA = "project";
+
 
     //==== DATA =====
     public static final String ANY = "*";

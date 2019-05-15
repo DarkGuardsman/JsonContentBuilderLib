@@ -5,13 +5,19 @@ import com.builtbroken.builder.mapper.anno.JsonMapping;
 import com.builtbroken.builder.mapper.anno.JsonTemplate;
 
 /**
+ * Used to store information about a file when created by an editor or auto generation program
+ * <p>
  * Created by Dark(DarkGuardsman, Robert) on 2019-05-14.
  */
 @JsonTemplate(type = "metadata", useDefaultConstructor = true)
 public class CreationData implements IJsonGeneratedObject
 {
-    @JsonMapping(keys = "name", type = "string")
+
+    @JsonMapping(keys = "name", type = "string", required = true)
     public String name;
+
+    @JsonMapping(keys = "meta_type", type = "enum", required = true)
+    public MetaDataType type;
 
     @JsonMapping(keys = "creation_date", type = "string")
     public String createdOn;
@@ -28,7 +34,7 @@ public class CreationData implements IJsonGeneratedObject
     @Override
     public String getJsonType()
     {
-        return "metadata";
+        return "metadata." + type.name().toLowerCase();
     }
 
     @Override
