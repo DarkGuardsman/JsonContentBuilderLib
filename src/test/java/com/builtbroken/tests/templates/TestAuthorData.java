@@ -4,6 +4,7 @@ import com.builtbroken.builder.ContentBuilderLib;
 import com.builtbroken.builder.handler.IJsonObjectHandler;
 import com.builtbroken.builder.loader.file.FileLocatorSimple;
 import com.builtbroken.builder.templates.AuthorData;
+import com.builtbroken.builder.templates.MetaDataLevel;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -37,8 +38,46 @@ public class TestAuthorData
 
         Assertions.assertTrue(object instanceof AuthorData);
 
+        AuthorData authorData = (AuthorData) object;
+        Assertions.assertNull(authorData.group);
+        Assertions.assertNull(authorData.url);
+        Assertions.assertEquals("test author", authorData.name);
+        Assertions.assertEquals(MetaDataLevel.FILE, authorData.level);
 
         //Cleanup
-        ContentBuilderLib.getMainLoader().destroy();
+        ContentBuilderLib.destroy();
+    }
+
+    @Test
+    public void testFolderData()
+    {
+        //Setup
+        File file = new File(System.getProperty("user.dir"), "src/test/resources/test/data/author/author_folder.json");
+        ContentBuilderLib.getMainLoader().addFileLocator(new FileLocatorSimple(file));
+        ContentBuilderLib.getMainLoader().registerObjectTemplate(AuthorData.class);
+        ContentBuilderLib.getMainLoader().setup();
+
+        //Trigger loading of file
+        ContentBuilderLib.getMainLoader().load();
+
+        //Test we loaded something
+        Assertions.assertEquals(1, ContentBuilderLib.getMainLoader().filesLocated);
+        Assertions.assertEquals(1, ContentBuilderLib.getMainLoader().filesProcessed);
+        Assertions.assertEquals(1, ContentBuilderLib.getMainLoader().objectsGenerated);
+
+        //Test that our something is the right something
+        IJsonObjectHandler handler = ContentBuilderLib.getMainLoader().jsonObjectHandlerRegistry.getHandler("author.package");
+        Object object = handler.getObject("test author");
+
+        Assertions.assertTrue(object instanceof AuthorData);
+
+        AuthorData authorData = (AuthorData) object;
+        Assertions.assertEquals("test.data.author", authorData.group);
+        Assertions.assertEquals("test author", authorData.name);
+        Assertions.assertEquals("www.builtbroken.com", authorData.url);
+        Assertions.assertEquals(MetaDataLevel.PACKAGE, authorData.level);
+
+        //Cleanup
+        ContentBuilderLib.destroy();
     }
 }

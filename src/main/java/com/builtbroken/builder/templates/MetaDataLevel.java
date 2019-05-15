@@ -21,7 +21,7 @@ package com.builtbroken.builder.templates;
 public enum MetaDataLevel
 {
     FILE,
-    FOLDER,
+    PACKAGE,
     PROJECT,
     OBJECT
 }
