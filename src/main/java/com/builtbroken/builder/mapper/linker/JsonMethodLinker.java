@@ -19,12 +19,12 @@ public class JsonMethodLinker extends JsonLinker<Object>
 
     public JsonMethodLinker(Method method, JsonObjectWiring mapping)
     {
-        this(method, mapping.jsonFields(), mapping.objectType(), mapping.required());
+        this(method, mapping.jsonFields(), mapping.objectType(), mapping.valuePrefix(), mapping.required());
     }
 
-    public JsonMethodLinker(Method method, String[] names, String type, boolean required)
+    public JsonMethodLinker(Method method, String[] names, String type, String prefix, boolean required)
     {
-        super(names, type, required);
+        super(names, type, prefix, required);
         this.method = method;
     }
 
@@ -37,7 +37,7 @@ public class JsonMethodLinker extends JsonLinker<Object>
 
             if (data.isJsonPrimitive() && data.getAsJsonPrimitive().isString())
             {
-                final String key = data.getAsString();
+                final String key = prefix + data.getAsString();
                 final IJsonObjectHandler handler = registry.getHandler(getType());
                 if (handler != null)
                 {

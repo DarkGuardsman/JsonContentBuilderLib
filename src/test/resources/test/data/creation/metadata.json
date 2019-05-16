@@ -1,0 +1,15 @@
+[
+  {
+    "type": "metadata",
+    "id": "test.meta",
+    "level": "package",
+    "creation_date" : "5/16/2019",
+    "last_update_date" : "5/17/2019",
+    "program_used" : "mac"
+  },
+  {
+    "type": "version",
+    "id": "metadata:test.meta",
+    "version": "0.0.0.1"
+  }
+]

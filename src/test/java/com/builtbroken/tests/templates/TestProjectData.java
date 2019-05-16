@@ -5,6 +5,7 @@ import com.builtbroken.builder.ContentBuilderRefs;
 import com.builtbroken.builder.handler.IJsonObjectHandler;
 import com.builtbroken.builder.loader.file.FileLocatorSimple;
 import com.builtbroken.builder.templates.*;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -49,17 +50,20 @@ public class TestProjectData
         Assertions.assertNotNull(projectData.creationData.version, "Failed to write version data");
 
         //Validate version stuff
-        Assertions.assertEquals("0.0.1.1", projectData.creationData.version);
-        Assertions.assertEquals("version.test", projectData.creationData.name);
-        Assertions.assertEquals(MetaDataLevel.PROJECT, projectData.creationData.level);
+        Assertions.assertEquals("0.0.1.1", projectData.creationData.version.version);
+        Assertions.assertEquals("metadata:test.project", projectData.creationData.version.id);
+        Assertions.assertEquals(MetaDataLevel.OBJECT, projectData.creationData.version.level);
 
         //Validate meta
 
         //Validate author
 
         //Validate project data
+    }
 
-        //Cleanup
+    @AfterEach
+    public void afterEachTest()
+    {
         ContentBuilderLib.destroy();
     }
 }

@@ -9,12 +9,14 @@ public abstract class JsonLinker<O extends Object> implements IJsonLinker<O>
     private final String[] names;
     protected final String type;
     protected final boolean required;
+    protected final String prefix;
 
-    public JsonLinker(String[] names, String type, boolean required)
+    public JsonLinker(String[] names, String type, String prefix, boolean required)
     {
         this.names = names;
         this.type = type;
         this.required = required;
+        this.prefix = prefix;
     }
 
     @Override

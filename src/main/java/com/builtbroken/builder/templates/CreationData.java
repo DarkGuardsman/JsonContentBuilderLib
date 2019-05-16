@@ -17,7 +17,7 @@ import com.builtbroken.builder.mapper.anno.JsonTemplate;
 public class CreationData implements IJsonGeneratedObject
 {
 
-    public String name;
+    public String id;
 
     public MetaDataLevel level;
 
@@ -30,15 +30,15 @@ public class CreationData implements IJsonGeneratedObject
     @JsonMapping(keys = "program_used", type = ConverterRefs.STRING)
     public String program;
 
-    @JsonObjectWiring(jsonFields = "name", objectType = "version")
+    @JsonObjectWiring(jsonFields = "id", objectType = "version", valuePrefix = ContentBuilderRefs.TYPE_CREATION_DATA + ":")
     public VersionData version;
 
     @JsonConstructor
-    public static CreationData create(@JsonMapping(keys = "name", type = ConverterRefs.STRING, required = true) String name,
+    public static CreationData create(@JsonMapping(keys = "id", type = ConverterRefs.STRING, required = true) String id,
                                       @JsonMapping(keys = "level", type = ConverterRefs.ENUM, required = true) MetaDataLevel level)
     {
         CreationData creationData = new CreationData();
-        creationData.name = name;
+        creationData.id = id;
         creationData.level = level;
 
         return creationData;
@@ -53,7 +53,7 @@ public class CreationData implements IJsonGeneratedObject
     @Override
     public String getJsonUniqueID()
     {
-        return name;
+        return id;
     }
 
     @Override

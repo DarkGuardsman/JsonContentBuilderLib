@@ -3,9 +3,9 @@ package com.builtbroken.tests.templates;
 import com.builtbroken.builder.ContentBuilderLib;
 import com.builtbroken.builder.handler.IJsonObjectHandler;
 import com.builtbroken.builder.loader.file.FileLocatorSimple;
-import com.builtbroken.builder.templates.AuthorData;
 import com.builtbroken.builder.templates.MetaDataLevel;
 import com.builtbroken.builder.templates.VersionData;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -42,10 +42,13 @@ public class TestVersionData
 
         VersionData versionData = (VersionData) object;
         Assertions.assertEquals("0.0.1.1", versionData.version);
-        Assertions.assertEquals("version.test", versionData.name);
+        Assertions.assertEquals("version.test", versionData.id);
         Assertions.assertEquals(MetaDataLevel.PACKAGE, versionData.level);
+    }
 
-        //Cleanup
+    @AfterEach
+    public void afterEachTest()
+    {
         ContentBuilderLib.destroy();
     }
 }

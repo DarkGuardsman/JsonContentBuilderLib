@@ -53,6 +53,24 @@ public @interface JsonObjectWiring
     String objectType();
 
     /**
+     * Value to prefix in front of the value used for wiring.
+     * <p>
+     * This is meant to be used when the json field is shared
+     * between several mappings but the key needs to be prefixed
+     *
+     * Ex: object with the field id containing 'copper'
+     *    object needs to wire ingot, nugget, and fluid stack ref objects
+     *    object decided to reuse id for all 3 since they should all match
+     *    all 3 wiring types are in the same map thus would have prefixes
+     *    ingot:copper
+     *    nugget:copper
+     *    fluid:copper
+     *
+     * @return
+     */
+    String valuePrefix() default "";
+
+    /**
      * Enforced that a value is not null and contains data
      * <p>
      * Only works on fields at this time.

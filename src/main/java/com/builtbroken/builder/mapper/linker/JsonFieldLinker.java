@@ -19,12 +19,12 @@ public class JsonFieldLinker extends JsonLinker<Object>
 
     public JsonFieldLinker(Field field, JsonObjectWiring mapping)
     {
-        this(field, mapping.jsonFields(), mapping.objectType(), mapping.required());
+        this(field, mapping.jsonFields(), mapping.objectType(), mapping.valuePrefix(), mapping.required());
     }
 
-    public JsonFieldLinker(Field field, String[] names, String type, boolean required)
+    public JsonFieldLinker(Field field, String[] names, String type, String prefix, boolean required)
     {
-        super(names, type, required);
+        super(names, type, prefix, required);
         this.field = field;
     }
 
@@ -37,7 +37,7 @@ public class JsonFieldLinker extends JsonLinker<Object>
 
             if (data.isJsonPrimitive() && data.getAsJsonPrimitive().isString())
             {
-                final String key = data.getAsString();
+                final String key = prefix + data.getAsString();
                 final IJsonObjectHandler handler = registry.getHandler(getType());
                 if (handler != null)
                 {

@@ -20,9 +20,9 @@ import java.util.List;
 public class ProjectData implements IJsonGeneratedObject
 {
     /**
-     * Unique name of the project
+     * Unique id of the project
      */
-    public String name;
+    public String id;
 
     /**
      * Display name of the project
@@ -33,13 +33,13 @@ public class ProjectData implements IJsonGeneratedObject
     /**
      * Creation information about the project
      */
-    @JsonObjectWiring(jsonFields = "name", objectType = ContentBuilderRefs.TYPE_CREATION_DATA + "." + ContentBuilderRefs.TYPE_PROJECT_DATA)
+    @JsonObjectWiring(jsonFields = "id", objectType = ContentBuilderRefs.TYPE_CREATION_DATA + "." + ContentBuilderRefs.TYPE_PROJECT_DATA)
     public CreationData creationData;
 
     /**
      * Person who created the project
      */
-    @JsonObjectWiring(jsonFields = "name", objectType = ContentBuilderRefs.TYPE_AUTHOR_DATA + "." + ContentBuilderRefs.TYPE_PROJECT_DATA)
+    @JsonObjectWiring(jsonFields = "id", objectType = ContentBuilderRefs.TYPE_AUTHOR_DATA + "." + ContentBuilderRefs.TYPE_PROJECT_DATA)
     public AuthorData authorData;
 
     /**
@@ -55,10 +55,10 @@ public class ProjectData implements IJsonGeneratedObject
     public final List<String> excludePaths = new ArrayList();
 
     @JsonConstructor
-    public static ProjectData create( @JsonMapping(keys = "name", type = ConverterRefs.STRING, required = true) String name)
+    public static ProjectData create( @JsonMapping(keys = "id", type = ConverterRefs.STRING, required = true) String name)
     {
         ProjectData projectData = new ProjectData();
-        projectData.name = name;
+        projectData.id = name;
         return projectData;
     }
 
@@ -71,7 +71,7 @@ public class ProjectData implements IJsonGeneratedObject
     @Override
     public String getJsonUniqueID()
     {
-        return name;
+        return id;
     }
 
 

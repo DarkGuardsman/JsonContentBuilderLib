@@ -6,10 +6,7 @@ import com.builtbroken.builder.loader.file.FileLocatorSimple;
 import com.builtbroken.builder.templates.AuthorData;
 import com.builtbroken.builder.templates.MetaDataLevel;
 import com.builtbroken.tests.mapper.TestFieldConstructor;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.io.File;
 
@@ -46,9 +43,6 @@ public class TestAuthorData
         Assertions.assertEquals("Master Author", authorData.name);
         Assertions.assertEquals("test.author", authorData.id);
         Assertions.assertEquals(MetaDataLevel.FILE, authorData.level);
-
-        //Cleanup
-        ContentBuilderLib.destroy();
     }
 
     @Test
@@ -79,8 +73,11 @@ public class TestAuthorData
         Assertions.assertEquals("Master Author", authorData.name);
         Assertions.assertEquals("www.builtbroken.com", authorData.url);
         Assertions.assertEquals(MetaDataLevel.PACKAGE, authorData.level);
+    }
 
-        //Cleanup
+    @AfterEach
+    public void afterEachTest()
+    {
         ContentBuilderLib.destroy();
     }
 }

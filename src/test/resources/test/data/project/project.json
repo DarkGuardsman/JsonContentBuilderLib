@@ -1,7 +1,7 @@
 [
   {
     "type": "project",
-    "name" : "test.project",
+    "id" : "test.project",
     "display_name": "Test Project",
     "include" : [
       "pathA",
@@ -14,7 +14,7 @@
   },
   {
     "type" : "metadata",
-    "name" : "test.project",
+    "id" : "test.project",
     "level" : "project",
     "creation_date" : "5/16/2019",
     "last_update_date" : "5/16/2019",
@@ -29,8 +29,7 @@
   },
   {
     "type" : "version",
-    "name" : "test.project",
-    "version": "0.0.1.1",
-    "level" : "project"
+    "id" : "metadata:test.project",
+    "version": "0.0.1.1"
   }
 ]
