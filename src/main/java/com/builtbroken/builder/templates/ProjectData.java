@@ -73,4 +73,11 @@ public class ProjectData implements IJsonGeneratedObject
     {
         return name;
     }
+
+
+    @Override
+    public String toString()
+    {
+        return "ProjectData[" + getJsonUniqueID() + "]";
+    }
 }

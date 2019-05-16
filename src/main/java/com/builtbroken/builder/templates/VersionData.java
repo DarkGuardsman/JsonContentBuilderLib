@@ -43,4 +43,10 @@ public class VersionData implements IJsonGeneratedObject
     {
         return name;
     }
+
+    @Override
+    public String toString()
+    {
+        return "VersionData[" + getJsonUniqueID() + "]";
+    }
 }

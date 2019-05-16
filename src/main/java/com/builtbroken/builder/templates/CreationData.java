@@ -55,4 +55,10 @@ public class CreationData implements IJsonGeneratedObject
     {
         return name;
     }
+
+    @Override
+    public String toString()
+    {
+        return "CreationData[" + getJsonUniqueID() + "]";
+    }
 }

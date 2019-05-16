@@ -61,4 +61,10 @@ public class AuthorData implements IJsonGeneratedObject
     {
         return group != null ? group : name;
     }
+
+    @Override
+    public String toString()
+    {
+        return "AuthorData[" + getJsonUniqueID() + "]";
+    }
 }
