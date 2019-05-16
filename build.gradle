@@ -1,12 +1,31 @@
-apply plugin: 'java' 
-
-repositories {
-    jcenter() 
+buildscript {
+  repositories {
+    maven {
+      url "https://plugins.gradle.org/m2/"
+    }
+  }
+  dependencies {
+    classpath "org.ajoberstar:grgit:2.1.0"
+    classpath "se.bjurr.gitchangelog:git-changelog-gradle-plugin:+"
+  }
 }
+
+plugins {
+  //id "se.bjurr.gitchangelog.git-changelog-gradle-plugin" version "1.60"
+}
+
+apply plugin: "org.ajoberstar.grgit"
+apply plugin: 'java'
+apply from: 'https://raw.githubusercontent.com/BuiltBrokenModding/BuiltBrokenScripts/universal/index/index-nonmc.gradle'
+apply plugin: 'se.bjurr.gitchangelog.git-changelog-gradle-plugin'
+
+/*repositories {
+    jcenter() 
+}*/
 
 dependencies {
     implementation 'com.google.guava:guava:11.0.2'
-	implementation 'com.google.code.gson:gson:2.8.5'
+	  implementation 'com.google.code.gson:gson:2.8.5'
     testImplementation('org.junit.jupiter:junit-jupiter:5.4.2')
 }
 
@@ -15,9 +34,9 @@ targetCompatibility = '1.8'
 
 jar 
 { 
-    baseName = 'JSON-Content-Builder' 
-    version = '1.1.2' 
-    destinationDir = file rootDir.path + '/output/'
+    //baseName = 'JSON-Content-Builder' 
+    //version = '1.1.2' 
+    //destinationDir = file rootDir.path + '/output/'
 }    
 
 test {
