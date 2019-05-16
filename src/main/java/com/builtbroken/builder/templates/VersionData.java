@@ -3,6 +3,7 @@ package com.builtbroken.builder.templates;
 import com.builtbroken.builder.ContentBuilderRefs;
 import com.builtbroken.builder.converter.ConverterRefs;
 import com.builtbroken.builder.data.IJsonGeneratedObject;
+import com.builtbroken.builder.data.ISimpleDataValidation;
 import com.builtbroken.builder.mapper.anno.JsonConstructor;
 import com.builtbroken.builder.mapper.anno.JsonMapping;
 import com.builtbroken.builder.mapper.anno.JsonTemplate;
@@ -11,7 +12,7 @@ import com.builtbroken.builder.mapper.anno.JsonTemplate;
  * Created by Dark(DarkGuardsman, Robert) on 2019-05-15.
  */
 @JsonTemplate(type = ContentBuilderRefs.TYPE_VERSION_DATA)
-public class VersionData implements IJsonGeneratedObject
+public class VersionData implements IJsonGeneratedObject, ISimpleDataValidation
 {
 
     public String id;

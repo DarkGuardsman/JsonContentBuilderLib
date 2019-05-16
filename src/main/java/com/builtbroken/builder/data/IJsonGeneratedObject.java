@@ -18,18 +18,4 @@ public interface IJsonGeneratedObject
      * Unique ID withing the {@link #getJsonType()}
      */
     String getJsonUniqueID();
-
-    /**
-     * Called to check if the object was built correctly.
-     * <p>
-     * Will be called in post build phase to do final
-     * check that may require testing auto wiring
-     * and if data is within expected limits.
-     *
-     * @return true if is valid
-     */
-    default boolean isValid()
-    {
-        return true; //TODO create system to provide reason for why its invalid
-    }
 }

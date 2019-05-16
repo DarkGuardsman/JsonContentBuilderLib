@@ -3,6 +3,7 @@ package com.builtbroken.builder.pipe.nodes.post;
 import com.builtbroken.builder.ContentBuilderRefs;
 import com.builtbroken.builder.data.GeneratedObject;
 import com.builtbroken.builder.data.IJsonGeneratedObject;
+import com.builtbroken.builder.data.ISimpleDataValidation;
 import com.builtbroken.builder.pipe.Pipe;
 import com.builtbroken.builder.pipe.nodes.NodeType;
 import com.builtbroken.builder.pipe.nodes.PipeNode;
@@ -27,9 +28,9 @@ public class PipeNodePostValidator extends PipeNode
         if (currentObject instanceof GeneratedObject)
         {
             final GeneratedObject generatedObjectData = (GeneratedObject) currentObject;
-            if (generatedObjectData.objectCreated instanceof IJsonGeneratedObject)
+            if (generatedObjectData.objectCreated instanceof ISimpleDataValidation)
             {
-                IJsonGeneratedObject jsonGeneratedObject = (IJsonGeneratedObject) generatedObjectData.objectCreated;
+                ISimpleDataValidation jsonGeneratedObject = (ISimpleDataValidation) generatedObjectData.objectCreated;
                 if (!jsonGeneratedObject.isValid())
                 {
                     throw new RuntimeException("PipeNodePostValidator: object is invalid and may not have built correctly. "
