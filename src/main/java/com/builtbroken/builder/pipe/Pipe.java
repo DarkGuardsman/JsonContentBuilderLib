@@ -88,7 +88,7 @@ public class Pipe
      */
     public void processSet(JsonElement jsonData, Object currentObject, Queue<Object> objectsOut)
     {
-        getLogger().accept("Process", jsonData + "  " + currentObject);
+        getLogger().accept("Process", "Object: " + currentObject);
 
         //Start
         queueIn.clear();
