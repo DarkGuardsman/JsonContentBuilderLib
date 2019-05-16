@@ -16,7 +16,7 @@ public class PipeNodeMappingValidator extends PipeNode
 {
     public PipeNodeMappingValidator(Pipe pipe)
     {
-        super(pipe, NodeType.MAPPER, ContentBuilderRefs.PIPE_LINK_MAPPER);
+        super(pipe, NodeType.MAPPER, ContentBuilderRefs.PIPE_MAPPER_VALIDATION);
     }
 
     @Override

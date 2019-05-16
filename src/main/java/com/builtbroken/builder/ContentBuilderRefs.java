@@ -14,13 +14,18 @@ public class ContentBuilderRefs
 
 
     public static final String PIPE_BUILDER = "builder";
-    public static final String PIPE_OBJECT_CREATOR = PIPE_ID + ":builder.creator";
-
+    public static final String PIPE_BUILDER_CREATION = PIPE_ID + ":creator";
+    public static final String PIPE_BUILDER_REG = PIPE_ID + ":registration";
 
     public static final String PIPE_MAPPER = "mapper";
-    public static final String PIPE_FIELD_MAPPER = PIPE_MAPPER + ":fields";
-    public static final String PIPE_LINK_MAPPER = PIPE_MAPPER + ":links";
-    public static final String PIPE_WIRE_MAPPER = PIPE_MAPPER + ":wires";
+    public static final String PIPE_MAPPER_FIELDS = PIPE_MAPPER + ":fields";
+    public static final String PIPE_MAPPER_INJECTION = PIPE_MAPPER + ":injection"; //TODO implement
+    public static final String PIPE_MAPPER_VALIDATION = PIPE_MAPPER + ":validation";
+
+    public static final String PIPE_POST = "post";
+    public static final String PIPE_POST_WIRING = PIPE_MAPPER + ":wires";
+    public static final String PIPE_POST_WIRING_VALIDATION = PIPE_MAPPER + ":validation.wires";
+    public static final String PIPE_POST_VALIDATION = PIPE_MAPPER + ":validation";
 
     //==== JSON IDs ======
     public static final String JSON_CONSTRUCTOR = "constructor";

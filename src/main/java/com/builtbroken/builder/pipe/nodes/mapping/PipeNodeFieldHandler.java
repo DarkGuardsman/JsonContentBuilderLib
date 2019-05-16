@@ -17,7 +17,7 @@ public class PipeNodeFieldHandler extends PipeNode
 {
     public PipeNodeFieldHandler(Pipe pipe)
     {
-        super(pipe, NodeType.MAPPER, ContentBuilderRefs.PIPE_FIELD_MAPPER);
+        super(pipe, NodeType.MAPPER, ContentBuilderRefs.PIPE_MAPPER_FIELDS);
     }
 
     @Override

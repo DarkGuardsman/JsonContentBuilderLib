@@ -30,7 +30,7 @@ public class PipeNodeObjectCreator extends PipeNode
 
     public PipeNodeObjectCreator(Pipe pipe)
     {
-        super(pipe, NodeType.BUILDER, ContentBuilderRefs.PIPE_OBJECT_CREATOR);
+        super(pipe, NodeType.BUILDER, ContentBuilderRefs.PIPE_BUILDER_CREATION);
     }
 
     @Override

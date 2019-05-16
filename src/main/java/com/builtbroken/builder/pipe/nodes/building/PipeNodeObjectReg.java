@@ -18,7 +18,7 @@ public class PipeNodeObjectReg extends PipeNode
 {
     public PipeNodeObjectReg(Pipe pipe)
     {
-        super(pipe, NodeType.BUILDER, ContentBuilderRefs.PIPE_OBJECT_CREATOR);
+        super(pipe, NodeType.BUILDER, ContentBuilderRefs.PIPE_BUILDER_REG);
     }
 
     @Override
