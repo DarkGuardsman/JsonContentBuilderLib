@@ -3,5 +3,5 @@
   "name": "test author",
   "url": "www.builtbroken.com",
   "group": "test.data.author",
-  "level": "folder"
+  "level": "package"
 }
