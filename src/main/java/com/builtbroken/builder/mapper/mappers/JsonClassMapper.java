@@ -19,7 +19,9 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -30,10 +32,9 @@ import java.util.function.Supplier;
  */
 public class JsonClassMapper
 {
-
-    private final HashMap<String, IJsonMapper> mappings = new HashMap();
-    private final HashMap<String, IJsonLinker> linkMappers = new HashMap();
-    private final HashMap<String, IJsonBuilder> jsonBuilders = new HashMap();
+    private final HashMap<String, IJsonMapper> mappings = new HashMap(); //TODO allow more than 1 mapper
+    private final HashMap<String, List<IJsonLinker>> linkMappers = new HashMap();
+    private final HashMap<String, IJsonBuilder> jsonBuilders = new HashMap(); //TODO allow more than 1 constructor matching best
 
     private JsonClassMapper parent;
     public final Class clazz;
@@ -91,7 +92,7 @@ public class JsonClassMapper
                 final JsonFieldLinker linker = new JsonFieldLinker(field, objectWiring);
                 for (String key : linker.getKeys())
                 {
-                    linkMappers.put(key.toLowerCase(), linker);
+                    addLink(key, linker);
                     System.out.println("JsonClassMapper[" + clazz + "] LINK: " + key + " -> " + field);
                 }
             }
@@ -117,8 +118,7 @@ public class JsonClassMapper
                         try
                         {
                             return ((Supplier) field.get(null)).get();
-                        }
-                        catch (Exception e)
+                        } catch (Exception e)
                         {
                             throw new RuntimeException("JsonClassMapper: Unexpected error invoking supplier to create new object", e);
                         }
@@ -133,8 +133,7 @@ public class JsonClassMapper
                         try
                         {
                             return ((Function) field.get(null)).apply(json);
-                        }
-                        catch (Exception e)
+                        } catch (Exception e)
                         {
                             throw new RuntimeException("JsonClassMapper: Unexpected error invoking lambda function to create new object", e);
                         }
@@ -158,7 +157,7 @@ public class JsonClassMapper
                             + " Class: " + clazz
                             + " Method: " + method.toString());
                 }
-                else if(method.getParameterCount() != 1)
+                else if (method.getParameterCount() != 1)
                 {
                     throw new RuntimeException("JsonClassMapper: Mapping only supports a single parameter for input. "
                             + " Class: " + clazz
@@ -191,7 +190,7 @@ public class JsonClassMapper
                             + " Class: " + clazz
                             + " Method: " + method.toString());
                 }
-                else if(method.getParameterCount() != 1)
+                else if (method.getParameterCount() != 1)
                 {
                     throw new RuntimeException("JsonClassMapper: Autowiring only supports a single parameter for input. "
                             + " Class: " + clazz
@@ -202,7 +201,7 @@ public class JsonClassMapper
                 for (String key : linker.getKeys())
                 {
                     System.out.println("JsonClassMapper[" + clazz + "] LINK: " + key + " -> " + method);
-                    linkMappers.put(key.toLowerCase(), linker);
+                    addLink(key, linker);
                 }
             }
 
@@ -335,8 +334,7 @@ public class JsonClassMapper
                 try
                 {
                     return clazz.newInstance();
-                }
-                catch (Exception e)
+                } catch (Exception e)
                 {
                     throw new RuntimeException("JsonClassMapper: Unexpected error using creating object of type[" + type + "] using default method for clazz " + clazz, e);
 
@@ -345,6 +343,16 @@ public class JsonClassMapper
         }
 
         return this;
+    }
+
+    public void addLink(String name, IJsonLinker linker)
+    {
+        name = name.toLowerCase();
+        if (!linkMappers.containsKey(name))
+        {
+            linkMappers.put(name, new ArrayList());
+        }
+        linkMappers.get(name).add(linker);
     }
 
     public void mapDataFields(JsonObject json, Object objectToMap, ConversionHandler handler)
@@ -378,7 +386,7 @@ public class JsonClassMapper
             final JsonElement data = entry.getValue();
             if (linkMappers.containsKey(key))
             {
-                linkMappers.get(key).link(object, data, registry);
+                linkMappers.get(key).forEach(linker -> linker.link(object, data, registry));
             }
             else
             {
@@ -393,20 +401,20 @@ public class JsonClassMapper
         }
     }
 
-    public void validate(Object object)
+    public void validate(Object object, boolean links)
     {
-        for (IJsonMapper mapper : mappings.values())
+        if (!links)
         {
-            mapper.isValid(object);
+            mappings.values().forEach(mapper -> mapper.isValid(object));
         }
-        for (IJsonLinker mapper : linkMappers.values())
+        else
         {
-            mapper.isValid(object);
+            linkMappers.values().forEach(list -> list.forEach(linker -> linker.isValid(object)));
         }
 
         if (getParent() != null)
         {
-            getParent().validate(object);
+            getParent().validate(object, links);
         }
     }
 
@@ -435,7 +443,7 @@ public class JsonClassMapper
         mappings.values().forEach(mappers -> mappers.destroy());
         mappings.clear();
 
-        linkMappers.values().forEach(mappers -> mappers.destroy());
+        linkMappers.values().forEach(list -> list.forEach(mappers -> mappers.destroy()));
         linkMappers.clear();
     }
 }
