@@ -11,6 +11,7 @@ import com.builtbroken.builder.pipe.nodes.json.PipeNodeJsonSplitter;
 import com.builtbroken.builder.pipe.nodes.post.PipeNodeAutoWire;
 import com.builtbroken.builder.pipe.nodes.mapping.PipeNodeFieldHandler;
 import com.builtbroken.builder.pipe.nodes.mapping.PipeNodeMappingValidator;
+import com.builtbroken.builder.pipe.nodes.post.PipeNodePostValidator;
 import com.builtbroken.builder.pipe.nodes.post.PipeNodeWireValidator;
 import com.google.gson.JsonElement;
 
@@ -100,7 +101,8 @@ public class PipeLine
         //Setup post
         Pipe postPipe = new Pipe(handler, ContentBuilderRefs.PIPE_POST);
         postPipe.addNode(new PipeNodeAutoWire(postPipe)); //wire objects
-        postPipe.addNode(new PipeNodeWireValidator(postPipe)); //validate
+        postPipe.addNode(new PipeNodeWireValidator(postPipe)); //validate wire
+        postPipe.addNode(new PipeNodePostValidator(postPipe)); //validate
         handler.pipes.add(postPipe);
 
         return handler;
