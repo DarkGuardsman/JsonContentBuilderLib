@@ -5,7 +5,10 @@ import com.builtbroken.builder.handler.IJsonObjectHandler;
 import com.builtbroken.builder.loader.file.FileLocatorSimple;
 import com.builtbroken.builder.templates.AuthorData;
 import com.builtbroken.builder.templates.MetaDataLevel;
+import com.builtbroken.tests.mapper.TestFieldConstructor;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -34,14 +37,14 @@ public class TestAuthorData
 
         //Test that our something is the right something
         IJsonObjectHandler handler = ContentBuilderLib.getMainLoader().jsonObjectHandlerRegistry.getHandler("author.file");
-        Object object = handler.getObject("test author");
+        Object object = handler.getObject("test.author");
 
-        Assertions.assertTrue(object instanceof AuthorData);
+        Assertions.assertTrue(object instanceof AuthorData, "Failed to locate author data");
 
         AuthorData authorData = (AuthorData) object;
-        Assertions.assertNull(authorData.group);
         Assertions.assertNull(authorData.url);
-        Assertions.assertEquals("test author", authorData.name);
+        Assertions.assertEquals("Master Author", authorData.name);
+        Assertions.assertEquals("test.author", authorData.id);
         Assertions.assertEquals(MetaDataLevel.FILE, authorData.level);
 
         //Cleanup
@@ -67,13 +70,13 @@ public class TestAuthorData
 
         //Test that our something is the right something
         IJsonObjectHandler handler = ContentBuilderLib.getMainLoader().jsonObjectHandlerRegistry.getHandler("author.package");
-        Object object = handler.getObject("test author");
+        Object object = handler.getObject("test.data.author");
 
-        Assertions.assertTrue(object instanceof AuthorData);
+        Assertions.assertTrue(object instanceof AuthorData, "Failed to locate author data");
 
         AuthorData authorData = (AuthorData) object;
-        Assertions.assertEquals("test.data.author", authorData.group);
-        Assertions.assertEquals("test author", authorData.name);
+        Assertions.assertEquals("test.data.author", authorData.id);
+        Assertions.assertEquals("Master Author", authorData.name);
         Assertions.assertEquals("www.builtbroken.com", authorData.url);
         Assertions.assertEquals(MetaDataLevel.PACKAGE, authorData.level);
 

@@ -1,5 +1,6 @@
 {
   "type": "author",
-  "name": "test author",
+  "id" : "test.author",
+  "name": "Master Author",
   "level": "file"
 }

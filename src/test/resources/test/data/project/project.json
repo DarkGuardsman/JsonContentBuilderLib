@@ -22,9 +22,9 @@
   },
   {
     "type": "author",
+    "id" : "test.project",
     "name": "test author",
     "url": "www.builtbroken.com",
-    "group": "test.project",
     "level" : "project"
   },
   {

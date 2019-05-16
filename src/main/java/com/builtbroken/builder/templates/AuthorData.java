@@ -17,17 +17,15 @@ public class AuthorData implements IJsonGeneratedObject
 {
 
     /**
-     * Author's name
+     * Author's name for display
      */
-
+    @JsonMapping(keys = "name", type = ConverterRefs.STRING, required = true)
     public String name;
 
     /**
-     * Group of the author data. For a single file this will be null, for package it will
-     * be the unique package name, and for project it will be the project's name.
+     * Unique global ID for tracking this author
      */
-    @JsonMapping(keys = "group", type = ConverterRefs.STRING)
-    public String group;
+    public String id;
 
     /**
      * Author's personal URL or contract information
@@ -41,11 +39,11 @@ public class AuthorData implements IJsonGeneratedObject
     public MetaDataLevel level;
 
     @JsonConstructor
-    public static AuthorData create(@JsonMapping(keys = "name", type = ConverterRefs.STRING, required = true) String name,
+    public static AuthorData create(@JsonMapping(keys = "id", type = ConverterRefs.STRING, required = true) String id,
                                     @JsonMapping(keys = "level", type = ConverterRefs.ENUM, required = true) MetaDataLevel type)
     {
         AuthorData data = new AuthorData();
-        data.name = name;
+        data.id = id;
         data.level = type;
         return data;
     }
@@ -59,12 +57,20 @@ public class AuthorData implements IJsonGeneratedObject
     @Override
     public String getJsonUniqueID()
     {
-        return group != null ? group : name;
+        return id;
     }
 
     @Override
     public String toString()
     {
         return "AuthorData[" + getJsonUniqueID() + "]";
+    }
+
+    @Override
+    public boolean isValid()
+    {
+        return level != null
+                && id != null && !id.isEmpty()
+                && name != null && !name.isEmpty();
     }
 }
