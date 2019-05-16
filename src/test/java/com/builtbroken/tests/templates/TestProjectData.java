@@ -49,16 +49,34 @@ public class TestProjectData
         Assertions.assertNotNull(projectData.creationData, "Failed to write creation data");
         Assertions.assertNotNull(projectData.creationData.version, "Failed to write version data");
 
-        //Validate version stuff
-        Assertions.assertEquals("0.0.1.1", projectData.creationData.version.version);
-        Assertions.assertEquals("metadata:test.project", projectData.creationData.version.id);
-        Assertions.assertEquals(MetaDataLevel.OBJECT, projectData.creationData.version.level);
-
         //Validate meta
+        CreationData creationData = projectData.creationData;
+        Assertions.assertEquals("test.project", creationData.id);
+        Assertions.assertEquals(MetaDataLevel.PROJECT, creationData.level);
+
+        //Validate version stuff
+        VersionData versionData = creationData.version;
+        Assertions.assertEquals("0.0.1.1", versionData.version);
+        Assertions.assertEquals("metadata:test.project", versionData.id);
+        Assertions.assertEquals(MetaDataLevel.OBJECT, versionData.level);
 
         //Validate author
+        AuthorData authorData = projectData.authorData;
+        Assertions.assertEquals("test.project", authorData.id);
+        Assertions.assertEquals(MetaDataLevel.PROJECT, authorData.level);
 
         //Validate project data
+        Assertions.assertEquals("test.project", projectData.id);
+        Assertions.assertEquals("Test Project", projectData.displayName);
+
+        Assertions.assertEquals(2, projectData.includePaths.size());
+        Assertions.assertEquals("pathA", projectData.includePaths.get(0));
+        Assertions.assertEquals("pathB", projectData.includePaths.get(1));
+
+        Assertions.assertEquals(2, projectData.excludePaths.size());
+        Assertions.assertEquals("pathC", projectData.excludePaths.get(0));
+        Assertions.assertEquals("pathD", projectData.excludePaths.get(1));
+
     }
 
     @AfterEach
