@@ -13,9 +13,9 @@ import java.util.Queue;
  * Handles how to convert from stored JSON data into fields
  * Created by Dark(DarkGuardsman, Robert) on 2019-02-27.
  */
-public class PipeNodeFieldHandler extends PipeNode
+public class PipeNodeDataMapper extends PipeNode
 {
-    public PipeNodeFieldHandler(Pipe pipe)
+    public PipeNodeDataMapper(Pipe pipe)
     {
         super(pipe, NodeType.MAPPER, ContentBuilderRefs.PIPE_MAPPER_FIELDS);
     }
