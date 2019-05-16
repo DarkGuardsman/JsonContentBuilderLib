@@ -24,7 +24,7 @@ public class JsonObjectHandler implements IJsonObjectHandler
         if (id.equalsIgnoreCase(object.getJsonType()))
         {
             String uniqueID = object.getJsonUniqueID();
-            if (object.getJsonUniqueID() != null)
+            if (uniqueID != null)
             {
                 uniqueID = uniqueID.toLowerCase();
                 if (!objectMap.containsKey(uniqueID))
@@ -34,16 +34,19 @@ public class JsonObjectHandler implements IJsonObjectHandler
                 else
                 {
                     //TODO error
+                    System.out.println(this + ": Error, object was supplied where another object already has the unique ID. " + object);
                 }
             }
             else
             {
                 //TODO error
+                System.out.println(this + ": Error, object was supplied that lacks a uniqueID. " + object);
             }
         }
         else
         {
             //TODO error
+            System.out.println(this + ": Error, object was supplied that didn't match the handler's type. " + object);
         }
     }
 
@@ -56,5 +59,11 @@ public class JsonObjectHandler implements IJsonObjectHandler
             return objectMap.get(unqueId);
         }
         return null;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "JsonObjectHandler[" + id + "]";
     }
 }
