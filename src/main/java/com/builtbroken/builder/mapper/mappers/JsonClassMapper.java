@@ -3,11 +3,11 @@ package com.builtbroken.builder.mapper.mappers;
 import com.builtbroken.builder.ContentBuilderRefs;
 import com.builtbroken.builder.converter.ConversionHandler;
 import com.builtbroken.builder.handler.JsonObjectHandlerRegistry;
-import com.builtbroken.builder.mapper.anno.JsonConstructor;
-import com.builtbroken.builder.mapper.anno.JsonMapping;
-import com.builtbroken.builder.mapper.anno.JsonObjectWiring;
-import com.builtbroken.builder.mapper.anno.JsonTemplate;
+import com.builtbroken.builder.mapper.MapperHelpers;
+import com.builtbroken.builder.mapper.anno.*;
 import com.builtbroken.builder.mapper.builder.*;
+import com.builtbroken.builder.mapper.injection.IJsonInjectionMapper;
+import com.builtbroken.builder.mapper.injection.JsonInjectionMapper;
 import com.builtbroken.builder.mapper.linker.IJsonLinker;
 import com.builtbroken.builder.mapper.linker.JsonFieldLinker;
 import com.builtbroken.builder.mapper.linker.JsonMethodLinker;
@@ -36,6 +36,7 @@ public class JsonClassMapper
     private final HashMap<String, IJsonMapper> mappings = new HashMap(); //TODO allow more than 1 mapper
     private final HashMap<String, List<IJsonLinker>> linkMappers = new HashMap();
     private final HashMap<String, IJsonBuilder> jsonBuilders = new HashMap(); //TODO allow more than 1 constructor matching best
+    private final List<IJsonInjectionMapper> injectionMappers = new ArrayList();
 
     private JsonClassMapper parent;
     public final Class clazz;
@@ -180,8 +181,8 @@ public class JsonClassMapper
                 //Error
                 if (mapping != null)
                 {
-                    throw new RuntimeException("JsonClassMapper: A method can be a mapping injection point"
-                            + " or an auto wire injection point, not both. "
+                    throw new RuntimeException("JsonClassMapper: Field wiring annotation is not compatible"
+                            + " with mapping annotation."
                             + " Class: " + clazz
                             + " Method: " + method.toString());
                 }
@@ -204,6 +205,40 @@ public class JsonClassMapper
                     System.out.println("JsonClassMapper[" + clazz + "] LINK: " + key + " -> " + method);
                     addLink(key, linker);
                 }
+            }
+
+            //Injection handling
+            final JsonInjection injection = method.getAnnotation(JsonInjection.class);
+            if (injection != null)
+            {
+                if (mapping != null || objectWiring != null)
+                {
+                    throw new RuntimeException("JsonClassMapper: Injection mapping annotation is not compatible"
+                            + " with mapping or wiring annotation."
+                            + " Class: " + clazz
+                            + " Method: " + method.toString());
+                }
+                else if (Modifier.isStatic(method.getModifiers()))
+                {
+                    throw new RuntimeException("JsonClassMapper: Injection mapping can not be applied to a static method. "
+                            + " Class: " + clazz
+                            + " Method: " + method.toString());
+                }
+                else if (method.getParameterCount() == 0)
+                {
+                    throw new RuntimeException("JsonClassMapper: JsonInjection requires at least 1 parameter."
+                            + " Class: " + clazz
+                            + " Method: " + method.toString());
+                }
+
+                //Locate all mappings
+                final BiFunction<JsonObject, ConversionHandler, Object>[] mappers
+                        = MapperHelpers.buildMappers(method.getParameterTypes(),
+                        method.getParameterAnnotations(),
+                        () -> " Class: " + clazz + " Method: " + method.toString());
+
+                //Create
+                injectionMappers.add(new JsonInjectionMapper(method, mappers));
             }
 
             //Construction handling
@@ -231,31 +266,7 @@ public class JsonClassMapper
                     //Locate all mappings
                     final BiFunction<JsonObject, ConversionHandler, Object>[] mappers = new BiFunction[method.getParameterCount()];
                     final Annotation[][] paraAnnos = method.getParameterAnnotations();
-                    for (int para = 0; para < mappers.length; para++)
-                    {
-                        final int paraC = para;
-                        final Class<?> paraClazz = method.getParameterTypes()[para];
-                        for (Annotation annotation : paraAnnos[para])
-                        {
-                            if (annotation instanceof JsonMapping)
-                            {
-                                if (annotation instanceof JsonMapping)
-                                {
-                                    mappers[para] = JsonBuilderMapper.get(paraClazz, (JsonMapping) annotation, () -> "CLAZZ: " + clazz + " METHOD: " + method + " PARA: " + paraC);
-                                    break;
-                                }
-                                break;
-                            }
-                        }
 
-                        if (mappers[para] == null)
-                        {
-                            new RuntimeException("JsonClassMapper: All method parameters require JsonMapping annotation "
-                                    + "when used with JsonConstructor annotation."
-                                    + " Class: " + clazz
-                                    + " Method: " + method);
-                        }
-                    }
 
                     //Mapper constructor
                     System.out.println("JsonClassMapper[" + clazz + "] CREATE_P: " + key + " -> " + method);
@@ -289,29 +300,10 @@ public class JsonClassMapper
                 else if (constructor.getParameterCount() > 0)
                 {
                     //Locate all mappings
-                    final BiFunction<JsonObject, ConversionHandler, Object>[] mappers = new BiFunction[constructor.getParameterCount()];
-                    final Annotation[][] paraAnnos = constructor.getParameterAnnotations();
-                    for (int para = 0; para < mappers.length; para++)
-                    {
-                        final int paraC = para;
-                        final Class<?> paraClazz = constructor.getParameterTypes()[para];
-                        for (Annotation annotation : paraAnnos[para])
-                        {
-                            if (annotation instanceof JsonMapping)
-                            {
-                                mappers[para] = JsonBuilderMapper.get(paraClazz, (JsonMapping) annotation, () -> "CLAZZ: " + clazz + " CONSTRUCTOR: " + constructor + " PARA: " + paraC);
-                                break;
-                            }
-                        }
-
-                        if (mappers[para] == null)
-                        {
-                            new RuntimeException("JsonClassMapper: All constructor parameters require JsonMapping annotation "
-                                    + "when used with JsonConstructor annotation."
-                                    + " Class: " + clazz
-                                    + " Constructor: " + constructor);
-                        }
-                    }
+                    final BiFunction<JsonObject, ConversionHandler, Object>[] mappers
+                            = MapperHelpers.buildMappers(constructor.getParameterTypes(),
+                            constructor.getParameterAnnotations(),
+                            () -> " Class: " + clazz + " Constructor: " + constructor.toString());
 
                     //Mapper constructor
                     System.out.println("JsonClassMapper[" + clazz + "] CREATE_P: " + key + " -> " + constructor);
@@ -358,6 +350,13 @@ public class JsonClassMapper
 
     public void mapDataFields(JsonObject json, Object objectToMap, ConversionHandler handler)
     {
+        //Do parent class first to get allow child to replace parent data
+        if (getParent() != null)
+        {
+            getParent().mapDataFields(json, objectToMap, handler);
+        }
+
+        //Do simple field mapping
         for (Map.Entry<String, JsonElement> entry : json.entrySet())
         {
             final String key = entry.getKey().toLowerCase();
@@ -373,9 +372,11 @@ public class JsonClassMapper
                 //          Ignore links
             }
         }
-        if (getParent() != null)
+
+        //Do more complex method mapping
+        for(IJsonInjectionMapper mapper : injectionMappers)
         {
-            getParent().mapDataFields(json, objectToMap, handler);
+            mapper.map(objectToMap, json, handler);
         }
     }
 

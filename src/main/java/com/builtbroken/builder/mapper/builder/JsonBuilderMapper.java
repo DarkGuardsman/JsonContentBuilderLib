@@ -3,6 +3,7 @@ package com.builtbroken.builder.mapper.builder;
 import com.builtbroken.builder.ContentBuilderRefs;
 import com.builtbroken.builder.converter.ConversionHandler;
 import com.builtbroken.builder.converter.ConverterRefs;
+import com.builtbroken.builder.mapper.MapperHelpers;
 import com.builtbroken.builder.mapper.anno.JsonMapping;
 import com.builtbroken.builder.mapper.mappers.JsonMapper;
 import com.google.gson.JsonElement;
@@ -54,63 +55,8 @@ public abstract class JsonBuilderMapper extends JsonBuilder
                 ? object
                 : object.get(ContentBuilderRefs.JSON_CONSTRUCTOR).getAsJsonObject();
 
-        //Map args
-        final Object[] args = new Object[mappers.length];
-        for (int i = 0; i < mappers.length; i++)
-        {
-            final BiFunction<JsonObject, ConversionHandler, Object> mapper = mappers[i];
-            final Object out = mapper.apply(jsonObject, converter);
-            if(out != null)
-            {
-                args[i] = out;
-            }
-        }
-
-        return args;
+       return MapperHelpers.buildInputs(jsonObject, converter, mappers);
     }
 
 
-    public static BiFunction<JsonObject, ConversionHandler, Object> get(Class<?> paraClazz, JsonMapping mapper, Supplier<String> error)
-    {
-        return (jsonObject, converter) ->
-        {
-            final String type = mapper.type();
-            Object object = null;
-            for (final String key : mapper.keys())
-            {
-                final JsonElement json = jsonObject.get(key);
-
-                if(json != null)
-                {
-                    //Special handling for enum
-                    if (type.equalsIgnoreCase(ConverterRefs.ENUM))
-                    {
-                        try
-                        {
-                            object = JsonMapper.getEnumValue(paraClazz, json);
-                        } catch (Exception e)
-                        {
-                            throw new RuntimeException("JsonBuilderMapper: Failed to get enum due", e);
-                        }
-                    }
-                    //Normal handling
-                    else
-                    {
-                        object = converter.fromJson(type, json, mapper.args());
-                    }
-                }
-
-                if (json != null)
-                {
-                    break;
-                }
-            }
-
-            if(object == null && mapper.required())
-            {
-                throw new RuntimeException("JsonBuilderMapper: Failed to load required json field while mapping for a builder. " + error.get());
-            }
-            return object;
-        };
-    }
 }
