@@ -3,6 +3,7 @@ package com.builtbroken.builder.templates;
 import com.builtbroken.builder.ContentBuilderRefs;
 import com.builtbroken.builder.converter.ConverterRefs;
 import com.builtbroken.builder.data.IJsonGeneratedObject;
+import com.builtbroken.builder.mapper.anno.JsonConstructor;
 import com.builtbroken.builder.mapper.anno.JsonMapping;
 import com.builtbroken.builder.mapper.anno.JsonObjectWiring;
 import com.builtbroken.builder.mapper.anno.JsonTemplate;
@@ -15,14 +16,12 @@ import java.util.List;
  * <p>
  * Created by Dark(DarkGuardsman, Robert) on 2019-05-15.
  */
-@JsonTemplate(type = ContentBuilderRefs.TYPE_PROJECT_DATA, useDefaultConstructor = true)
+@JsonTemplate(type = ContentBuilderRefs.TYPE_PROJECT_DATA)
 public class ProjectData implements IJsonGeneratedObject
 {
-
     /**
      * Unique name of the project
      */
-    @JsonMapping(keys = {"name", "id"}, type = ConverterRefs.STRING, required = true)
     public String name;
 
     /**
@@ -44,22 +43,24 @@ public class ProjectData implements IJsonGeneratedObject
     public AuthorData authorData;
 
     /**
-     * Version of the project
-     */
-    @JsonObjectWiring(jsonFields = "name", objectType = ContentBuilderRefs.TYPE_VERSION_DATA + "." + ContentBuilderRefs.TYPE_PROJECT_DATA)
-    public VersionData versionData;
-
-    /**
      * Files or folders to include as part of the project
      */
-    @JsonMapping(keys = "include", type = ConverterRefs.LIST)
-    public List<String> includePaths = new ArrayList();
+    @JsonMapping(keys = "include", type = ConverterRefs.LIST, args = ConverterRefs.STRING)
+    public final List<String> includePaths = new ArrayList();
 
     /**
      * Files or folders to exclude from the project
      */
-    @JsonMapping(keys = "exclude", type = ConverterRefs.LIST)
-    public List<String> excludePaths = new ArrayList();
+    @JsonMapping(keys = "exclude", type = ConverterRefs.LIST, args = ConverterRefs.STRING)
+    public final List<String> excludePaths = new ArrayList();
+
+    @JsonConstructor
+    public static ProjectData create( @JsonMapping(keys = "name", type = ConverterRefs.STRING, required = true) String name)
+    {
+        ProjectData projectData = new ProjectData();
+        projectData.name = name;
+        return projectData;
+    }
 
     @Override
     public String getJsonType()

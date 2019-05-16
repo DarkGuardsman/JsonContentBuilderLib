@@ -5,6 +5,7 @@ import com.builtbroken.builder.converter.ConverterRefs;
 import com.builtbroken.builder.data.IJsonGeneratedObject;
 import com.builtbroken.builder.mapper.anno.JsonConstructor;
 import com.builtbroken.builder.mapper.anno.JsonMapping;
+import com.builtbroken.builder.mapper.anno.JsonObjectWiring;
 import com.builtbroken.builder.mapper.anno.JsonTemplate;
 
 /**
@@ -29,8 +30,8 @@ public class CreationData implements IJsonGeneratedObject
     @JsonMapping(keys = "program_used", type = ConverterRefs.STRING)
     public String program;
 
-    @JsonMapping(keys = "version", type = ConverterRefs.STRING)
-    public String version;
+    @JsonObjectWiring(jsonFields = "name", objectType = "version")
+    public VersionData version;
 
     @JsonConstructor
     public static CreationData create(@JsonMapping(keys = "name", type = ConverterRefs.STRING, required = true) String name,

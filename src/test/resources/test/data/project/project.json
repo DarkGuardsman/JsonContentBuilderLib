@@ -1,0 +1,36 @@
+[
+  {
+    "type": "project",
+    "name" : "test.project",
+    "display_name": "Test Project",
+    "include" : [
+      "pathA",
+      "pathB"
+    ],
+    "exclude" : [
+      "pathC",
+      "pathD"
+    ]
+  },
+  {
+    "type" : "metadata",
+    "name" : "test.project",
+    "level" : "project",
+    "creation_date" : "5/16/2019",
+    "last_update_date" : "5/16/2019",
+    "program_used" : "mac"
+  },
+  {
+    "type": "author",
+    "name": "test author",
+    "url": "www.builtbroken.com",
+    "group": "test.project",
+    "level" : "project"
+  },
+  {
+    "type" : "version",
+    "name" : "test.project",
+    "version": "0.0.1.1",
+    "level" : "project"
+  }
+]
