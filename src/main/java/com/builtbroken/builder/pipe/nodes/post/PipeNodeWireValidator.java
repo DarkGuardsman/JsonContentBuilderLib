@@ -1,4 +1,4 @@
-package com.builtbroken.builder.pipe.nodes.mapping;
+package com.builtbroken.builder.pipe.nodes.post;
 
 import com.builtbroken.builder.ContentBuilderRefs;
 import com.builtbroken.builder.data.GeneratedObject;
@@ -12,11 +12,11 @@ import java.util.Queue;
 /**
  * Created by Dark(DarkGuardsman, Robert) on 2019-03-15.
  */
-public class PipeNodeMappingValidator extends PipeNode
+public class PipeNodeWireValidator extends PipeNode
 {
-    public PipeNodeMappingValidator(Pipe pipe)
+    public PipeNodeWireValidator(Pipe pipe)
     {
-        super(pipe, NodeType.MAPPER, ContentBuilderRefs.PIPE_MAPPER_VALIDATION);
+        super(pipe, NodeType.POST, ContentBuilderRefs.PIPE_POST_WIRING_VALIDATION);
     }
 
     @Override
@@ -27,7 +27,7 @@ public class PipeNodeMappingValidator extends PipeNode
             final GeneratedObject generatedObjectData = (GeneratedObject) currentObject;
 
             //Check validation of mappings
-            getContentLoader().jsonMappingHandler.validate(generatedObjectData.type, generatedObjectData.objectCreated, false);
+            getContentLoader().jsonMappingHandler.validate(generatedObjectData.type, generatedObjectData.objectCreated, true);
 
             //Pass to next
             objectsOut.add(generatedObjectData);

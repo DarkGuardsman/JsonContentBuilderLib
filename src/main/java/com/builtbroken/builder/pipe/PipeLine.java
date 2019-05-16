@@ -8,9 +8,10 @@ import com.builtbroken.builder.pipe.nodes.building.PipeNodeObjectCreator;
 import com.builtbroken.builder.pipe.nodes.building.PipeNodeObjectReg;
 import com.builtbroken.builder.pipe.nodes.json.PipeNodeCommentRemover;
 import com.builtbroken.builder.pipe.nodes.json.PipeNodeJsonSplitter;
-import com.builtbroken.builder.pipe.nodes.mapping.PipeNodeAutoWire;
+import com.builtbroken.builder.pipe.nodes.post.PipeNodeAutoWire;
 import com.builtbroken.builder.pipe.nodes.mapping.PipeNodeFieldHandler;
 import com.builtbroken.builder.pipe.nodes.mapping.PipeNodeMappingValidator;
+import com.builtbroken.builder.pipe.nodes.post.PipeNodeWireValidator;
 import com.google.gson.JsonElement;
 
 import javax.annotation.Nonnull;
@@ -93,9 +94,14 @@ public class PipeLine
         //Setup mapper
         Pipe mapperPipe = new Pipe(handler, ContentBuilderRefs.PIPE_MAPPER);
         mapperPipe.addNode(new PipeNodeFieldHandler(mapperPipe)); //map fields
-        mapperPipe.addNode(new PipeNodeAutoWire(mapperPipe)); //wire objects
         mapperPipe.addNode(new PipeNodeMappingValidator(mapperPipe)); //validate
         handler.pipes.add(mapperPipe);
+
+        //Setup post
+        Pipe postPipe = new Pipe(handler, ContentBuilderRefs.PIPE_POST);
+        postPipe.addNode(new PipeNodeAutoWire(postPipe)); //wire objects
+        postPipe.addNode(new PipeNodeWireValidator(postPipe)); //validate
+        handler.pipes.add(postPipe);
 
         return handler;
     }

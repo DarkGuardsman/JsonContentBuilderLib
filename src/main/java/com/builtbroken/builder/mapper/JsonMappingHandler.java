@@ -84,9 +84,9 @@ public class JsonMappingHandler
      * @param objectType  - type, used to match to mapper
      * @param objectToMap - object to check
      */
-    public void validate(String objectType, Object objectToMap)
+    public void validate(String objectType, Object objectToMap, boolean links)
     {
-        getMapper(objectType).validate(objectToMap);
+        getMapper(objectType).validate(objectToMap, links);
     }
 
     /**

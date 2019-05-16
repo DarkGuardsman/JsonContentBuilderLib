@@ -1,4 +1,4 @@
-package com.builtbroken.builder.pipe.nodes.mapping;
+package com.builtbroken.builder.pipe.nodes.post;
 
 import com.builtbroken.builder.ContentBuilderRefs;
 import com.builtbroken.builder.data.GeneratedObject;
@@ -17,7 +17,7 @@ public class PipeNodeAutoWire extends PipeNode
 
     public PipeNodeAutoWire(Pipe pipe)
     {
-        super(pipe, NodeType.MAPPER, ContentBuilderRefs.PIPE_WIRE_MAPPER);
+        super(pipe, NodeType.POST, ContentBuilderRefs.PIPE_POST_WIRING);
     }
 
     @Override

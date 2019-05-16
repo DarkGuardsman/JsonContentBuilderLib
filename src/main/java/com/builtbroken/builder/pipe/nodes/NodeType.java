@@ -17,5 +17,10 @@ public enum NodeType
     /**
      * Uses the object and JSON to map out information. As well link objects to each other.
      */
-    MAPPER
+    MAPPER,
+    /**
+     * Runs after everything has been loaded, built, and mapped. Handles linking objects
+     * and doing post validation of objects. As well data completion if needed
+     */
+    POST
 }
