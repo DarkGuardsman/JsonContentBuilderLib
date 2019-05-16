@@ -15,12 +15,13 @@ public class ContentBuilderRefs
 
     public static final String PIPE_BUILDER = "builder";
     public static final String PIPE_BUILDER_CREATION = PIPE_ID + ":creator";
-    public static final String PIPE_BUILDER_REG = PIPE_ID + ":registration";
+
 
     public static final String PIPE_MAPPER = "mapper";
     public static final String PIPE_MAPPER_FIELDS = PIPE_MAPPER + ":fields";
     public static final String PIPE_MAPPER_INJECTION = PIPE_MAPPER + ":injection"; //TODO implement
     public static final String PIPE_MAPPER_VALIDATION = PIPE_MAPPER + ":validation";
+    public static final String PIPE_MAPPER_OBJECT_REG = PIPE_MAPPER + ":registration";
 
     public static final String PIPE_POST = "post";
     public static final String PIPE_POST_WIRING = PIPE_MAPPER + ":wires";

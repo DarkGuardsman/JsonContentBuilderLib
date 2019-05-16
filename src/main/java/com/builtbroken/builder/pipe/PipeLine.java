@@ -5,7 +5,7 @@ import com.builtbroken.builder.converter.ConversionHandler;
 import com.builtbroken.builder.loader.ContentLoader;
 import com.builtbroken.builder.pipe.nodes.IPipeNode;
 import com.builtbroken.builder.pipe.nodes.building.PipeNodeObjectCreator;
-import com.builtbroken.builder.pipe.nodes.building.PipeNodeObjectReg;
+import com.builtbroken.builder.pipe.nodes.mapping.PipeNodeObjectReg;
 import com.builtbroken.builder.pipe.nodes.json.PipeNodeCommentRemover;
 import com.builtbroken.builder.pipe.nodes.json.PipeNodeJsonSplitter;
 import com.builtbroken.builder.pipe.nodes.post.PipeNodeAutoWire;
@@ -89,13 +89,13 @@ public class PipeLine
         //Setup builder
         Pipe builderPipe = new Pipe(handler, ContentBuilderRefs.PIPE_BUILDER);
         builderPipe.addNode(new PipeNodeObjectCreator(builderPipe)); //Create json
-        builderPipe.addNode(new PipeNodeObjectReg(builderPipe)); //register to handlers
         handler.pipes.add(builderPipe);
 
         //Setup mapper
         Pipe mapperPipe = new Pipe(handler, ContentBuilderRefs.PIPE_MAPPER);
         mapperPipe.addNode(new PipeNodeFieldHandler(mapperPipe)); //map fields
         mapperPipe.addNode(new PipeNodeMappingValidator(mapperPipe)); //validate
+        mapperPipe.addNode(new PipeNodeObjectReg(mapperPipe)); //register to handlers
         handler.pipes.add(mapperPipe);
 
         //Setup post

@@ -1,4 +1,4 @@
-package com.builtbroken.builder.pipe.nodes.building;
+package com.builtbroken.builder.pipe.nodes.mapping;
 
 import com.builtbroken.builder.ContentBuilderRefs;
 import com.builtbroken.builder.data.GeneratedObject;
@@ -18,7 +18,7 @@ public class PipeNodeObjectReg extends PipeNode
 {
     public PipeNodeObjectReg(Pipe pipe)
     {
-        super(pipe, NodeType.BUILDER, ContentBuilderRefs.PIPE_BUILDER_REG);
+        super(pipe, NodeType.MAPPER, ContentBuilderRefs.PIPE_MAPPER_OBJECT_REG);
     }
 
     @Override
