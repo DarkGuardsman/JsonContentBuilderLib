@@ -32,6 +32,7 @@ import java.util.function.Supplier;
  */
 public class JsonClassMapper
 {
+
     private final HashMap<String, IJsonMapper> mappings = new HashMap(); //TODO allow more than 1 mapper
     private final HashMap<String, List<IJsonLinker>> linkMappers = new HashMap();
     private final HashMap<String, IJsonBuilder> jsonBuilders = new HashMap(); //TODO allow more than 1 constructor matching best
@@ -386,6 +387,7 @@ public class JsonClassMapper
             final JsonElement data = entry.getValue();
             if (linkMappers.containsKey(key))
             {
+                System.out.println("JsonClassMapper: trying " + linkMappers.get(key).size() + " linkers for field " + key);
                 linkMappers.get(key).forEach(linker -> linker.link(object, data, registry));
             }
             else
@@ -405,11 +407,23 @@ public class JsonClassMapper
     {
         if (!links)
         {
-            mappings.values().forEach(mapper -> mapper.isValid(object));
+            mappings.values().forEach(mapper ->
+            {
+                if (!mapper.isValid(object))
+                {
+                    throw new RuntimeException("JsonClassMapper: Missing required field " + mapper);
+                }
+            });
         }
         else
         {
-            linkMappers.values().forEach(list -> list.forEach(linker -> linker.isValid(object)));
+            linkMappers.values().forEach(list -> list.forEach(linker ->
+            {
+                if (!linker.isValid(object))
+                {
+                    throw new RuntimeException("JsonClassMapper: Missing required link " + linker);
+                }
+            }));
         }
 
         if (getParent() != null)

@@ -7,6 +7,7 @@ import com.builtbroken.builder.mapper.anno.JsonObjectWiring;
 import com.google.gson.JsonElement;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 
 /**
  * Created by Dark(DarkGuardsman, Robert) on 2019-03-11.
@@ -43,21 +44,24 @@ public class JsonMethodLinker extends JsonLinker<Object>
                     IJsonGeneratedObject objectToLink = handler.getObject(key);
                     if (objectToLink != null)
                     {
+                        System.out.println("JsonMethodLinker: linked " + objectToLink);
                         method.invoke(object, objectToLink);
                     }
                     else
                     {
                         //TODO display warning? Might just leave this to validation
+                        System.out.println("JsonMethodLinker: failed to locate object with name[" + key + "] from " + handler);
                     }
                 }
                 else
                 {
                     //TODO display warning? Might just leave this to validation
+                    System.out.println("JsonMethodLinker: failed to locate handler for type " + getType());
                 }
             }
             else
             {
-                throw new RuntimeException("JsonFieldLinker currently only supports using a string as a link key");
+                throw new RuntimeException("JsonMethodLinker currently only supports using a string as a link key");
             }
         }
         catch (Exception e)
@@ -76,5 +80,11 @@ public class JsonMethodLinker extends JsonLinker<Object>
     public void destroy()
     {
 
+    }
+
+    @Override
+    public String toString()
+    {
+        return "JsonMethodLinker[Keys: " + Arrays.toString(getKeys()) + ", Required:" + required + "]";
     }
 }

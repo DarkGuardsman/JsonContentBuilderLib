@@ -7,12 +7,14 @@ import com.builtbroken.builder.mapper.anno.JsonObjectWiring;
 import com.google.gson.JsonElement;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
 
 /**
  * Created by Dark(DarkGuardsman, Robert) on 2019-03-11.
  */
 public class JsonFieldLinker extends JsonLinker<Object>
 {
+
     private final Field field;
 
     public JsonFieldLinker(Field field, JsonObjectWiring mapping)
@@ -39,19 +41,22 @@ public class JsonFieldLinker extends JsonLinker<Object>
                 final IJsonObjectHandler handler = registry.getHandler(getType());
                 if (handler != null)
                 {
-                    IJsonGeneratedObject objectToLink = handler.getObject(key);
+                    final IJsonGeneratedObject objectToLink = handler.getObject(key);
                     if (objectToLink != null)
                     {
+                        System.out.println("JsonFieldLinker: linked " + objectToLink);
                         field.set(object, objectToLink);
                     }
                     else
                     {
                         //TODO display warning? Might just leave this to validation
+                        System.out.println("JsonFieldLinker: failed to locate object with name[" + key + "] from " + handler);
                     }
                 }
                 else
                 {
                     //TODO display warning? Might just leave this to validation
+                    System.out.println("JsonFieldLinker: failed to locate handler for type " + getType());
                 }
             }
             else
@@ -59,8 +64,7 @@ public class JsonFieldLinker extends JsonLinker<Object>
                 throw new RuntimeException("JsonFieldLinker currently only supports using a string as a link key");
             }
 
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             throw new RuntimeException("JsonMethodMapper: Failed to link json object to field. "
                     + "\n FIELD:    " + field.getName()
@@ -77,10 +81,15 @@ public class JsonFieldLinker extends JsonLinker<Object>
         try
         {
             return !required || field.get(object) != null;
-        }
-        catch (IllegalAccessException e)
+        } catch (IllegalAccessException e)
         {
             return false;
         }
+    }
+
+    @Override
+    public String toString()
+    {
+        return "JsonFieldLinker[Keys: " + Arrays.toString(getKeys()) + ", Required:" + required + "]";
     }
 }

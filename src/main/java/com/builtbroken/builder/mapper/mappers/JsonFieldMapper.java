@@ -157,4 +157,10 @@ public class JsonFieldMapper extends JsonMapper<Object>
             return false;
         }
     }
+
+    @Override
+    public String toString()
+    {
+        return "JsonFieldMapper[Keys: " + Arrays.toString(getKeys()) + ", Required:" + required + "]";
+    }
 }

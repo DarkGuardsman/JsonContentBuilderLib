@@ -44,9 +44,9 @@ public class TestProjectData
 
         //Validate we exist with sub-objects
         ProjectData projectData = (ProjectData) object;
-        Assertions.assertNotNull(projectData.authorData);
-        Assertions.assertNotNull(projectData.creationData);
-        Assertions.assertNotNull(projectData.creationData.version);
+        Assertions.assertNotNull(projectData.authorData, "Failed to wire author data");
+        Assertions.assertNotNull(projectData.creationData, "Failed to write creation data");
+        Assertions.assertNotNull(projectData.creationData.version, "Failed to write version data");
 
         //Validate version stuff
         Assertions.assertEquals("0.0.1.1", projectData.creationData.version);

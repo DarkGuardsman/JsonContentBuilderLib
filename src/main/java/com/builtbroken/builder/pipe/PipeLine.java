@@ -192,7 +192,7 @@ public class PipeLine
     {
         //DEBUG
         getLogger().accept("handle", "start " + jsonData
-                + "\n " + shouldSkipPipe);
+                + "\n=========================");
 
         //HANDLE
         final List<Object> builtObjects = new ArrayList();
@@ -213,7 +213,7 @@ public class PipeLine
                 currentOut.clear();
 
                 //DEBUG
-                getLogger().accept("handle >> pipe", pipe.pipeName + " IN: " + currentIN.size());
+                getLogger().accept("handle >> pipe", pipe.pipeName + " IN: " + currentIN.size() + "\n");
 
                 //loop inputs
                 while (currentIN.peek() != null)
@@ -222,7 +222,14 @@ public class PipeLine
                     getLogger().accept("handle >> pipe", pipe.pipeName + " NEXT: " + currentIN.peek());
 
                     pipe.processSet(jsonData, currentIN.poll(), currentOut);
+
+                    //DEBUG
+                    getLogger().accept("handle >> pipe", pipe.pipeName + " END: " + currentOut.size() + "\n");
                 }
+
+                //DEBUG
+                getLogger().accept("handle >> pipe", pipe.pipeName + " OUT: " + currentOut.size()
+                        + "\n=====================================");
             }
         }
 

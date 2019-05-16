@@ -69,4 +69,10 @@ public class JsonMethodMapper extends JsonMapper<Object>
         }
 
     }
+
+    @Override
+    public String toString()
+    {
+        return "JsonMethodMapper[Keys: " + Arrays.toString(getKeys()) + "]";
+    }
 }

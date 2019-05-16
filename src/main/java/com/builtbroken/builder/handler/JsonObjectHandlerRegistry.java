@@ -42,6 +42,8 @@ public class JsonObjectHandlerRegistry
 
             //Create handler if we have none
             createOrGetHandler(type).onCreated(jsonGeneratedObject);
+
+            System.out.println("JsonObjectHandlerRegistry >> Registered: " + type + " >> " + jsonGeneratedObject);
         }
         else
         {
