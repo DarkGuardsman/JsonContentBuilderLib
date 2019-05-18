@@ -14,7 +14,6 @@ import com.builtbroken.builder.mapper.linker.JsonMethodLinker;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -209,33 +208,31 @@ public class JsonClassMapper
 
             //Injection handling
             final JsonInjection injection = method.getAnnotation(JsonInjection.class);
+            final Supplier<String> methodErrorDataSupplier = () -> " Class: " + clazz + " Method: " + method.toString();
             if (injection != null)
             {
                 if (mapping != null || objectWiring != null)
                 {
                     throw new RuntimeException("JsonClassMapper: Injection mapping annotation is not compatible"
                             + " with mapping or wiring annotation."
-                            + " Class: " + clazz
-                            + " Method: " + method.toString());
+                            + methodErrorDataSupplier.get());
                 }
                 else if (Modifier.isStatic(method.getModifiers()))
                 {
                     throw new RuntimeException("JsonClassMapper: Injection mapping can not be applied to a static method. "
-                            + " Class: " + clazz
-                            + " Method: " + method.toString());
+                            + methodErrorDataSupplier.get());
                 }
                 else if (method.getParameterCount() == 0)
                 {
                     throw new RuntimeException("JsonClassMapper: JsonInjection requires at least 1 parameter."
-                            + " Class: " + clazz
-                            + " Method: " + method.toString());
+                            + methodErrorDataSupplier.get());
                 }
 
                 //Locate all mappings
                 final BiFunction<JsonObject, ConversionHandler, Object>[] mappers
                         = MapperHelpers.buildMappers(method.getParameterTypes(),
                         method.getParameterAnnotations(),
-                        () -> " Class: " + clazz + " Method: " + method.toString());
+                        methodErrorDataSupplier);
 
                 //Create
                 injectionMappers.add(new JsonInjectionMapper(method, mappers));
@@ -249,8 +246,7 @@ public class JsonClassMapper
                 if (!Modifier.isStatic(method.getModifiers()))
                 {
                     throw new RuntimeException("JsonClassMapper: Can't apply an object constructor to a non-static method. "
-                            + " Class: " + clazz
-                            + " Method: " + method.toString());
+                            + methodErrorDataSupplier.get());
                 }
 
                 final String key = jsonConstructor.type().toLowerCase();
@@ -264,8 +260,8 @@ public class JsonClassMapper
                 else if (method.getParameterCount() > 0)
                 {
                     //Locate all mappings
-                    final BiFunction<JsonObject, ConversionHandler, Object>[] mappers = new BiFunction[method.getParameterCount()];
-                    final Annotation[][] paraAnnos = method.getParameterAnnotations();
+                    final BiFunction<JsonObject, ConversionHandler, Object>[] mappers
+                            = MapperHelpers.buildMappers(method.getParameterTypes(), method.getParameterAnnotations(), methodErrorDataSupplier);
 
 
                     //Mapper constructor

@@ -36,18 +36,14 @@ public class MapperHelpers
             {
                 if (annotation instanceof JsonMapping)
                 {
-                    if (annotation instanceof JsonMapping)
-                    {
-                        mappers[para] = MapperHelpers.getClazzBasedMapper(paraClazz, (JsonMapping) annotation, () -> errorData.get() + " PARA: " + paraC);
-                        break;
-                    }
+                    mappers[para] = MapperHelpers.getClazzBasedMapper(paraClazz, (JsonMapping) annotation, () -> errorData.get() + " PARA: " + paraC);
                     break;
                 }
             }
 
             if (mappers[para] == null)
             {
-                new RuntimeException("JsonClassMapper: All parameters require JsonMapping annotation"
+                throw new RuntimeException("JsonClassMapper: All parameters require JsonMapping annotation"
                         + " when used to create mapping logic for injection into a method or constructor."
                         + errorData.get());
             }
@@ -96,17 +92,18 @@ public class MapperHelpers
             Object object = null;
             for (final String key : mapper.keys())
             {
-                final JsonElement json = jsonObject.get(key);
+                final JsonElement jsonData = jsonObject.get(key);
 
-                if (json != null)
+                if (jsonData != null)
                 {
                     //Special handling for enum
                     if (type.equalsIgnoreCase(ConverterRefs.ENUM))
                     {
                         try
                         {
-                            object = JsonMapper.getEnumValue(paraClazz, json);
-                        } catch (Exception e)
+                            object = JsonMapper.getEnumValue(paraClazz, jsonData);
+                        }
+                        catch (Exception e)
                         {
                             throw new RuntimeException("JsonBuilderMapper: Failed to get enum due", e);
                         }
@@ -114,11 +111,12 @@ public class MapperHelpers
                     //Normal handling
                     else
                     {
-                        object = converter.fromJson(type, json, mapper.args());
+                        object = converter.fromJson(type, jsonData, mapper.args());
                     }
                 }
 
-                if (json != null)
+                //Exit loop if we have an object
+                if (object != null)
                 {
                     break;
                 }
