@@ -64,6 +64,15 @@ ext.getBuildNumber = {
     return getDate()
 }
 
+import org.ajoberstar.grgit.*
+
+ext.GitHash = {
+    //return gitHash()
+    def gitHash = 'unknown'
+    if (new File(projectDir, '.git').exists()) {
+    def repo = Grgit.open(currentDir: file('.'))
+  }
+}
 
 version = "${version_major}.${version_minor}.${version_revis}b" + project.getBuildNumber()
 
@@ -257,13 +266,6 @@ publishing {
         }
     }
 }
-
-def getDate() {
-    def date = new Date()
-    def formattedDate = date.format('yyyyMMddHHmmss')
-    return formattedDate
-}
-
 
 tasks.build.dependsOn makeChangelog
 
