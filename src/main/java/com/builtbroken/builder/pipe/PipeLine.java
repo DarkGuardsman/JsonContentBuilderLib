@@ -181,6 +181,11 @@ public class PipeLine
         }
     }
 
+    public Pipe get(String key)
+    {
+        return id_to_pipe.get(key.toLowerCase());
+    }
+
     /**
      * Called to handle a JSON and turn it into objects
      *
