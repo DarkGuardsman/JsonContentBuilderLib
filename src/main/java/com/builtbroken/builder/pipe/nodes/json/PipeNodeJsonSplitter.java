@@ -2,6 +2,7 @@ package com.builtbroken.builder.pipe.nodes.json;
 
 import com.builtbroken.builder.ContentBuilderRefs;
 import com.builtbroken.builder.pipe.nodes.IPipeNode;
+import com.builtbroken.builder.pipe.nodes.NodeActionResult;
 import com.builtbroken.builder.pipe.nodes.NodeType;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -14,30 +15,32 @@ import java.util.Queue;
  * <p>
  * Created by Dark(DarkGuardsman, Robert) on 2019-02-27.
  */
-public class PipeNodeJsonSplitter implements IPipeNode
+public class PipeNodeJsonSplitter implements IPipeNode<JsonArray>
 {
+    @Override
+    public void receive(JsonElement data, JsonArray currentObject, Queue<Object> objectsOut)
+    {
+        for (JsonElement element : currentObject)
+        {
+            if (element.isJsonObject())
+            {
+                objectsOut.add(element.deepCopy());
+            }
+            else
+            {
+                throw new IllegalArgumentException("PipeNodeJsonSplitter: Can only split by objects in an array. Primitives and arrays are not considered there own objects for the pipe.");
+            }
+        }
+    }
 
     @Override
-    public void receive(JsonElement data, Object currentObject, Queue<Object> objectsOut)
+    public NodeActionResult shouldReceive(JsonElement data, Object currentObject)
     {
         if (currentObject instanceof JsonArray)
         {
-            for (JsonElement element : ((JsonArray) currentObject))
-            {
-                if (element.isJsonObject())
-                {
-                    objectsOut.add(element.deepCopy());
-                }
-                else
-                {
-                    throw new IllegalArgumentException("PipeNodeJsonSplitter: Can only split by objects in an array. Primitives and arrays are not considered there own objects for the pipe.");
-                }
-            }
+            return NodeActionResult.CONTINUE;
         }
-        else if (currentObject instanceof JsonObject)
-        {
-            objectsOut.add(currentObject);
-        }
+        return NodeActionResult.SKIP;
     }
 
     @Override

@@ -20,13 +20,13 @@ public class TestCommentCleaner
     @Test
     public void testEmpty()
     {
-        PipeNodeCommentRemover commentRemover = new PipeNodeCommentRemover();
+        PipeNodeCommentRemover commentRemover = new PipeNodeCommentRemover(null);
         final JsonObject generatedJson = new JsonObject();
 
         //Run
         Queue<Object> queue = new LinkedList();
         final JsonObject insert = generatedJson.deepCopy();
-        commentRemover.receive(insert, null, queue);
+        commentRemover.receive(insert, insert, queue);
 
         //Check that we added JSON to output
         Assertions.assertSame(queue.peek(), insert);
@@ -38,7 +38,7 @@ public class TestCommentCleaner
     @Test
     public void testBasic()
     {
-        PipeNodeCommentRemover commentRemover = new PipeNodeCommentRemover();
+        PipeNodeCommentRemover commentRemover = new PipeNodeCommentRemover(null);
 
         for (int i = 0; i < 10; i++)
         {
@@ -53,7 +53,7 @@ public class TestCommentCleaner
             //Run
             Queue<Object> queue = new LinkedList();
             final JsonObject insert = generatedJson.deepCopy();
-            commentRemover.receive(insert, null, queue);
+            commentRemover.receive(insert, insert, queue);
 
             //Check that we added JSON to output
             Assertions.assertSame(queue.peek(), insert);
@@ -66,7 +66,7 @@ public class TestCommentCleaner
     @Test
     public void testBasicWithRandom()
     {
-        PipeNodeCommentRemover commentRemover = new PipeNodeCommentRemover();
+        PipeNodeCommentRemover commentRemover = new PipeNodeCommentRemover(null);
         Random random = new Random();
 
         for (int timesToRun = 0; timesToRun < 10; timesToRun++)
@@ -92,7 +92,7 @@ public class TestCommentCleaner
             //Run
             Queue<Object> queue = new LinkedList();
             final JsonObject insert = generatedJson.deepCopy();
-            commentRemover.receive(insert, null, queue);
+            commentRemover.receive(insert, insert, queue);
 
             //Check that we added JSON to output
             Assertions.assertSame(queue.peek(), insert);
@@ -117,7 +117,7 @@ public class TestCommentCleaner
     @Test
     public void testArray()
     {
-        PipeNodeCommentRemover commentRemover = new PipeNodeCommentRemover();
+        PipeNodeCommentRemover commentRemover = new PipeNodeCommentRemover(null);
         final JsonObject generatedJson = new JsonObject();
         JsonArray array = new JsonArray();
         array.add("1");
@@ -132,7 +132,7 @@ public class TestCommentCleaner
         //Run
         Queue<Object> queue = new LinkedList();
         final JsonObject insert = generatedJson.deepCopy();
-        commentRemover.receive(insert, null, queue);
+        commentRemover.receive(insert, insert, queue);
 
         //Check that we added JSON to output
         Assertions.assertSame(queue.peek(), insert);

@@ -61,8 +61,8 @@ public class TestPipeLine
         final JsonArray array = generateJson();
 
 
-        //Only run json pipe
-        List<Object> out = pipeLine.handle(array, pipe -> pipe.pipeName == ContentBuilderRefs.PIPE_MAPPER);
+        //Only run json and build pipes
+        List<Object> out = pipeLine.handle(array, pipe -> pipe.pipeName != ContentBuilderRefs.PIPE_JSON && pipe.pipeName != ContentBuilderRefs.PIPE_BUILDER);
         Assertions.assertNotNull(out);
         Assertions.assertEquals(3, out.size());
         Assertions.assertTrue(out.get(0) instanceof GeneratedObject);
@@ -85,7 +85,7 @@ public class TestPipeLine
         final JsonArray array = generateJson();
 
 
-        //Only run json pipe
+        //Only run json, builder, and mapper pipes
         List<Object> out = pipeLine.handle(array, null);
         Assertions.assertNotNull(out);
         Assertions.assertEquals(3, out.size());

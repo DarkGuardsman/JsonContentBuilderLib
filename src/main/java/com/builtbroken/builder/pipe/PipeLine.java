@@ -82,7 +82,7 @@ public class PipeLine
 
         //Setup cleaner
         Pipe jsonPrepPipe = new Pipe(handler, ContentBuilderRefs.PIPE_JSON);
-        jsonPrepPipe.addNode(new PipeNodeCommentRemover()); //cleanup
+        jsonPrepPipe.addNode(new PipeNodeCommentRemover(jsonPrepPipe)); //cleanup
         jsonPrepPipe.addNode(new PipeNodeJsonSplitter()); //breakdown
         handler.pipes.add(jsonPrepPipe);
 

@@ -1,14 +1,20 @@
-package com.builtbroken.builder.pipe.nodes;
+package com.builtbroken.builder.pipe.nodes.prefab;
 
 import com.builtbroken.builder.converter.ConversionHandler;
+import com.builtbroken.builder.data.GeneratedObject;
 import com.builtbroken.builder.loader.ContentLoader;
 import com.builtbroken.builder.pipe.Pipe;
 import com.builtbroken.builder.pipe.PipeLine;
+import com.builtbroken.builder.pipe.nodes.IPipeNode;
+import com.builtbroken.builder.pipe.nodes.NodeType;
+import com.google.gson.JsonElement;
+
+import java.util.Queue;
 
 /**
  * Created by Dark(DarkGuardsman, Robert) on 2019-03-05.
  */
-public abstract class PipeNode implements IPipeNode
+public abstract class PipeNode<O extends Object> implements IPipeNode<O>
 {
 
     protected final Pipe pipe;

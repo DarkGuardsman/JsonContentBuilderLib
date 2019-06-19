@@ -3,6 +3,7 @@ package com.builtbroken.builder.pipe;
 import com.builtbroken.builder.converter.ConversionHandler;
 import com.builtbroken.builder.loader.ContentLoader;
 import com.builtbroken.builder.pipe.nodes.IPipeNode;
+import com.builtbroken.builder.pipe.nodes.NodeActionResult;
 import com.google.gson.JsonElement;
 
 import java.util.LinkedList;
@@ -120,15 +121,28 @@ public class Pipe
     private void handleNodeStep(IPipeNode node, JsonElement jsonData, Object currentObject, Queue<Object> queueOut)
     {
         getLogger().accept("Node[" + node.getUniqueID() + "]", jsonData + " " + currentObject);
-        try
+
+        NodeActionResult result = node.shouldReceive(jsonData, currentObject);
+        if (result == NodeActionResult.CONTINUE)
         {
-            node.receive(jsonData, currentObject, queueOut);
+            try
+            {
+                node.receive(jsonData, currentObject, queueOut);
+
+            } catch (Exception e)
+            {
+                throw new RuntimeException("Unexpected error while processing node in pipeline[" + pipeName + "], Node: " + node.getUniqueID() + " Class: " + node.getClass(), e);
+                //TODO add way for loader to provide more information about error
+                //TODO format error to look nice in output log to better improve error handling by developers
+            }
         }
-        catch (Exception e)
+        else if (result != NodeActionResult.SKIP)
         {
-            throw new RuntimeException("Unexpected error while processing node in pipeline[" + pipeName + "], Node: " + node.getUniqueID() + " Class: " + node.getClass(), e);
-            //TODO add way for loader to provide more information about error
-            //TODO format error to look nice in output log to better improve error handling by developers
+            throw new RuntimeException("pipeline[" + pipeName + "] rejected accepting input " + currentObject);
+        }
+        else
+        {
+            queueOut.add(currentObject);
         }
     }
 

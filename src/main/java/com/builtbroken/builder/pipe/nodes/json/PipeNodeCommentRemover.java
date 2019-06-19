@@ -1,7 +1,9 @@
 package com.builtbroken.builder.pipe.nodes.json;
 
 import com.builtbroken.builder.ContentBuilderRefs;
+import com.builtbroken.builder.pipe.Pipe;
 import com.builtbroken.builder.pipe.nodes.IPipeNode;
+import com.builtbroken.builder.pipe.nodes.NodeActionResult;
 import com.builtbroken.builder.pipe.nodes.NodeType;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -15,27 +17,24 @@ import java.util.Queue;
 /**
  * Created by Dark(DarkGuardsman, Robert) on 2/26/19.
  */
-public class PipeNodeCommentRemover implements IPipeNode
+public class PipeNodeCommentRemover extends PipeNodeJson
 {
-
-    @Override
-    public void receive(JsonElement data, Object currentObject, Queue<Object> out)
+    public PipeNodeCommentRemover(Pipe pipe)
     {
-        if (data.isJsonObject())
-        {
-            cleanObject(data.getAsJsonObject(), 0);
-        }
-        else if (data.isJsonArray())
-        {
-            cleanArray(data.getAsJsonArray(), 0);
-        }
-        out.add(data);
+        super(pipe, NodeType.JSON_EDITOR, ContentBuilderRefs.PIPE_COMMENT_REMOVER);
     }
 
     @Override
-    public NodeType getNodeType()
+    public void receive(JsonElement currentObject)
     {
-        return NodeType.JSON_EDITOR;
+        if (currentObject.isJsonObject())
+        {
+            cleanObject(currentObject.getAsJsonObject(), 0);
+        }
+        else if (currentObject.isJsonArray())
+        {
+            cleanArray(currentObject.getAsJsonArray(), 0);
+        }
     }
 
     private void cleanArray(JsonArray array, int depth)
@@ -86,12 +85,5 @@ public class PipeNodeCommentRemover implements IPipeNode
         return string.startsWith("_") && element.isJsonPrimitive();
         //TODO create a list of prefixes that count as comments
         //TODO create a way to disable removal in some cases (file, path, depth, etc)
-    }
-
-
-    @Override
-    public String getUniqueID()
-    {
-        return ContentBuilderRefs.PIPE_COMMENT_REMOVER;
     }
 }

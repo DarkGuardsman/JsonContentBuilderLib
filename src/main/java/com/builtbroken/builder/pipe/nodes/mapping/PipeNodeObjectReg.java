@@ -3,18 +3,18 @@ package com.builtbroken.builder.pipe.nodes.mapping;
 import com.builtbroken.builder.ContentBuilderRefs;
 import com.builtbroken.builder.data.GeneratedObject;
 import com.builtbroken.builder.pipe.Pipe;
+import com.builtbroken.builder.pipe.nodes.NodeActionResult;
 import com.builtbroken.builder.pipe.nodes.NodeType;
-import com.builtbroken.builder.pipe.nodes.PipeNode;
+import com.builtbroken.builder.pipe.nodes.prefab.PipeNode;
+import com.builtbroken.builder.pipe.nodes.prefab.PipeNodeGenObject;
 import com.google.gson.JsonElement;
-
-import java.util.Queue;
 
 /**
  * Handles placing objects into handlers
  * <p>
  * Created by Dark(DarkGuardsman, Robert) on 2019-04-05.
  */
-public class PipeNodeObjectReg extends PipeNode
+public class PipeNodeObjectReg extends PipeNodeGenObject
 {
     public PipeNodeObjectReg(Pipe pipe)
     {
@@ -22,23 +22,9 @@ public class PipeNodeObjectReg extends PipeNode
     }
 
     @Override
-    public void receive(JsonElement data, Object currentObject, Queue<Object> objectsOut)
+    public void receive(GeneratedObject generatedObject)
     {
-        //Can only handle json objects
-        if (currentObject instanceof GeneratedObject)
-        {
-            final GeneratedObject generatedObject = (GeneratedObject) currentObject;
-            getContentLoader().jsonObjectHandlerRegistry.onCreated(generatedObject);
-            //TODO fire some events
-
-            //Pass to next
-            objectsOut.add(generatedObject);
-        }
-        else
-        {
-            System.out.println("PipeNodeObjectReg: Error, Input into object creator needs to be a GeneratedObject. Input: " + currentObject);
-            //TODO throw error, only if strict mode is enabled
-        }
+        getContentLoader().jsonObjectHandlerRegistry.onCreated(generatedObject);
     }
 
     @Override

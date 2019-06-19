@@ -22,7 +22,7 @@ public class TestJsonSplitter
         PipeNodeJsonSplitter splitter = new PipeNodeJsonSplitter();
 
         final LinkedList<Object> out = new LinkedList();
-        splitter.receive(json, json, out);
+        splitter.receive(json, json.getAsJsonArray(), out);
 
         Assertions.assertEquals(6, out.size());
 

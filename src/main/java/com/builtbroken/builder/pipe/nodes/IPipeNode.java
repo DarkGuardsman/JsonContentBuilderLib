@@ -18,7 +18,7 @@ import java.util.Queue;
  * <p>
  * Created by Dark(DarkGuardsman, Robert) on 2/26/19.
  */
-public interface IPipeNode
+public interface IPipeNode<O extends Object>
 {
 
     /**
@@ -30,7 +30,21 @@ public interface IPipeNode
      * @param objectsOut    - any object generated in this phase, add current object if not consumed
      * @return current object, or new object if created
      */
-    void receive(JsonElement data, Object currentObject, Queue<Object> objectsOut);
+    void receive(JsonElement data, O currentObject, Queue<Object> objectsOut);
+
+    /**
+     * Checks to see if this pipe node should process the object or JSON.
+     * <p>
+     * This allows nodes to control what flows into the node and
+     * for nodes to be created that only handle some of the inputs.
+     *
+     * @param data          - current JSON data, previous nodes may have edited it
+     * @param currentObject - current object, may be null if not built or even a sub part of the JSON.
+     * @return {@Link NodeActionResult#CONTINUE} for {@link #receive(JsonElement, Object, Queue)} to be called
+     * {@link NodeActionResult#REJECT} to fail out causing the process to stop, or {@link NodeActionResult#SKIP} to
+     * continue without running {@link #receive(JsonElement, Object, Queue)}
+     */
+    NodeActionResult shouldReceive(JsonElement data, Object currentObject);
 
     /**
      * Called on pipe initialization to generate or reference

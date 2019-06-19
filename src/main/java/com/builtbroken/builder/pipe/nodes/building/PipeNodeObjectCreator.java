@@ -4,8 +4,9 @@ import com.builtbroken.builder.ContentBuilderRefs;
 import com.builtbroken.builder.converter.ConversionHandler;
 import com.builtbroken.builder.data.GeneratedObject;
 import com.builtbroken.builder.pipe.Pipe;
+import com.builtbroken.builder.pipe.nodes.NodeActionResult;
 import com.builtbroken.builder.pipe.nodes.NodeType;
-import com.builtbroken.builder.pipe.nodes.PipeNode;
+import com.builtbroken.builder.pipe.nodes.prefab.PipeNode;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -17,7 +18,7 @@ import java.util.Queue;
  * <p>
  * Created by Dark(DarkGuardsman, Robert) on 2019-02-27.
  */
-public class PipeNodeObjectCreator extends PipeNode
+public class PipeNodeObjectCreator extends PipeNode<JsonObject>
 {
 
     /**
@@ -34,42 +35,38 @@ public class PipeNodeObjectCreator extends PipeNode
     }
 
     @Override
-    public void receive(JsonElement data, Object currentObject, Queue<Object> objectsOut)
+    public void receive(JsonElement data, JsonObject jsonObject, Queue<Object> objectsOut)
     {
-        //Can only handle json objects
-        if (currentObject instanceof JsonObject)
+
+        //Make sure we have the type field
+        if (jsonObject.has(type_key))
         {
-            final JsonObject jsonObject = (JsonObject) currentObject;
+            final ConversionHandler handler = getConverter();
+            final String type = jsonObject.getAsJsonPrimitive(type_key).getAsString();
 
-            //Make sure we have the type field
-            if (jsonObject.has(type_key))
+            //Convert object
+            final Object object = handler.fromJson(type, jsonObject, null); //TODO maybe include a few args like version if found
+            if (object != null)
             {
-                final ConversionHandler handler = getConverter();
-                final String type = jsonObject.getAsJsonPrimitive(type_key).getAsString();
-
-                //Convert object
-                final Object object = handler.fromJson(type, jsonObject, null); //TODO maybe include a few args like version if found
-                if (object != null)
-                {
-                    objectsOut.add(new GeneratedObject(type, object, jsonObject.deepCopy()));
-                }
-                else
-                {
-                    System.out.println("PipeNodeObjectCreator: Error, Failed to convert object. Input: " + currentObject);
-                    //TODO throw error, only if strict mode is enabled
-                }
+                objectsOut.add(new GeneratedObject(type, object, jsonObject.deepCopy()));
             }
             else
             {
-                System.out.println("PipeNodeObjectCreator: Error, Input JsonObject needs to define a type to use this builder. Input: " + currentObject);
+                System.out.println("PipeNodeObjectCreator: Error, Failed to convert object. Input: " + jsonObject);
                 //TODO throw error, only if strict mode is enabled
             }
         }
         else
         {
-            System.out.println("PipeNodeObjectCreator: Error, Input into object creator needs to be a JsonObject. Input: " + currentObject);
+            System.out.println("PipeNodeObjectCreator: Error, Input JsonObject needs to define a type to use this builder. Input: " + jsonObject);
             //TODO throw error, only if strict mode is enabled
         }
+    }
+
+    @Override
+    public NodeActionResult shouldReceive(JsonElement data, Object currentObject)
+    {
+        return currentObject instanceof JsonObject ? NodeActionResult.CONTINUE : NodeActionResult.REJECT;
     }
 
     @Override

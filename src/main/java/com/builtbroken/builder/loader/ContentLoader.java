@@ -343,10 +343,16 @@ public class ContentLoader
         //DEBUG-LOGGING
         getLogger().accept("init", "start");
 
+        addPipes();
         pipeLine.init();
 
         //DEBUG-LOGGING
         getLogger().accept("init", "end");
+    }
+
+    protected void addPipes()
+    {
+
     }
 
     /**
