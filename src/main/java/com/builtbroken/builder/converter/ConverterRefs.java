@@ -6,6 +6,8 @@ package com.builtbroken.builder.converter;
 public class ConverterRefs
 {
     public static final String STRING = "string";
+    public static final String BOOLEAN = "bool";
+    public static final String OBJECT = "object";
 
     public static final String BYTE = "byte";
     public static final String SHORT = "short";
