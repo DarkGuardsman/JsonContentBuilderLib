@@ -52,7 +52,7 @@ import java.util.function.Function;
  * integrated into the process. Including testing tools, debug tools, or new processes
  * to integrate with existing complex systems.
  * <p>
- * Created by Dark(DarkGuardsman, Robert) on 2/27/19.
+ * Created by Robin Seifert on 2/27/19.
  */
 public class PipeLine
 {

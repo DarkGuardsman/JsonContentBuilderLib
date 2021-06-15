@@ -10,7 +10,7 @@ import com.builtbroken.builder.pipe.nodes.prefab.PipeNodeGenObject;
 import com.google.gson.JsonElement;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 2019-03-15.
+ * Created by Robin Seifert on 2019-03-15.
  */
 public class PipeNodeWireValidator extends PipeNodeGenObject
 {

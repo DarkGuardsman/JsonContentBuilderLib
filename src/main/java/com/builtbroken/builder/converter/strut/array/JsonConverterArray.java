@@ -8,7 +8,7 @@ import com.google.gson.JsonElement;
 import java.util.Arrays;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 2019-03-05.
+ * Created by Robin Seifert on 2019-03-05.
  */
 public class JsonConverterArray extends JsonConverter
 {

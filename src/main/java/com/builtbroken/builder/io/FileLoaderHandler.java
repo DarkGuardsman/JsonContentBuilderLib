@@ -15,7 +15,7 @@ import java.util.function.Consumer;
 
 /**
  * Handles loading all files from the file system into data structures for use
- * Created by Dark(DarkGuardsman, Robert) on 2/19/19.
+ * Created by Robin Seifert on 2/19/19.
  */
 public class FileLoaderHandler //TODO make this instance based instead of global
 {

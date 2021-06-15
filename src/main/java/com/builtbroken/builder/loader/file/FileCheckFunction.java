@@ -4,7 +4,7 @@ import javax.annotation.Nullable;
 import java.io.File;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 2019-05-08.
+ * Created by Robin Seifert on 2019-05-08.
  */
 @FunctionalInterface
 public interface FileCheckFunction

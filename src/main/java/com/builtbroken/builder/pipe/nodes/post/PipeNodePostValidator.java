@@ -11,7 +11,7 @@ import com.builtbroken.builder.pipe.nodes.prefab.PipeNodeSimple;
 import com.google.gson.JsonElement;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 2019-05-16.
+ * Created by Robin Seifert on 2019-05-16.
  */
 public class PipeNodePostValidator extends PipeNodeSimple<GeneratedObject, ISimpleDataValidation>
 {

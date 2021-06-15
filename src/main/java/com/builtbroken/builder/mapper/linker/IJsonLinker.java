@@ -4,7 +4,7 @@ import com.builtbroken.builder.handler.JsonObjectHandlerRegistry;
 import com.google.gson.JsonElement;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 2019-03-11.
+ * Created by Robin Seifert on 2019-03-11.
  */
 public interface IJsonLinker<O extends Object>
 {

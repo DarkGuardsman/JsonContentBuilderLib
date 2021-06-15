@@ -20,7 +20,7 @@ import java.util.ServiceLoader;
  * Use this to trigger the loading or request manual loading of files. It will be
  * able to locate the exact sub-systems to use for loading the data.
  * <p>
- * Created by Dark(DarkGuardsman, Robert) on 2/19/19.
+ * Created by Robin Seifert on 2/19/19.
  */
 public class ContentBuilderLib
 {

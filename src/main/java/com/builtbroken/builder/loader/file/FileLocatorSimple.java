@@ -9,7 +9,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 2019-04-05.
+ * Created by Robin Seifert on 2019-04-05.
  */
 public class FileLocatorSimple implements IFileLocator
 {

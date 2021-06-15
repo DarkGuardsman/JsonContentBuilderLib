@@ -5,7 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 2019-03-05.
+ * Created by Robin Seifert on 2019-03-05.
  */
 public class JsonConverterBoolean extends JsonConverter<String>
 {

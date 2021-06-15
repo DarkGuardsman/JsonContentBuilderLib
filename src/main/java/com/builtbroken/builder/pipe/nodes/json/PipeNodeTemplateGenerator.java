@@ -7,7 +7,7 @@ package com.builtbroken.builder.pipe.nodes.json;
  * merge into a template provided as part of the data
  * or merge into a separate JSON file already loaded.
  * <p>
- * Created by Dark(DarkGuardsman, Robert) on 2019-02-27.
+ * Created by Robin Seifert on 2019-02-27.
  */
 public class PipeNodeTemplateGenerator
 {

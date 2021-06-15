@@ -3,7 +3,7 @@ package com.builtbroken.builder.converter;
 import com.google.gson.JsonElement;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 2019-03-05.
+ * Created by Robin Seifert on 2019-03-05.
  */
 public abstract class JsonConverter<O extends Object> implements IJsonConverter<O>
 {

@@ -4,7 +4,7 @@ import com.builtbroken.builder.data.IJsonUnique;
 import com.google.gson.JsonElement;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 2019-03-05.
+ * Created by Robin Seifert on 2019-03-05.
  */
 public interface IJsonConverter<O extends Object> extends IJsonUnique
 {

@@ -7,7 +7,7 @@ import com.google.gson.JsonElement;
 import java.util.function.Function;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 2019-04-05.
+ * Created by Robin Seifert on 2019-04-05.
  */
 public class ConverterObjectBuilder<C extends IJsonGeneratedObject> extends JsonConverter<C>
 {

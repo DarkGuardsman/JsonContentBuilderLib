@@ -11,7 +11,7 @@ import java.io.Reader;
 import java.util.function.Consumer;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 2/19/19.
+ * Created by Robin Seifert on 2/19/19.
  */
 public interface IFileLoader
 {

@@ -7,7 +7,7 @@ import javax.annotation.Nonnull;
 import java.util.function.Function;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 2019-05-14.
+ * Created by Robin Seifert on 2019-05-14.
  */
 public class JsonBuilderFunction extends JsonBuilder
 {

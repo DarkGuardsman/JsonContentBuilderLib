@@ -13,7 +13,7 @@ import java.util.Collection;
 import java.util.function.Consumer;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 2019-03-11.
+ * Created by Robin Seifert on 2019-03-11.
  */
 public class JsonFieldMapper extends JsonMapper<Object>
 {

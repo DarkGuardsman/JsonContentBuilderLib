@@ -28,7 +28,7 @@ import java.util.function.Function;
  * any other tasks. This is done using sub objects such as the {@link PipeLine} to handle
  * all JSON and conversion process.
  * <p>
- * Created by Dark(DarkGuardsman, Robert) on 2/19/19.
+ * Created by Robin Seifert on 2/19/19.
  */
 public class ContentLoader
 {

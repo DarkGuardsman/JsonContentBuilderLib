@@ -11,7 +11,7 @@ import java.util.function.Function;
 
 /**
  * simple converter wrapper that allows for nested JSON objects to easily be used for value assignment
- * Created by Dark(DarkGuardsman, Robert) on 2019-6-20.
+ * Created by Robin Seifert on 2019-6-20.
  */
 public class JsonConverterObject extends JsonConverter<Object>
 {

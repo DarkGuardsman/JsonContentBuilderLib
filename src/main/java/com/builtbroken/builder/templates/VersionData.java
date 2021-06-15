@@ -9,7 +9,7 @@ import com.builtbroken.builder.mapper.anno.JsonMapping;
 import com.builtbroken.builder.mapper.anno.JsonTemplate;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 2019-05-15.
+ * Created by Robin Seifert on 2019-05-15.
  */
 @JsonTemplate(type = ContentBuilderRefs.TYPE_VERSION_DATA)
 public class VersionData implements IJsonGeneratedObject, ISimpleDataValidation

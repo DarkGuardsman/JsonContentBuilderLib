@@ -27,7 +27,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 2019-03-11.
+ * Created by Robin Seifert on 2019-03-11.
  */
 public class JsonClassMapper
 {

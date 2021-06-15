@@ -11,7 +11,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.function.BiFunction;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 2019-05-14.
+ * Created by Robin Seifert on 2019-05-14.
  */
 public class JsonBuilderConstructor extends JsonBuilderMapper
 {

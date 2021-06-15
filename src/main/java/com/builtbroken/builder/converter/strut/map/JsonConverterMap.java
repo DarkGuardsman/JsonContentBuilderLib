@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * Simple map converter, more complex version will be added later
  * <p>
- * Created by Dark(DarkGuardsman, Robert) on 2019-03-06.
+ * Created by Robin Seifert on 2019-03-06.
  */
 public class JsonConverterMap extends JsonConverter<Map>
 {

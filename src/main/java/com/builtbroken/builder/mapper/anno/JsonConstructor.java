@@ -20,7 +20,7 @@ import java.lang.annotation.Target;
  * Do not change the passed in data as this may not be
  * supported in future releases.
  * <p>
- * Created by Dark(DarkGuardsman, Robert) on 2019-05-14.
+ * Created by Robin Seifert on 2019-05-14.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value = {ElementType.CONSTRUCTOR, ElementType.METHOD, ElementType.FIELD})

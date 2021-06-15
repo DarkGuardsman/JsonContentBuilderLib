@@ -7,7 +7,7 @@ import com.google.gson.JsonElement;
 import java.util.Queue;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 2019-06-19.
+ * Created by Robin Seifert on 2019-06-19.
  */
 public abstract class PipeNodeSimple<I extends Object, O extends Object> extends PipeNode<I>
 {

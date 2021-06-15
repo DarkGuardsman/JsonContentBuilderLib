@@ -11,7 +11,7 @@ import com.builtbroken.builder.mapper.anno.JsonTemplate;
 /**
  * Used to store information about a file when created by an editor or auto generation program
  * <p>
- * Created by Dark(DarkGuardsman, Robert) on 2019-05-14.
+ * Created by Robin Seifert on 2019-05-14.
  */
 @JsonTemplate(type = ContentBuilderRefs.TYPE_CREATION_DATA)
 public class CreationData implements IJsonGeneratedObject

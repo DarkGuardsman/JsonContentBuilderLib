@@ -1,7 +1,7 @@
 package com.builtbroken.builder.pipe.nodes;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 2/27/19.
+ * Created by Robin Seifert on 2/27/19.
  */
 public enum NodeType
 {

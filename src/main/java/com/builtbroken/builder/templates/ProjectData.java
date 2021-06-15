@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Used to track a collection of JSON as a project for an editor or program to load
  * <p>
- * Created by Dark(DarkGuardsman, Robert) on 2019-05-15.
+ * Created by Robin Seifert on 2019-05-15.
  */
 @JsonTemplate(type = ContentBuilderRefs.TYPE_PROJECT_DATA)
 public class ProjectData implements IJsonGeneratedObject

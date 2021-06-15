@@ -16,7 +16,7 @@ import java.util.Queue;
  * Optionally you can skip doing work on the passed in object but this is messy.
  * As it could indicate an error with the pipe if you received something unexpected.
  * <p>
- * Created by Dark(DarkGuardsman, Robert) on 2/26/19.
+ * Created by Robin Seifert on 2/26/19.
  */
 public interface IPipeNode<O extends Object>
 {

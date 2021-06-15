@@ -10,7 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 2019-04-05.
+ * Created by Robin Seifert on 2019-04-05.
  */
 public class FileLocatorFiltered implements IFileLocator
 {

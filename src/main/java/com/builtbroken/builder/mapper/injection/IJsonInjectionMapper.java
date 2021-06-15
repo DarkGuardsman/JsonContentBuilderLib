@@ -4,7 +4,7 @@ import com.builtbroken.builder.converter.ConversionHandler;
 import com.google.gson.JsonElement;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 2019-05-16.
+ * Created by Robin Seifert on 2019-05-16.
  */
 public interface IJsonInjectionMapper<O extends Object>
 {

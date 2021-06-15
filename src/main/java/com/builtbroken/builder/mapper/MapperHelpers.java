@@ -12,7 +12,7 @@ import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 2019-05-16.
+ * Created by Robin Seifert on 2019-05-16.
  */
 public class MapperHelpers
 {

@@ -30,7 +30,7 @@ import java.lang.annotation.Target;
  *
  *
  * <p>
- * Created by Dark(DarkGuardsman, Robert) on 2019-03-11.
+ * Created by Robin Seifert on 2019-03-11.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value = {ElementType.FIELD, ElementType.METHOD})

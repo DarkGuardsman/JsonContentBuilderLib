@@ -20,7 +20,7 @@ import java.lang.annotation.Target;
  * avoid any problems or expectations of functionality by
  * the generated object.
  * <p>
- * Created by Dark(DarkGuardsman, Robert) on 2019-05-14.
+ * Created by Robin Seifert on 2019-05-14.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value = {ElementType.TYPE})

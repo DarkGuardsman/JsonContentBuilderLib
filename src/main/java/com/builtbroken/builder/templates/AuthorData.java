@@ -11,7 +11,7 @@ import com.builtbroken.builder.mapper.anno.JsonTemplate;
 /**
  * Used to store author information about a folder containing JSON or a single json
  * <p>
- * Created by Dark(DarkGuardsman, Robert) on 2019-05-14.
+ * Created by Robin Seifert on 2019-05-14.
  */
 @JsonTemplate(type = ContentBuilderRefs.TYPE_AUTHOR_DATA)
 public class AuthorData implements IJsonGeneratedObject, ISimpleDataValidation

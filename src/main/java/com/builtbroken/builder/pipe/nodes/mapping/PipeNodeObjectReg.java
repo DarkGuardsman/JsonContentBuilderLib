@@ -12,7 +12,7 @@ import com.google.gson.JsonElement;
 /**
  * Handles placing objects into handlers
  * <p>
- * Created by Dark(DarkGuardsman, Robert) on 2019-04-05.
+ * Created by Robin Seifert on 2019-04-05.
  */
 public class PipeNodeObjectReg extends PipeNodeGenObject
 {

@@ -1,7 +1,7 @@
 package com.builtbroken.builder.data;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 2019-05-14.
+ * Created by Robin Seifert on 2019-05-14.
  */
 public interface IJsonUnique
 {

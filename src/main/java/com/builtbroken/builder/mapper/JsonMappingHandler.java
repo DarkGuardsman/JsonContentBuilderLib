@@ -8,7 +8,7 @@ import java.util.HashMap;
 
 /**
  * Handles mapping JSON data to fields/methods
- * Created by Dark(DarkGuardsman, Robert) on 2019-03-11.
+ * Created by Robin Seifert on 2019-03-11.
  */
 public class JsonMappingHandler
 {

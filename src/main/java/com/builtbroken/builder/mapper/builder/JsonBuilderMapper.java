@@ -17,7 +17,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 2019-05-14.
+ * Created by Robin Seifert on 2019-05-14.
  */
 public abstract class JsonBuilderMapper extends JsonBuilder
 {

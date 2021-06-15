@@ -1,7 +1,7 @@
 package com.builtbroken.builder.mapper.linker;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 2019-03-11.
+ * Created by Robin Seifert on 2019-03-11.
  */
 public abstract class JsonLinker<O extends Object> implements IJsonLinker<O>
 {

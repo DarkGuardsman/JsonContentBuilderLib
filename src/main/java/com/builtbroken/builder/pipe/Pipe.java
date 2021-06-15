@@ -35,7 +35,7 @@ import java.util.function.BiConsumer;
  * where ordering of the pipes is important to receive
  * the right type of object.
  * <p>
- * Created by Dark(DarkGuardsman, Robert) on 2/26/19.
+ * Created by Robin Seifert on 2/26/19.
  */
 public class Pipe
 {

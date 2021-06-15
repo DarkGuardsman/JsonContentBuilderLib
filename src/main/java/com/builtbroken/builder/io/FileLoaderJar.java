@@ -26,7 +26,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 2/21/19.
+ * Created by Robin Seifert on 2/21/19.
  */
 public class FileLoaderJar implements IFileLoader
 {

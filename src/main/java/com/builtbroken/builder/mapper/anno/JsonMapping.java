@@ -16,7 +16,7 @@ import java.lang.annotation.Target;
  * When used on a parameter in a constructor it will map that parameter
  * to json data requested. Not yet supported for methods.
  * <p>
- * Created by Dark(DarkGuardsman, Robert) on 2019-03-11.
+ * Created by Robin Seifert on 2019-03-11.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value = {ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER})

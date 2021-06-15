@@ -11,7 +11,7 @@ import com.google.gson.JsonElement;
 
 /**
  * Handles how to convert from stored JSON data into fields
- * Created by Dark(DarkGuardsman, Robert) on 2019-02-27.
+ * Created by Robin Seifert on 2019-02-27.
  */
 public class PipeNodeDataMapper extends PipeNodeGenObject
 {

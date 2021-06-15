@@ -12,7 +12,7 @@ import com.builtbroken.builder.pipe.nodes.prefab.PipeNodeSimple;
 import com.google.gson.JsonElement;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 2019-03-15.
+ * Created by Robin Seifert on 2019-03-15.
  */
 public class PipeNodeMappingValidator extends PipeNodeGenObject
 {

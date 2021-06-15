@@ -3,7 +3,7 @@ package com.builtbroken.builder.data;
 /**
  * Applied to objects that need very simple [YES/NO] validation
  * <p>
- * Created by Dark(DarkGuardsman, Robert) on 2019-05-16.
+ * Created by Robin Seifert on 2019-05-16.
  */
 public interface ISimpleDataValidation
 {

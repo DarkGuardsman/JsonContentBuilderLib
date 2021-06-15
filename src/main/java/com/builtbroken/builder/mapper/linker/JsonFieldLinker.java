@@ -10,7 +10,7 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 2019-03-11.
+ * Created by Robin Seifert on 2019-03-11.
  */
 public class JsonFieldLinker extends JsonLinker<Object>
 {

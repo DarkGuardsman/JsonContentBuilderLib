@@ -16,7 +16,7 @@ package com.builtbroken.builder.templates;
  * many more options. This results in the inability to define the information
  * in terms of location requiring additional metadata to be used.
  * <p>
- * Created by Dark(DarkGuardsman, Robert) on 2019-05-15.
+ * Created by Robin Seifert Robert) on 2019-05-15.
  */
 public enum MetaDataLevel
 {

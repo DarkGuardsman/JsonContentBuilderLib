@@ -13,7 +13,7 @@ import java.util.function.BiFunction;
 import static com.builtbroken.builder.mapper.mappers.JsonMapper.getEnumValue;
 
 /**
- * Created by Dark(DarkGuardsman, Robert) on 2019-03-11.
+ * Created by Robin Seifert on 2019-03-11.
  */
 public class JsonInjectionMapper implements IJsonInjectionMapper
 {

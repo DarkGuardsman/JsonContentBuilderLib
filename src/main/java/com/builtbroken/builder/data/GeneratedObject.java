@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 
 /**
  * Used to temp store generated objects with metadata
- * Created by Dark(DarkGuardsman, Robert) on 2019-03-05.
+ * Created by Robin Seifert on 2019-03-05.
  */
 public class GeneratedObject
 {

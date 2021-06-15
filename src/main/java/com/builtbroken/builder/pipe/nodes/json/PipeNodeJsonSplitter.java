@@ -13,7 +13,7 @@ import java.util.Queue;
 /**
  * Splits JSON objects into smaller parts
  * <p>
- * Created by Dark(DarkGuardsman, Robert) on 2019-02-27.
+ * Created by Robin Seifert on 2019-02-27.
  */
 public class PipeNodeJsonSplitter implements IPipeNode<JsonArray>
 {
