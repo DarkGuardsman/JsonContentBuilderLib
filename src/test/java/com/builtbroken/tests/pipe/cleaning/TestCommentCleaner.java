@@ -1,13 +1,16 @@
 package com.builtbroken.tests.pipe.cleaning;
 
+import com.builtbroken.builder.pipe.nodes.json.JsonHelpers;
 import com.builtbroken.builder.pipe.nodes.json.PipeNodeCommentRemover;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Queue;
 import java.util.Random;
 
@@ -25,7 +28,7 @@ public class TestCommentCleaner
 
         //Run
         Queue<Object> queue = new LinkedList();
-        final JsonObject insert = generatedJson.deepCopy();
+        final JsonObject insert = JsonHelpers.deepCopy(generatedJson);
         commentRemover.receive(insert, insert, queue);
 
         //Check that we added JSON to output
@@ -52,7 +55,7 @@ public class TestCommentCleaner
 
             //Run
             Queue<Object> queue = new LinkedList();
-            final JsonObject insert = generatedJson.deepCopy();
+            final JsonObject insert = JsonHelpers.deepCopy(generatedJson);
             commentRemover.receive(insert, insert, queue);
 
             //Check that we added JSON to output
@@ -91,7 +94,7 @@ public class TestCommentCleaner
 
             //Run
             Queue<Object> queue = new LinkedList();
-            final JsonObject insert = generatedJson.deepCopy();
+            final JsonObject insert = JsonHelpers.deepCopy(generatedJson);
             commentRemover.receive(insert, insert, queue);
 
             //Check that we added JSON to output
@@ -100,15 +103,15 @@ public class TestCommentCleaner
             //Check that json is empty
             Assertions.assertEquals(20 - commentsAdded, insert.size(), "Comment remover failed to empty object " + generatedJson.toString());
 
-            for (String s : insert.keySet())
+            for (Map.Entry<String, JsonElement> entry : insert.entrySet())
             {
-                if (s.startsWith("_"))
+                if (entry.getKey().startsWith("_"))
                 {
                     Assertions.fail("Comment remover failed to remover comments from " + insert);
                 }
                 else
                 {
-                    Assertions.assertEquals(generatedJson.get(s), insert.get(s), "Comment remover edited non-comment data" + generatedJson.toString() + "  " + insert.toString());
+                    Assertions.assertEquals(generatedJson.get(entry.getKey()), insert.get(entry.getKey()), "Comment remover edited non-comment data" + generatedJson.toString() + "  " + insert.toString());
                 }
             }
         }
@@ -131,7 +134,7 @@ public class TestCommentCleaner
 
         //Run
         Queue<Object> queue = new LinkedList();
-        final JsonObject insert = generatedJson.deepCopy();
+        final JsonObject insert = JsonHelpers.deepCopy(generatedJson);
         commentRemover.receive(insert, insert, queue);
 
         //Check that we added JSON to output

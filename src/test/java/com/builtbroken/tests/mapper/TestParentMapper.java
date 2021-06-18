@@ -2,6 +2,7 @@ package com.builtbroken.tests.mapper;
 
 import com.builtbroken.builder.ContentBuilderLib;
 import com.builtbroken.builder.mapper.anno.JsonMapping;
+import com.builtbroken.builder.pipe.nodes.json.JsonHelpers;
 import com.builtbroken.tests.JAssert;
 import com.builtbroken.tests.UnitTestHelpers;
 import com.google.gson.JsonObject;
@@ -113,7 +114,7 @@ public class TestParentMapper
         object.add(JSON_PROP_C, UnitTestHelpers.createJsonIntArray(JSON_PROP_C_VAL));
         object.addProperty(JSON_PROP_E, JSON_PROP_E_VAL);
 
-        testObject = object.deepCopy();
+        testObject = JsonHelpers.deepCopy(object);
     }
 
     @AfterAll

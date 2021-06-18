@@ -6,6 +6,7 @@ import com.builtbroken.builder.data.GeneratedObject;
 import com.builtbroken.builder.pipe.Pipe;
 import com.builtbroken.builder.pipe.nodes.NodeActionResult;
 import com.builtbroken.builder.pipe.nodes.NodeType;
+import com.builtbroken.builder.pipe.nodes.json.JsonHelpers;
 import com.builtbroken.builder.pipe.nodes.prefab.PipeNode;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -27,7 +28,7 @@ public class PipeNodeObjectCreator extends PipeNode<JsonObject>
      * If you plan to support more than 1 field for types. Create a wrapper Pipe Node that stores more than
      * 1 version of this class or create a completely new pipe node that maps several fields to the type.
      */
-    public String type_key = ContentBuilderRefs.JSON_TYPE;
+    public String type_key = ContentBuilderRefs.JSON_TYPE; //TODO rename to 'template' as type for template != registry type
 
     public PipeNodeObjectCreator(Pipe pipe)
     {
@@ -37,7 +38,6 @@ public class PipeNodeObjectCreator extends PipeNode<JsonObject>
     @Override
     public void receive(JsonElement data, JsonObject jsonObject, Queue<Object> objectsOut)
     {
-
         //Make sure we have the type field
         if (jsonObject.has(type_key))
         {
@@ -48,7 +48,7 @@ public class PipeNodeObjectCreator extends PipeNode<JsonObject>
             final Object object = handler.fromJson(type, jsonObject, null); //TODO maybe include a few args like version if found
             if (object != null)
             {
-                objectsOut.add(new GeneratedObject(type, object, jsonObject.deepCopy()));
+                objectsOut.add(new GeneratedObject(type, object, JsonHelpers.deepCopy(jsonObject)));
             }
             else
             {

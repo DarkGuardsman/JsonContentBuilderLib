@@ -6,7 +6,6 @@ import com.builtbroken.builder.pipe.nodes.NodeActionResult;
 import com.builtbroken.builder.pipe.nodes.NodeType;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 import java.util.Queue;
 
@@ -24,7 +23,7 @@ public class PipeNodeJsonSplitter implements IPipeNode<JsonArray>
         {
             if (element.isJsonObject())
             {
-                objectsOut.add(element.deepCopy());
+                objectsOut.add(JsonHelpers.deepCopy(element.getAsJsonObject()));
             }
             else
             {

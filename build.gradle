@@ -17,7 +17,7 @@ repositories {
 
 dependencies{
     compile 'com.google.guava:guava:11.0.2'
-    compile 'com.google.code.gson:gson:2.8.5'
+    compile 'com.google.code.gson:gson:2.8.0'
 
     //Junit5
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'

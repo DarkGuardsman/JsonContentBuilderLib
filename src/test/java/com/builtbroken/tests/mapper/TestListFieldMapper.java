@@ -3,6 +3,7 @@ package com.builtbroken.tests.mapper;
 import com.builtbroken.builder.ContentBuilderLib;
 import com.builtbroken.builder.converter.ConverterRefs;
 import com.builtbroken.builder.mapper.anno.JsonMapping;
+import com.builtbroken.builder.pipe.nodes.json.JsonHelpers;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.junit.jupiter.api.AfterAll;
@@ -117,7 +118,7 @@ public class TestListFieldMapper
     private JsonObject createData(String key)
     {
         JsonObject data = new JsonObject();
-        data.add(key, testData.deepCopy());
+        data.add(key, JsonHelpers.deepCopy(testData));
         return data;
     }
 

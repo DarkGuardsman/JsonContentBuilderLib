@@ -17,6 +17,7 @@ import com.google.gson.JsonElement;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Queue;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -312,7 +313,7 @@ public class ContentLoader
                 final List<Object> out = pipeLine.handle(fileLoad.element, null); //TODO add metadata
 
                 //Add to global list of generated objects
-                out.stream().filter(obj -> obj != null).forEach(obj -> generatedObjects.add(obj));
+                out.stream().filter(Objects::nonNull).forEach(obj -> generatedObjects.add(obj));
 
                 //count generated objects for debug
                 objectsGenerated += out.size();

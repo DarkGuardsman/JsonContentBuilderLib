@@ -2,17 +2,15 @@ package com.builtbroken.builder.pipe.nodes.json;
 
 import com.builtbroken.builder.ContentBuilderRefs;
 import com.builtbroken.builder.pipe.Pipe;
-import com.builtbroken.builder.pipe.nodes.IPipeNode;
-import com.builtbroken.builder.pipe.nodes.NodeActionResult;
 import com.builtbroken.builder.pipe.nodes.NodeType;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Queue;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Created by Robin Seifert on 2/26/19.
@@ -56,7 +54,7 @@ public class PipeNodeCommentRemover extends PipeNodeJson
 
     private void cleanObject(JsonObject data, int depth)
     {
-        final List<String> ids = new ArrayList(data.keySet());
+        final List<String> ids = data.entrySet().stream().map(Map.Entry::getKey).collect(Collectors.toList());
         for (String id : ids)
         {
             //Remove comments
