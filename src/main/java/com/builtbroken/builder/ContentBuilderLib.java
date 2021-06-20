@@ -77,10 +77,10 @@ public class ContentBuilderLib
         for (IJsonGeneratedObject generatedObject : templates)
         {
             final Class<? extends IJsonGeneratedObject> clazz = generatedObject.getClass();
-            final JsonTemplate jsonConstructor = clazz.getAnnotation(JsonTemplate.class);
-            if (jsonConstructor != null)
+            final JsonTemplate templateAnnotation = clazz.getAnnotation(JsonTemplate.class);
+            if (templateAnnotation != null)
             {
-                getMainLoader().registerObjectTemplate(jsonConstructor.type(), clazz, null);
+                getMainLoader().registerObjectTemplate(templateAnnotation.type(), clazz, null);
             }
             else
             {

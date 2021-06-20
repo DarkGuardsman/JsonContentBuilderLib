@@ -8,6 +8,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.lang.annotation.Annotation;
+import java.util.Arrays;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
@@ -28,20 +29,24 @@ public class MapperHelpers
     public static BiFunction<JsonObject, ConversionHandler, Object>[] buildMappers(final Class[] types, final Annotation[][] paraAnnos, final Supplier<String> errorData)
     {
         final BiFunction<JsonObject, ConversionHandler, Object>[] mappers = new BiFunction[types.length];
-        for (int para = 0; para < mappers.length; para++)
+
+        //Looping over parameters
+        for (int index = 0; index < mappers.length; index++)
         {
-            final int paraC = para;
-            final Class<?> paraClazz = types[para];
-            for (Annotation annotation : paraAnnos[para])
+            final int parameterIndex = index;
+            final Class<?> paraClazz = types[index];
+
+            //Loop over annotations per parameter
+            for (Annotation annotation : paraAnnos[index])
             {
                 if (annotation instanceof JsonMapping)
                 {
-                    mappers[para] = MapperHelpers.getClazzBasedMapper(paraClazz, (JsonMapping) annotation, () -> errorData.get() + " PARA: " + paraC);
+                    mappers[index] = MapperHelpers.getClazzBasedMapper(paraClazz, (JsonMapping) annotation, () -> errorData.get() + " Parameter: " + parameterIndex);
                     break;
                 }
             }
 
-            if (mappers[para] == null)
+            if (mappers[index] == null)
             {
                 throw new RuntimeException("JsonClassMapper: All parameters require JsonMapping annotation"
                         + " when used to create mapping logic for injection into a method or constructor."
@@ -124,7 +129,7 @@ public class MapperHelpers
 
             if (object == null && mapper.required())
             {
-                throw new RuntimeException("JsonBuilderMapper: Failed to load required json field while mapping for a builder. " + error.get());
+                throw new RuntimeException("JsonBuilderMapper: Failed to load required json field [" + Arrays.toString(mapper.keys()) + "] while mapping for a builder. " + error.get());
             }
             return object;
         };
