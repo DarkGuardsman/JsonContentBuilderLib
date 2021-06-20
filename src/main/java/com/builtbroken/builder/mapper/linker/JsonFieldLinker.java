@@ -90,6 +90,6 @@ public class JsonFieldLinker extends JsonLinker<Object>
     @Override
     public String toString()
     {
-        return "JsonFieldLinker[Keys: " + Arrays.toString(getKeys()) + ", Required:" + required + "]";
+        return String.format("JsonFieldLinker[Field: %s, Keys: %s, Required: %s]", field, Arrays.toString(getKeys()), required);
     }
 }
