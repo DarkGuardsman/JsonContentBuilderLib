@@ -4,6 +4,7 @@ import com.builtbroken.builder.ContentBuilderLib;
 import com.builtbroken.builder.converter.ConversionHandler;
 import com.builtbroken.builder.converter.strut.ConverterObjectBuilder;
 import com.builtbroken.builder.data.DataFileLoad;
+import com.builtbroken.builder.data.GeneratedObject;
 import com.builtbroken.builder.data.IJsonGeneratedObject;
 import com.builtbroken.builder.handler.JsonObjectHandlerRegistry;
 import com.builtbroken.builder.loader.file.IFileLocator;
@@ -42,7 +43,10 @@ public class ContentLoader
     /**
      * Main pipe line to use for handling new JSON files
      */
-    public final PipeLine pipeLine;
+    protected final PipeLine objectCreationPipeline;
+
+    /** Additional pipelines to run after objects are created. Each pipe feeds the next. */
+    protected final List<PipeLine> pipelines = new ArrayList();
 
     /**
      * Conversion handler for this loader, wrappers to global
@@ -73,7 +77,7 @@ public class ContentLoader
      * Temp cache of objects generated, will be cleared on complete
      * and is only designed for loaders that might only load 1 object type
      */
-    protected List<Object> generatedObjects = new ArrayList();
+    public final List<Object> generatedObjects = new ArrayList();
 
     /**
      * Function to use for outputting logs. Allows switching
@@ -90,33 +94,17 @@ public class ContentLoader
     private boolean hasLoaded = false;
 
     /**
-     * Creates a new content loader with a default pipe line.
-     * <p>
-     * The defult pipe is designed to work with a set format
-     * of JSON files. It expects to take in single JsonObjects
-     * or arrays of JsonObjects. Each object should define a
-     * type and some data to load.
-     *
-     * @param name - unique name of the loader
-     */
-    public ContentLoader(String name)
-    {
-        this(name, PipeLine.newDefault());
-        logger = (prefix, msg) -> System.out.println("ContentLoader[" + name + "]:" + prefix + " >> " + msg);
-    }
-
-    /**
      * Creates a new content loader
      *
-     * @param name     - unique name of the loader
-     * @param pipeLine - pipe line ot use
+     * @param name                   - unique name of the loader
+     * @param objectCreationPipeline - pipe line ot use
      */
-    public ContentLoader(String name, PipeLine pipeLine)
+    public ContentLoader(String name, PipeLine objectCreationPipeline)
     {
         this.name = name;
-        this.pipeLine = pipeLine;
+        this.objectCreationPipeline = objectCreationPipeline;
         this.jsonObjectHandlerRegistry = new JsonObjectHandlerRegistry();
-        this.pipeLine.contentLoader = this;
+        this.objectCreationPipeline.contentLoader = this;
         this.conversionHandler = new ConversionHandler(ContentBuilderLib.getMainConverter(), name);
         this.jsonMappingHandler = new JsonMappingHandler(this);
     }
@@ -258,6 +246,7 @@ public class ContentLoader
         //Run
         locateFiles();
         processFiles();
+        processObjects();
 
         //DEBUG-LOGGING
         getLogger().accept("load", "end");
@@ -310,10 +299,10 @@ public class ContentLoader
                 //DEBUG-LOGGING
                 getLogger().accept("processing", "[" + filesProcessed + "]  start processing data load: " + fileLoad);
 
-                final List<Object> out = pipeLine.handle(fileLoad.element, null); //TODO add metadata
+                final List<Object> out = objectCreationPipeline.handle(fileLoad.element, null, null); //TODO add metadata
 
                 //Add to global list of generated objects
-                out.stream().filter(Objects::nonNull).forEach(obj -> generatedObjects.add(obj));
+                out.stream().filter(Objects::nonNull).forEach(generatedObjects::add);
 
                 //count generated objects for debug
                 objectsGenerated += out.size();
@@ -334,6 +323,46 @@ public class ContentLoader
         }
     }
 
+    protected void processObjects()
+    {
+        for(PipeLine pipeLine : pipelines)
+        {
+            int index = 0;
+            for (Object object : generatedObjects)
+            {
+                //DEBUG-LOGGING
+                getLogger().accept("post-processing", "[" + (index++) + "]  processing: " + object);
+
+                List<Object> out;
+
+                if (object instanceof GeneratedObject)
+                {
+                    out = pipeLine.handle(((GeneratedObject) object).jsonUsed, object, null); //TODO add metadata
+                }
+                else
+                {
+                    out = pipeLine.handle(null, object, null); //TODO add metadata
+                }
+
+                //Add to global list of generated objects
+                out.stream()
+                        .filter(Objects::nonNull)
+                        .filter(o -> o != object)
+                        .forEach(generatedObjects::add);
+
+                //count generated objects for debug
+                objectsGenerated += out.stream().filter(o -> o != object).count();
+
+                //DEBUG-LOGGING
+                getLogger().accept("processing", "[" + filesProcessed + "]  generated " + out.size() + " object" + (out.size() > 1 ? "s" : ""));
+
+
+                //DEBUG-LOGGING
+                getLogger().accept("post-processing", "[" + (index++) + "]  ending: " + object);
+            }
+        }
+    }
+
     /**
      * Called to init the loader, use
      * this to reference resources, objects,
@@ -345,7 +374,10 @@ public class ContentLoader
         getLogger().accept("init", "start");
 
         addPipes();
-        pipeLine.init();
+        objectCreationPipeline.init();
+        objectCreationPipeline.contentLoader = this;
+        pipelines.forEach(PipeLine::init);
+        pipelines.forEach(pipe -> pipe.contentLoader = this);
 
         //DEBUG-LOGGING
         getLogger().accept("init", "end");
@@ -366,7 +398,8 @@ public class ContentLoader
         //DEBUG-LOGGING
         getLogger().accept("loadComplete", "start");
 
-        pipeLine.loadComplete();
+        objectCreationPipeline.loadComplete();
+        pipelines.forEach(PipeLine::loadComplete);
 
         //DEBUG-LOGGING
         getLogger().accept("loadComplete", "end");
@@ -384,7 +417,8 @@ public class ContentLoader
 
         clean();
 
-        pipeLine.destroy();
+        objectCreationPipeline.destroy();
+        pipelines.forEach(PipeLine::destroy);
         conversionHandler.destroy();
         jsonObjectHandlerRegistry.destroy();
         jsonMappingHandler.destroy();
@@ -410,5 +444,10 @@ public class ContentLoader
     public BiConsumer<String, String> getLogger()
     {
         return logger;
+    }
+
+    public void setLogger(BiConsumer<String, String> logger)
+    {
+        this.logger = logger;
     }
 }

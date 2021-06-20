@@ -1,17 +1,18 @@
 package com.builtbroken.tests.mapper;
 
 import com.builtbroken.builder.ContentBuilderLib;
+import com.builtbroken.builder.data.DataFileLoad;
 import com.builtbroken.builder.data.GeneratedObject;
 import com.builtbroken.builder.data.IJsonGeneratedObject;
+import com.builtbroken.builder.loader.MainContentLoader;
 import com.builtbroken.builder.mapper.anno.JsonConstructor;
 import com.builtbroken.builder.mapper.anno.JsonMapping;
 import com.google.gson.JsonObject;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
+import java.io.File;
+import java.util.Collections;
 
 /**
  * Created by Dark(DarkGuardsman, Robert) on 2019-05-14.
@@ -37,14 +38,19 @@ public class TestConstructor
         jsonData.addProperty(COUNT, COUNT_VALUE);
         jsonData.addProperty("type", TYPE);
 
-        //map
-        final List<Object> objects = ContentBuilderLib.getMainLoader().pipeLine.handle(jsonData, null);
+        //Setup default loader
+        final MainContentLoader loader = new MainContentLoader();
+        loader.registerObjectTemplate(TYPE, ClassForMappingTest.class, null);
+        loader.addFileLocator(() -> Collections.singleton(new DataFileLoad(new File("./fake.json"), jsonData)));
+        loader.setup();
+        loader.load();
+
 
         //Validate we got something
-        Assertions.assertEquals(1, objects.size());
+        Assertions.assertEquals(1, loader.generatedObjects.size());
 
         //Validate we got the expected something
-        final Object object = objects.get(0);
+        final Object object = loader.generatedObjects.get(0);
         Assertions.assertTrue(object instanceof GeneratedObject);
         Assertions.assertTrue(((GeneratedObject) object).objectCreated instanceof ClassForMappingTest);
 
@@ -52,19 +58,7 @@ public class TestConstructor
         final ClassForMappingTest testObject = (ClassForMappingTest) ((GeneratedObject) object).objectCreated;
         Assertions.assertEquals(testObject.testField, TREE_VALUE);
         Assertions.assertEquals(testObject.testField2, COUNT_VALUE);
-    }
 
-    @BeforeAll
-    public static void setup()
-    {
-        //Setup
-        ContentBuilderLib.getMainLoader().registerObjectTemplate(TYPE, ClassForMappingTest.class, null);
-        ContentBuilderLib.getMainLoader().setup();
-    }
-
-    @AfterAll
-    public static void cleanup()
-    {
         //Cleanup
         ContentBuilderLib.destroy();
     }

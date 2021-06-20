@@ -1,6 +1,8 @@
 package com.builtbroken.tests.mapper;
 
 import com.builtbroken.builder.ContentBuilderLib;
+import com.builtbroken.builder.loader.ContentLoader;
+import com.builtbroken.builder.loader.MainContentLoader;
 import com.builtbroken.builder.mapper.anno.JsonMapping;
 import com.builtbroken.builder.pipe.nodes.json.JsonHelpers;
 import com.builtbroken.tests.JAssert;
@@ -42,12 +44,13 @@ public class TestParentMapper
     //https://blog.jetbrains.com/idea/2016/08/using-junit-5-in-intellij-idea/
     private static JsonObject object;
     private static JsonObject testObject;
+    private static ContentLoader loader;
 
     @Test
     public void testLayer1()
     {
         Layer1 object = new Layer1();
-        ContentBuilderLib.getMainLoader().jsonMappingHandler.map(LAYER_1, object, testObject, false);
+        loader.jsonMappingHandler.map(LAYER_1, object, testObject, false);
         Assertions.assertEquals(JSON_ID_VAL, object.id);
         Assertions.assertEquals(JSON_PROP_A_VAL, object.propA);
     }
@@ -56,7 +59,7 @@ public class TestParentMapper
     public void testLayer2()
     {
         Layer2 object = new Layer2();
-        ContentBuilderLib.getMainLoader().jsonMappingHandler.map(LAYER_2, object, testObject, false);
+        loader.jsonMappingHandler.map(LAYER_2, object, testObject, false);
         Assertions.assertEquals(JSON_ID_VAL, object.id);
         Assertions.assertEquals(JSON_PROP_A_VAL, object.propA);
 
@@ -68,7 +71,7 @@ public class TestParentMapper
     public void testLayer2A()
     {
         Layer2A object = new Layer2A();
-        ContentBuilderLib.getMainLoader().jsonMappingHandler.map(LAYER_2A, object, testObject, false);
+        loader.jsonMappingHandler.map(LAYER_2A, object, testObject, false);
         Assertions.assertEquals(JSON_ID_VAL, object.id);
         Assertions.assertEquals(JSON_PROP_A_VAL, object.propA);
 
@@ -79,7 +82,7 @@ public class TestParentMapper
     public void testLayer3()
     {
         Layer3 object = new Layer3();
-        ContentBuilderLib.getMainLoader().jsonMappingHandler.map(LAYER_3, object, testObject, false);
+        loader.jsonMappingHandler.map(LAYER_3, object, testObject, false);
         Assertions.assertEquals(JSON_ID_VAL, object.id);
         Assertions.assertEquals(JSON_PROP_A_VAL, object.propA);
 
@@ -99,11 +102,13 @@ public class TestParentMapper
     @BeforeAll
     public static void setup()
     {
-        ContentBuilderLib.getMainLoader().setup();
-        ContentBuilderLib.getMainLoader().jsonMappingHandler.register(Layer1.class, LAYER_1);
-        ContentBuilderLib.getMainLoader().jsonMappingHandler.register(Layer2.class, LAYER_2);
-        ContentBuilderLib.getMainLoader().jsonMappingHandler.register(Layer2A.class, LAYER_2A);
-        ContentBuilderLib.getMainLoader().jsonMappingHandler.register(Layer3.class, LAYER_3);
+        //Setup
+        loader = new MainContentLoader();
+        loader.setup();
+        loader.jsonMappingHandler.register(Layer1.class, LAYER_1);
+        loader.jsonMappingHandler.register(Layer2.class, LAYER_2);
+        loader.jsonMappingHandler.register(Layer2A.class, LAYER_2A);
+        loader.jsonMappingHandler.register(Layer3.class, LAYER_3);
 
         object = new JsonObject();
         object.addProperty(JSON_PROP_A, JSON_PROP_A_VAL);

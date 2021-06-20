@@ -1,23 +1,17 @@
 package com.builtbroken.builder.pipe;
 
-import com.builtbroken.builder.ContentBuilderRefs;
 import com.builtbroken.builder.converter.ConversionHandler;
 import com.builtbroken.builder.loader.ContentLoader;
 import com.builtbroken.builder.pipe.nodes.IPipeNode;
-import com.builtbroken.builder.pipe.nodes.building.PipeNodeObjectCreator;
-import com.builtbroken.builder.pipe.nodes.mapping.PipeNodeObjectReg;
-import com.builtbroken.builder.pipe.nodes.json.PipeNodeCommentRemover;
-import com.builtbroken.builder.pipe.nodes.json.PipeNodeJsonSplitter;
-import com.builtbroken.builder.pipe.nodes.post.PipeNodeAutoWire;
-import com.builtbroken.builder.pipe.nodes.mapping.PipeNodeDataMapper;
-import com.builtbroken.builder.pipe.nodes.mapping.PipeNodeMappingValidator;
-import com.builtbroken.builder.pipe.nodes.post.PipeNodePostValidator;
-import com.builtbroken.builder.pipe.nodes.post.PipeNodeWireValidator;
 import com.google.gson.JsonElement;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
@@ -76,37 +70,7 @@ public class PipeLine
      *
      * @return default line
      */
-    public static PipeLine newDefault()
-    {
-        PipeLine handler = new PipeLine();
 
-        //Setup cleaner
-        Pipe jsonPrepPipe = new Pipe(handler, ContentBuilderRefs.PIPE_JSON);
-        jsonPrepPipe.addNode(new PipeNodeCommentRemover(jsonPrepPipe)); //cleanup
-        jsonPrepPipe.addNode(new PipeNodeJsonSplitter()); //breakdown
-        handler.pipes.add(jsonPrepPipe);
-
-        //Setup builder
-        Pipe builderPipe = new Pipe(handler, ContentBuilderRefs.PIPE_BUILDER);
-        builderPipe.addNode(new PipeNodeObjectCreator(builderPipe)); //Create json
-        handler.pipes.add(builderPipe);
-
-        //Setup mapper
-        Pipe mapperPipe = new Pipe(handler, ContentBuilderRefs.PIPE_MAPPER);
-        mapperPipe.addNode(new PipeNodeDataMapper(mapperPipe)); //map fields
-        mapperPipe.addNode(new PipeNodeMappingValidator(mapperPipe)); //validate
-        mapperPipe.addNode(new PipeNodeObjectReg(mapperPipe)); //register to handlers
-        handler.pipes.add(mapperPipe);
-
-        //Setup post
-        Pipe postPipe = new Pipe(handler, ContentBuilderRefs.PIPE_POST);
-        postPipe.addNode(new PipeNodeAutoWire(postPipe)); //wire objects
-        postPipe.addNode(new PipeNodeWireValidator(postPipe)); //validate wire
-        postPipe.addNode(new PipeNodePostValidator(postPipe)); //validate
-        handler.pipes.add(postPipe);
-
-        return handler;
-    }
 
     /**
      * Called to init the pipe line, use
@@ -195,7 +159,7 @@ public class PipeLine
      * @return
      */
     @Nonnull
-    public List<Object> handle(@Nonnull JsonElement jsonData, @Nullable Function<Pipe, Boolean> shouldSkipPipe) //TODO need a set return type other than object, something that is <Type, Data>
+    public List<Object> handle(@Nullable JsonElement jsonData, @Nullable Object object, @Nullable Function<Pipe, Boolean> shouldSkipPipe) //TODO need a set return type other than object, something that is <Type, Data>
     {
         //DEBUG
         getLogger().accept("handle", "start " + jsonData
@@ -207,7 +171,7 @@ public class PipeLine
         final Queue<Object> currentOut = new LinkedList();
 
         //Add JSON to first input
-        currentIN.add(jsonData);
+        currentIN.add(object == null ? jsonData : object);
 
         for (Pipe pipe : pipes)
         {

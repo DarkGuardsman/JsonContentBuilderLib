@@ -1,12 +1,12 @@
 package com.builtbroken.tests.templates;
 
-import com.builtbroken.builder.ContentBuilderLib;
 import com.builtbroken.builder.handler.IJsonObjectHandler;
+import com.builtbroken.builder.loader.MainContentLoader;
 import com.builtbroken.builder.loader.file.FileLocatorSimple;
 import com.builtbroken.builder.templates.AuthorData;
 import com.builtbroken.builder.templates.MetaDataLevel;
-import com.builtbroken.tests.mapper.TestFieldConstructor;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 
@@ -19,21 +19,22 @@ public class TestAuthorData
     public void testFileData()
     {
         //Setup
-        File file = new File(System.getProperty("user.dir"), "src/test/resources/test/data/author/author_file.json");
-        ContentBuilderLib.getMainLoader().addFileLocator(new FileLocatorSimple(file));
-        ContentBuilderLib.getMainLoader().registerObjectTemplate(AuthorData.class);
-        ContentBuilderLib.getMainLoader().setup();
+        final MainContentLoader loader = new MainContentLoader();
+        final File file = new File(System.getProperty("user.dir"), "src/test/resources/test/data/author/author_file.json");
+        loader.addFileLocator(new FileLocatorSimple(file));
+        loader.registerObjectTemplate(AuthorData.class);
+        loader.setup();
 
         //Trigger loading of file
-        ContentBuilderLib.getMainLoader().load();
+        loader.load();
 
         //Test we loaded something
-        Assertions.assertEquals(1, ContentBuilderLib.getMainLoader().filesLocated);
-        Assertions.assertEquals(1, ContentBuilderLib.getMainLoader().filesProcessed);
-        Assertions.assertEquals(1, ContentBuilderLib.getMainLoader().objectsGenerated);
+        Assertions.assertEquals(1, loader.filesLocated);
+        Assertions.assertEquals(1, loader.filesProcessed);
+        Assertions.assertEquals(1, loader.objectsGenerated);
 
         //Test that our something is the right something
-        IJsonObjectHandler handler = ContentBuilderLib.getMainLoader().jsonObjectHandlerRegistry.getHandler("author.file");
+        IJsonObjectHandler handler = loader.jsonObjectHandlerRegistry.getHandler("author.file");
         Object object = handler.getObject("test.author");
 
         Assertions.assertTrue(object instanceof AuthorData, "Failed to locate author data");
@@ -49,21 +50,22 @@ public class TestAuthorData
     public void testFolderData()
     {
         //Setup
-        File file = new File(System.getProperty("user.dir"), "src/test/resources/test/data/author/author_folder.json");
-        ContentBuilderLib.getMainLoader().addFileLocator(new FileLocatorSimple(file));
-        ContentBuilderLib.getMainLoader().registerObjectTemplate(AuthorData.class);
-        ContentBuilderLib.getMainLoader().setup();
+        final MainContentLoader loader = new MainContentLoader();
+        final File file = new File(System.getProperty("user.dir"), "src/test/resources/test/data/author/author_folder.json");
+        loader.addFileLocator(new FileLocatorSimple(file));
+        loader.registerObjectTemplate(AuthorData.class);
+        loader.setup();
 
         //Trigger loading of file
-        ContentBuilderLib.getMainLoader().load();
+        loader.load();
 
         //Test we loaded something
-        Assertions.assertEquals(1, ContentBuilderLib.getMainLoader().filesLocated);
-        Assertions.assertEquals(1, ContentBuilderLib.getMainLoader().filesProcessed);
-        Assertions.assertEquals(1, ContentBuilderLib.getMainLoader().objectsGenerated);
+        Assertions.assertEquals(1, loader.filesLocated);
+        Assertions.assertEquals(1, loader.filesProcessed);
+        Assertions.assertEquals(1, loader.objectsGenerated);
 
         //Test that our something is the right something
-        IJsonObjectHandler handler = ContentBuilderLib.getMainLoader().jsonObjectHandlerRegistry.getHandler("author.package");
+        IJsonObjectHandler handler = loader.jsonObjectHandlerRegistry.getHandler("author.package");
         Object object = handler.getObject("test.data.author");
 
         Assertions.assertTrue(object instanceof AuthorData, "Failed to locate author data");
@@ -73,11 +75,5 @@ public class TestAuthorData
         Assertions.assertEquals("Master Author", authorData.name);
         Assertions.assertEquals("www.builtbroken.com", authorData.url);
         Assertions.assertEquals(MetaDataLevel.PACKAGE, authorData.level);
-    }
-
-    @AfterEach
-    public void afterEachTest()
-    {
-        ContentBuilderLib.destroy();
     }
 }

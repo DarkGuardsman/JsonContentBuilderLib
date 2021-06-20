@@ -1,12 +1,11 @@
 package com.builtbroken.tests.mapper;
 
-import com.builtbroken.builder.ContentBuilderLib;
 import com.builtbroken.builder.converter.ConverterRefs;
+import com.builtbroken.builder.loader.ContentLoader;
+import com.builtbroken.builder.loader.MainContentLoader;
 import com.builtbroken.builder.mapper.anno.JsonMapping;
 import com.google.gson.JsonObject;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -21,9 +20,14 @@ public class TestMethodEnum
         JsonObject jsonData = new JsonObject();
         jsonData.addProperty("test", "a");
 
+        //Setup
+        final ContentLoader loader = new MainContentLoader();
+        loader.setup();
+        loader.jsonMappingHandler.register(ClassForMappingTest.class, "testClass");
+
         //map
         ClassForMappingTest object = new ClassForMappingTest();
-        ContentBuilderLib.getMainLoader().jsonMappingHandler.map("testClass", object, jsonData, false);
+        loader.jsonMappingHandler.map("testClass", object, jsonData, false);
 
         //Test
         Assertions.assertEquals(TestEnum.A, object.testEnum);
@@ -35,27 +39,17 @@ public class TestMethodEnum
         JsonObject jsonData = new JsonObject();
         jsonData.addProperty("test", 1);
 
+        //Setup
+        final ContentLoader loader = new MainContentLoader();
+        loader.setup();
+        loader.jsonMappingHandler.register(ClassForMappingTest.class, "testClass");
+
         //map
         ClassForMappingTest object = new ClassForMappingTest();
-        ContentBuilderLib.getMainLoader().jsonMappingHandler.map("testClass", object, jsonData, false);
+        loader.jsonMappingHandler.map("testClass", object, jsonData, false);
 
         //Test
         Assertions.assertEquals(TestEnum.B, object.testEnum);
-    }
-
-    @BeforeAll
-    public static void setup()
-    {
-        //Setup
-        ContentBuilderLib.getMainLoader().setup();
-        ContentBuilderLib.getMainLoader().jsonMappingHandler.register(ClassForMappingTest.class, "testClass");
-    }
-
-    @AfterAll
-    public static void cleanup()
-    {
-        //Cleanup
-        ContentBuilderLib.destroy();
     }
 
     private static class ClassForMappingTest

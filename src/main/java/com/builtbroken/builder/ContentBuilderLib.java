@@ -1,13 +1,27 @@
 package com.builtbroken.builder;
 
 import com.builtbroken.builder.converter.ConversionHandler;
-import com.builtbroken.builder.converter.primitives.*;
+import com.builtbroken.builder.converter.primitives.JsonConverterByte;
+import com.builtbroken.builder.converter.primitives.JsonConverterDouble;
+import com.builtbroken.builder.converter.primitives.JsonConverterFloat;
+import com.builtbroken.builder.converter.primitives.JsonConverterInt;
+import com.builtbroken.builder.converter.primitives.JsonConverterLong;
+import com.builtbroken.builder.converter.primitives.JsonConverterShort;
+import com.builtbroken.builder.converter.primitives.JsonConverterString;
 import com.builtbroken.builder.converter.strut.JsonConverterObject;
-import com.builtbroken.builder.converter.strut.array.*;
+import com.builtbroken.builder.converter.strut.array.JsonConverterArray;
+import com.builtbroken.builder.converter.strut.array.JsonConverterArrayByte;
+import com.builtbroken.builder.converter.strut.array.JsonConverterArrayDouble;
+import com.builtbroken.builder.converter.strut.array.JsonConverterArrayFloat;
+import com.builtbroken.builder.converter.strut.array.JsonConverterArrayInt;
+import com.builtbroken.builder.converter.strut.array.JsonConverterArrayLong;
+import com.builtbroken.builder.converter.strut.array.JsonConverterArrayShort;
+import com.builtbroken.builder.converter.strut.array.JsonConverterArrayString;
 import com.builtbroken.builder.converter.strut.list.JsonConverterList;
 import com.builtbroken.builder.converter.strut.map.JsonConverterMap;
 import com.builtbroken.builder.data.IJsonGeneratedObject;
 import com.builtbroken.builder.loader.ContentLoader;
+import com.builtbroken.builder.loader.MainContentLoader;
 import com.builtbroken.builder.mapper.anno.JsonTemplate;
 
 import java.util.HashMap;
@@ -161,7 +175,7 @@ public class ContentBuilderLib
     {
         if (MAIN_LOADER == null)
         {
-            MAIN_LOADER = new ContentLoader(ContentBuilderRefs.MAIN_LOADER);
+            MAIN_LOADER = new MainContentLoader();
             addLoader(MAIN_LOADER);
         }
         return MAIN_LOADER;

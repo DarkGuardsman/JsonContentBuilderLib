@@ -1,13 +1,12 @@
 package com.builtbroken.tests.mapper;
 
-import com.builtbroken.builder.ContentBuilderLib;
 import com.builtbroken.builder.data.GeneratedObject;
 import com.builtbroken.builder.data.IJsonGeneratedObject;
+import com.builtbroken.builder.loader.ContentLoader;
+import com.builtbroken.builder.loader.MainContentLoader;
 import com.builtbroken.builder.mapper.anno.JsonObjectWiring;
 import com.google.gson.JsonObject;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -24,39 +23,29 @@ public class TestMethodWiring
     @Test
     public void testSimple()
     {
+        //Setup
+        final ContentLoader loader = new MainContentLoader();
+        loader.setup();
+        loader.jsonMappingHandler.register(ClassForLinkTest.class, MAP_ID);
+        loader.jsonMappingHandler.register(ClassToWire.class, TYPE_ID);
+        loader.jsonObjectHandlerRegistry.createOrGetHandler(TYPE_ID);
+
         //Data
         JsonObject json = new JsonObject();
         json.addProperty(JSON_ID, OBJECT_ID);
 
         //Add object
         final Object clazzToWire = new ClassToWire();
-        ContentBuilderLib.getMainLoader().jsonObjectHandlerRegistry.onCreated(new GeneratedObject(TYPE_ID, clazzToWire, null));
+        loader.jsonObjectHandlerRegistry.onCreated(new GeneratedObject(TYPE_ID, clazzToWire, null));
 
         //Map
         ClassForLinkTest object = new ClassForLinkTest();
-        ContentBuilderLib.getMainLoader().jsonMappingHandler.map(MAP_ID, object, json, true);
+        loader.jsonMappingHandler.map(MAP_ID, object, json, true);
 
         //Test
         Assertions.assertEquals(clazzToWire, object.testField);
 
 
-    }
-
-    @BeforeAll
-    public static void setup()
-    {
-        //Setup
-        ContentBuilderLib.getMainLoader().setup();
-        ContentBuilderLib.getMainLoader().jsonMappingHandler.register(ClassForLinkTest.class, MAP_ID);
-        ContentBuilderLib.getMainLoader().jsonMappingHandler.register(ClassToWire.class, TYPE_ID);
-        ContentBuilderLib.getMainLoader().jsonObjectHandlerRegistry.createOrGetHandler(TYPE_ID);
-    }
-
-    @AfterAll
-    public static void cleanup()
-    {
-        //Cleanup
-        ContentBuilderLib.destroy();
     }
 
     private static class ClassToWire implements IJsonGeneratedObject

@@ -2,6 +2,7 @@ package com.builtbroken.tests.templates;
 
 import com.builtbroken.builder.ContentBuilderLib;
 import com.builtbroken.builder.handler.IJsonObjectHandler;
+import com.builtbroken.builder.loader.MainContentLoader;
 import com.builtbroken.builder.loader.file.FileLocatorSimple;
 import com.builtbroken.builder.templates.CreationData;
 import com.builtbroken.builder.templates.MetaDataLevel;
@@ -21,23 +22,24 @@ public class TestCreationData
     @Test
     public void testFolderData()
     {
-        //Setup
-        File file = new File(System.getProperty("user.dir"), "src/test/resources/test/data/creation/metadata.json");
-        ContentBuilderLib.getMainLoader().addFileLocator(new FileLocatorSimple(file));
-        ContentBuilderLib.getMainLoader().registerObjectTemplate(CreationData.class);
-        ContentBuilderLib.getMainLoader().registerObjectTemplate(VersionData.class);
-        ContentBuilderLib.getMainLoader().setup();
+        //Setup default loader
+        final MainContentLoader loader = new MainContentLoader();
+        final File file = new File(System.getProperty("user.dir"), "src/test/resources/test/data/creation/metadata.json");
+        loader.addFileLocator(new FileLocatorSimple(file));
+        loader.registerObjectTemplate(CreationData.class);
+        loader.registerObjectTemplate(VersionData.class);
+        loader.setup();
 
         //Trigger loading of file
-        ContentBuilderLib.getMainLoader().load();
+        loader.load();
 
         //Test we loaded something
-        Assertions.assertEquals(1, ContentBuilderLib.getMainLoader().filesLocated);
-        Assertions.assertEquals(1, ContentBuilderLib.getMainLoader().filesProcessed);
-        Assertions.assertEquals(2, ContentBuilderLib.getMainLoader().objectsGenerated);
+        Assertions.assertEquals(1, loader.filesLocated);
+        Assertions.assertEquals(1, loader.filesProcessed);
+        Assertions.assertEquals(2, loader.objectsGenerated);
 
         //Test that our something is the right something
-        IJsonObjectHandler handler = ContentBuilderLib.getMainLoader().jsonObjectHandlerRegistry.getHandler("metadata.package");
+        IJsonObjectHandler handler = loader.jsonObjectHandlerRegistry.getHandler("metadata.package");
         Assertions.assertNotNull(handler, "Failed to locate handler to get object");
         Object object = handler.getObject("test.meta");
 

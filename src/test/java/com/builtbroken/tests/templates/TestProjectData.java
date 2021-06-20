@@ -3,6 +3,8 @@ package com.builtbroken.tests.templates;
 import com.builtbroken.builder.ContentBuilderLib;
 import com.builtbroken.builder.ContentBuilderRefs;
 import com.builtbroken.builder.handler.IJsonObjectHandler;
+import com.builtbroken.builder.loader.ContentLoader;
+import com.builtbroken.builder.loader.MainContentLoader;
 import com.builtbroken.builder.loader.file.FileLocatorSimple;
 import com.builtbroken.builder.templates.*;
 import org.junit.jupiter.api.AfterEach;
@@ -21,24 +23,25 @@ public class TestProjectData
     public void testFolderData()
     {
         //Setup
+        final ContentLoader loader = new MainContentLoader();
         File file = new File(System.getProperty("user.dir"), "src/test/resources/test/data/project/project.json");
-        ContentBuilderLib.getMainLoader().addFileLocator(new FileLocatorSimple(file));
-        ContentBuilderLib.getMainLoader().registerObjectTemplate(VersionData.class);
-        ContentBuilderLib.getMainLoader().registerObjectTemplate(AuthorData.class);
-        ContentBuilderLib.getMainLoader().registerObjectTemplate(CreationData.class);
-        ContentBuilderLib.getMainLoader().registerObjectTemplate(ProjectData.class);
-        ContentBuilderLib.getMainLoader().setup();
+        loader.addFileLocator(new FileLocatorSimple(file));
+        loader.registerObjectTemplate(VersionData.class);
+        loader.registerObjectTemplate(AuthorData.class);
+        loader.registerObjectTemplate(CreationData.class);
+        loader.registerObjectTemplate(ProjectData.class);
+        loader.setup();
 
         //Trigger loading of file
-        ContentBuilderLib.getMainLoader().load();
+        loader.load();
 
         //Test we loaded something
-        Assertions.assertEquals(1, ContentBuilderLib.getMainLoader().filesLocated);
-        Assertions.assertEquals(1, ContentBuilderLib.getMainLoader().filesProcessed);
-        Assertions.assertEquals(4, ContentBuilderLib.getMainLoader().objectsGenerated);
+        Assertions.assertEquals(1, loader.filesLocated);
+        Assertions.assertEquals(1, loader.filesProcessed);
+        Assertions.assertEquals(4, loader.objectsGenerated);
 
         //Test that our something is the right something
-        IJsonObjectHandler handler = ContentBuilderLib.getMainLoader().jsonObjectHandlerRegistry.getHandler(ContentBuilderRefs.TYPE_PROJECT_DATA);
+        IJsonObjectHandler handler = loader.jsonObjectHandlerRegistry.getHandler(ContentBuilderRefs.TYPE_PROJECT_DATA);
         Object object = handler.getObject("test.project");
 
         Assertions.assertTrue(object instanceof ProjectData);

@@ -2,6 +2,8 @@ package com.builtbroken.tests.templates;
 
 import com.builtbroken.builder.ContentBuilderLib;
 import com.builtbroken.builder.handler.IJsonObjectHandler;
+import com.builtbroken.builder.loader.ContentLoader;
+import com.builtbroken.builder.loader.MainContentLoader;
 import com.builtbroken.builder.loader.file.FileLocatorSimple;
 import com.builtbroken.builder.templates.MetaDataLevel;
 import com.builtbroken.builder.templates.VersionData;
@@ -21,21 +23,22 @@ public class TestVersionData
     public void testFolderData()
     {
         //Setup
+        final ContentLoader loader = new MainContentLoader();
         File file = new File(System.getProperty("user.dir"), "src/test/resources/test/data/version/version.json");
-        ContentBuilderLib.getMainLoader().addFileLocator(new FileLocatorSimple(file));
-        ContentBuilderLib.getMainLoader().registerObjectTemplate(VersionData.class);
-        ContentBuilderLib.getMainLoader().setup();
+        loader.addFileLocator(new FileLocatorSimple(file));
+        loader.registerObjectTemplate(VersionData.class);
+        loader.setup();
 
         //Trigger loading of file
-        ContentBuilderLib.getMainLoader().load();
+        loader.load();
 
         //Test we loaded something
-        Assertions.assertEquals(1, ContentBuilderLib.getMainLoader().filesLocated);
-        Assertions.assertEquals(1, ContentBuilderLib.getMainLoader().filesProcessed);
-        Assertions.assertEquals(1, ContentBuilderLib.getMainLoader().objectsGenerated);
+        Assertions.assertEquals(1, loader.filesLocated);
+        Assertions.assertEquals(1, loader.filesProcessed);
+        Assertions.assertEquals(1, loader.objectsGenerated);
 
         //Test that our something is the right something
-        IJsonObjectHandler handler = ContentBuilderLib.getMainLoader().jsonObjectHandlerRegistry.getHandler("version.package");
+        IJsonObjectHandler handler = loader.jsonObjectHandlerRegistry.getHandler("version.package");
         Object object = handler.getObject("version.test");
 
         Assertions.assertTrue(object instanceof VersionData);

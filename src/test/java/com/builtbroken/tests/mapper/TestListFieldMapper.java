@@ -1,17 +1,21 @@
 package com.builtbroken.tests.mapper;
 
-import com.builtbroken.builder.ContentBuilderLib;
 import com.builtbroken.builder.converter.ConverterRefs;
+import com.builtbroken.builder.loader.ContentLoader;
+import com.builtbroken.builder.loader.MainContentLoader;
 import com.builtbroken.builder.mapper.anno.JsonMapping;
 import com.builtbroken.builder.pipe.nodes.json.JsonHelpers;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+import java.util.Stack;
 import java.util.function.Consumer;
 
 /**
@@ -26,9 +30,14 @@ public class TestListFieldMapper
     @Test
     public void testArrayList()
     {
+        //Setup
+        final ContentLoader loader = new MainContentLoader();
+        loader.jsonMappingHandler.register(ClassForMappingTest.class, "testClass");
+        loader.setup();
+
         //map
         ClassForMappingTest object = new ClassForMappingTest();
-        ContentBuilderLib.getMainLoader().jsonMappingHandler.map("testClass", object, createData("arrayList"), false);
+        loader.jsonMappingHandler.map("testClass", object, createData("arrayList"), false);
 
         //Test
         Assertions.assertNotNull(object.arrayList);
@@ -40,9 +49,14 @@ public class TestListFieldMapper
     @Test
     public void testLinkedList()
     {
+        //Setup
+        final ContentLoader loader = new MainContentLoader();
+        loader.jsonMappingHandler.register(ClassForMappingTest.class, "testClass");
+        loader.setup();
+
         //map
         ClassForMappingTest object = new ClassForMappingTest();
-        ContentBuilderLib.getMainLoader().jsonMappingHandler.map("testClass", object, createData("linkedList"), false);
+        loader.jsonMappingHandler.map("testClass", object, createData("linkedList"), false);
 
         //Test
         Assertions.assertNotNull(object.linkedList);
@@ -54,9 +68,14 @@ public class TestListFieldMapper
     @Test
     public void testQueue()
     {
+        //Setup
+        final ContentLoader loader = new MainContentLoader();
+        loader.jsonMappingHandler.register(ClassForMappingTest.class, "testClass");
+        loader.setup();
+
         //map
         ClassForMappingTest object = new ClassForMappingTest();
-        ContentBuilderLib.getMainLoader().jsonMappingHandler.map("testClass", object, createData("queue"), false);
+        loader.jsonMappingHandler.map("testClass", object, createData("queue"), false);
 
         //Test
         Assertions.assertNotNull(object.queue);
@@ -68,9 +87,14 @@ public class TestListFieldMapper
     @Test
     public void testStack()
     {
+        //Setup
+        final ContentLoader loader = new MainContentLoader();
+        loader.jsonMappingHandler.register(ClassForMappingTest.class, "testClass");
+        loader.setup();
+
         //map
         ClassForMappingTest object = new ClassForMappingTest();
-        ContentBuilderLib.getMainLoader().jsonMappingHandler.map("testClass", object, createData("stack"), false);
+        loader.jsonMappingHandler.map("testClass", object, createData("stack"), false);
 
         //Test
         Assertions.assertNotNull(object.stack);
@@ -82,9 +106,14 @@ public class TestListFieldMapper
     @Test
     public void testConsumer()
     {
+        //Setup
+        final ContentLoader loader = new MainContentLoader();
+        loader.jsonMappingHandler.register(ClassForMappingTest.class, "testClass");
+        loader.setup();
+
         //map
         ClassForMappingTest object = new ClassForMappingTest();
-        ContentBuilderLib.getMainLoader().jsonMappingHandler.map("testClass", object, createData("consumer"), false);
+        loader.jsonMappingHandler.map("testClass", object, createData("consumer"), false);
 
         //Test
         Assertions.assertNotNull(object.out);
@@ -96,20 +125,21 @@ public class TestListFieldMapper
     @Test
     public void testNullError()
     {
+        //Setup
+        final ContentLoader loader = new MainContentLoader();
+        loader.jsonMappingHandler.register(ClassForMappingTest.class, "testClass");
+        loader.setup();
+
         Assertions.assertThrows(RuntimeException.class, () ->
         {
             ClassForMappingTest object = new ClassForMappingTest();
-            ContentBuilderLib.getMainLoader().jsonMappingHandler.map("testClass", object, createData("error"), false);
+            loader.jsonMappingHandler.map("testClass", object, createData("error"), false);
         });
     }
 
     @BeforeAll
     public static void setup()
     {
-        //Setup
-        ContentBuilderLib.getMainLoader().setup();
-        ContentBuilderLib.getMainLoader().jsonMappingHandler.register(ClassForMappingTest.class, "testClass");
-
         testData = new JsonArray();
         testData.add("a");
         testData.add("b");
@@ -120,13 +150,6 @@ public class TestListFieldMapper
         JsonObject data = new JsonObject();
         data.add(key, JsonHelpers.deepCopy(testData));
         return data;
-    }
-
-    @AfterAll
-    public static void cleanup()
-    {
-        //Cleanup
-        ContentBuilderLib.destroy();
     }
 
     private static class ClassForMappingTest
