@@ -52,13 +52,13 @@ public class PipeNodeObjectCreator extends PipeNode<JsonObject>
             }
             else
             {
-                System.out.println("PipeNodeObjectCreator: Error, Failed to convert object. Input: " + jsonObject);
+                System.err.println("PipeNodeObjectCreator: Error, Failed to convert object. Input: " + jsonObject);
                 //TODO throw error, only if strict mode is enabled
             }
         }
         else
         {
-            System.out.println("PipeNodeObjectCreator: Error, Input JsonObject needs to define a type to use this builder. Input: " + jsonObject);
+            System.err.println("PipeNodeObjectCreator: Error, Input JsonObject needs to define a type to use this builder. Input: " + jsonObject);
             //TODO throw error, only if strict mode is enabled
         }
     }
