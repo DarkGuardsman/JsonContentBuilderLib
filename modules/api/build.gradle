@@ -1,0 +1,8 @@
+plugins{
+    id 'java'
+    id 'myproject.java-conventions'
+}
+
+dependencies{
+    implementation project(':core')
+}

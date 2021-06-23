@@ -1,0 +1,49 @@
+[
+  {
+    "type": "tree",
+    "data": {
+      "leaves": false,
+      "bark": true,
+      "spawn_rate": 0.34,
+      "drops": {
+        "type": "armory:ammo",
+        "id": "12g.normal"
+      }
+    }
+  },
+  {
+    "type": "ammo",
+    "data": {
+      "name": "12g.normal",
+      "ammo_type": "12g"
+    }
+  },
+  {
+    "type": "sentry",
+    "data": {
+      "weapon": "12g.pump"
+    }
+  },
+  {
+    "type": "gun",
+    "data": {
+      "name": "12g.pump",
+      "ammo": "12g"
+    }
+  },
+  {
+    "type": "ammo_type",
+    "data": {
+      "name": "12g"
+    }
+  },
+  {
+    "type": "ammo_mag",
+    "data": {
+      "type": "internal",
+      "name": "12g.tube.internal",
+      "ammo_type": "12g"
+    }
+  }
+]
+

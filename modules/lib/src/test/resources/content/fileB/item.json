@@ -1,0 +1,5 @@
+{
+  "type": "item",
+  "registry" : "mod:item_rock",
+  "translation" : "mod:item.rock"
+}
