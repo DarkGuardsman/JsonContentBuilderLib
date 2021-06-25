@@ -1,7 +1,5 @@
 package com.builtbroken.builder.mapper.anno;
 
-import com.builtbroken.builder.ContentBuilderRefs;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -38,7 +36,7 @@ public @interface JsonTemplate
      *
      * @return unique id of loader
      */
-    String contentLoader() default ContentBuilderRefs.MAIN_LOADER;
+    String contentLoader() default "";
 
     /**
      * Should a default constructor be used to create this object

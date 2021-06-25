@@ -4,7 +4,7 @@ plugins{
 }
 
 dependencies{
-    implementation project(':core')
-    implementation project(':api')
-    implementation project(':processor')
+    implementation project(':modules:core')
+    implementation project(':modules:processor')
+    annotationProcessor project(":modules:processor")
 }
