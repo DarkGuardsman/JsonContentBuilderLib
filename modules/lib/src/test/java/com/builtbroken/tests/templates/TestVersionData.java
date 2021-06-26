@@ -1,24 +1,25 @@
 package com.builtbroken.tests.templates;
 
-import com.builtbroken.builder.ContentBuilderLib;
 import com.builtbroken.builder.handler.IJsonObjectHandler;
 import com.builtbroken.builder.loader.ContentLoader;
 import com.builtbroken.builder.loader.MainContentLoader;
 import com.builtbroken.builder.loader.file.FileLocatorSimple;
 import com.builtbroken.builder.templates.MetaDataLevel;
 import com.builtbroken.builder.templates.VersionData;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.File;
+import java.util.stream.Stream;
 
 /**
  * Created by Dark(DarkGuardsman, Robert) on 2019-05-15.
  */
 public class TestVersionData
 {
-
     @Test
     public void testFolderData()
     {
@@ -49,9 +50,44 @@ public class TestVersionData
         Assertions.assertEquals(MetaDataLevel.PACKAGE, versionData.getMetaDataLevel());
     }
 
-    @AfterEach
-    public void afterEachTest()
+    @ParameterizedTest(name = "[{index}] input={0} output={1}")
+    @MethodSource()
+    void testVersionParsing_goodPaths(String versionString, String outputString)
     {
-        ContentBuilderLib.destroy();
+        final VersionData version = new VersionData();
+        version.loadVersion(versionString);
+        Assertions.assertEquals(outputString, version.getVersion());
+    }
+
+    static Stream<Arguments> testVersionParsing_goodPaths()
+    {
+        return Stream.of(
+                Arguments.of("5", "5"),
+                Arguments.of("5.5", "5.5"),
+                Arguments.of("5.5.5", "5.5.5"),
+                Arguments.of("5.5.5", "5.5.5"),
+                Arguments.of("5.5.5.5", "5.5.5.5")
+        );
+    }
+
+    @ParameterizedTest(name = "[{index}] input={0} should throw {1} with message {2}")
+    @MethodSource()
+    void testVersionParsing_badPaths(String versionString, Class<? extends Throwable> clazz, String message)
+    {
+        final VersionData version = new VersionData();
+        Assertions.assertThrows(clazz, () -> version.loadVersion(versionString), message);
+    }
+
+    static Stream<Arguments> testVersionParsing_badPaths()
+    {
+        return Stream.of(
+                Arguments.of(".", IllegalArgumentException.class, "Failed to parse version '.'"),
+                Arguments.of("5b", NumberFormatException.class, "Failed to parse version '5b' to get Build Number from '5b'"),
+                Arguments.of("5b.0", NumberFormatException.class, "Failed to parse version '5b.0' to get Major from '5b'"),
+                Arguments.of("0.5b", NumberFormatException.class, "Failed to parse version '0.5b' to get Minor from '5b'"),
+                Arguments.of("0.0.5b", NumberFormatException.class, "Failed to parse version '0.0.5b' to get Revision from '5b'"),
+                Arguments.of("0.0.0.5b", NumberFormatException.class, "Failed to parse version '0.0.0.5b' to get Build Number from '5b'"),
+                Arguments.of("0.0.0.0.1", IllegalArgumentException.class, "Version can only contain 4 numbers split by '.', instead got 5 values from '0.0.0.0.1")
+        );
     }
 }
