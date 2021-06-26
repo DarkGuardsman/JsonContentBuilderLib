@@ -37,10 +37,10 @@ public class ContentBuilderRefs
     public static final String MAIN_LOADER = "main";
 
     //==== JSON Object Types used by project
-    public static final String TYPE_AUTHOR_DATA = "author";
-    public static final String TYPE_CREATION_DATA = "metadata";
-    public static final String TYPE_PROJECT_DATA = "project";
-    public static final String TYPE_VERSION_DATA = "version";
+    public static final String TYPE_AUTHOR_DATA = "builder:author";
+    public static final String TYPE_CREATION_DATA = "builder:metadata";
+    public static final String TYPE_PROJECT_DATA = "builder:project";
+    public static final String TYPE_VERSION_DATA = "builder:version";
 
     //==== DATA =====
     public static final String ANY = "*";

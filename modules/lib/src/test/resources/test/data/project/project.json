@@ -1,6 +1,6 @@
 [
   {
-    "type": "project",
+    "type": "builder:project",
     "id" : "test.project",
     "display_name": "Test Project",
     "include" : [
@@ -13,7 +13,7 @@
     ]
   },
   {
-    "type" : "metadata",
+    "type" : "builder:metadata",
     "id" : "test.project",
     "level" : "project",
     "creation_date" : "5/16/2019",
@@ -21,15 +21,15 @@
     "program_used" : "mac"
   },
   {
-    "type": "author",
+    "type": "builder:author",
     "id" : "test.project",
     "name": "test author",
     "url": "www.builtbroken.com",
     "level" : "project"
   },
   {
-    "type" : "version",
-    "id" : "metadata:test.project",
+    "type" : "builder:version",
+    "id" : "test.project",
     "version": "0.0.1.1"
   }
 ]

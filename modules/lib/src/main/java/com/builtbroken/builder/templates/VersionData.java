@@ -11,8 +11,8 @@ import com.builtbroken.builder.mapper.anno.JsonTemplate;
 /**
  * Created by Robin Seifert on 2019-05-15.
  */
-@JsonTemplate(type = ContentBuilderRefs.TYPE_VERSION_DATA)
-public class VersionData implements IJsonGeneratedObject, ISimpleDataValidation
+@JsonTemplate(ContentBuilderRefs.TYPE_VERSION_DATA)
+public class VersionData extends AbstractLevelData implements IJsonGeneratedObject
 {
 
     public String id;
@@ -53,9 +53,9 @@ public class VersionData implements IJsonGeneratedObject, ISimpleDataValidation
     }
 
     @Override
-    public String toString()
+    public String getJsonTemplateID()
     {
-        return "VersionData[" + getJsonUniqueID() + "]";
+        return ContentBuilderRefs.TYPE_VERSION_DATA;
     }
 
     @Override

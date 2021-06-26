@@ -1,5 +1,5 @@
 {
-  "type": "item",
+  "type": "test:item",
   "registry" : "mod:item_rock",
   "translation" : "mod:item.rock"
 }

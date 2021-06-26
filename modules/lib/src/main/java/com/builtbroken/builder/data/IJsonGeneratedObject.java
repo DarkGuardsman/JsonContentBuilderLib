@@ -1,7 +1,7 @@
 package com.builtbroken.builder.data;
 
 /**
- * Applied to objects that will be generated from a
+ * Applied to objects that were generated from a
  * JSON template and registered to a handler for use in other systems.
  * <p>
  * Created by Robin Seifert on 2019-03-11.
@@ -10,12 +10,19 @@ public interface IJsonGeneratedObject
 {
 
     /**
-     * Type of JSON template this object was generated using
+     * Type of JSON registry used for this object
      */
-    String getJsonType();
+    default String getJsonRegistryID() {
+        return getJsonTemplateID();
+    }
 
     /**
-     * Unique ID withing the {@link #getJsonType()}
+     * Type of JSON template this object was generated using
+     */
+    String getJsonTemplateID();
+
+    /**
+     * Unique ID of this object for the given {@link #getJsonRegistryID()}
      */
     String getJsonUniqueID();
 }

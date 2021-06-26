@@ -112,7 +112,7 @@ public class ContentLoader
     /**
      * Called to register a class as an object template
      *
-     * @param clazz - clazz that the template is created as, must contain {@link com.builtbroken.builder.mapper.anno.JsonTemplate}
+     * @param clazz - clazz that the template is created as, must contain {@link JsonTemplate}
      * @param <C>   - its expected the class be instance of IJsonGeneratedObject
      */
     public <C extends IJsonGeneratedObject> void registerObjectTemplate(Class<C> clazz)
@@ -120,52 +120,69 @@ public class ContentLoader
         final JsonTemplate jsonConstructor = clazz.getAnnotation(JsonTemplate.class);
         if (jsonConstructor != null)
         {
-            registerObjectTemplate(jsonConstructor.type(), clazz, null);
+            final String registryID = !jsonConstructor.registry().trim().isEmpty() ? jsonConstructor.registry() : jsonConstructor.value();
+            registerObjectTemplate(jsonConstructor.value(), registryID, clazz, null);
         }
         else
         {
-            throw new RuntimeException(this + ": Registering an object template with only a class requires the class to use the JsonTemplate annotation");
+            throw new RuntimeException("ContentLoader: Registering an object template with only a class requires the class to use the JsonTemplate annotation");
         }
     }
 
     /**
      * Called to register a class as an object template
      *
-     * @param type    - name of the template, Ex: armory:sword
-     * @param clazz   - clazz that the template is created as
-     * @param factory - builder to generate the template, can be null if the class uses {@link com.builtbroken.builder.mapper.anno.JsonConstructor}
-     * @param <C>     - its expected the class be instance of IJsonGeneratedObject
+     * @param templateID - unique id of the template, Ex: armory:sword
+     * @param registryID - unique id of the registry to use, this can be shared between templates but only 1 registry should exist per ID
+     * @param clazz      - clazz that the template is created as
+     * @param factory    - builder to generate the template, can be null if the class uses {@link com.builtbroken.builder.mapper.anno.JsonConstructor}
+     * @param <C>        - its expected the class be instance of IJsonGeneratedObject
      */
-    public <C extends IJsonGeneratedObject> void registerObjectTemplate(String type, Class<C> clazz, Function<JsonElement, C> factory)
+    public <C extends IJsonGeneratedObject> void registerObjectTemplate(final String templateID, final String registryID, final Class<C> clazz, final Function<JsonElement, C> factory)
     {
         if (clazz == null)
         {
-            throw new IllegalArgumentException("ContentLoader: Can not provide an object type[" + type + "] for loading without a class");
+            throw new IllegalArgumentException(String.format("ContentLoader: clazz is required for registering a template of type[%s]", templateID));
         }
-        else if (type == null || type.trim().isEmpty())
+        else if (templateID == null || templateID.trim().isEmpty())
         {
-            throw new IllegalArgumentException("ContentLoader: Can not provide an object type[" + type + "] with an empty or null type name");
+            throw new IllegalArgumentException(String.format("ContentLoader: templateID is required for registering a template for class[%s]", clazz));
         }
-        else if (type.split(":").length == 0)
+        else if (templateID.split(":").length <= 1)
         {
-            throw new IllegalArgumentException("ContentLoader: Can not provide an object type[" + type + "] with an prefixing it with the package name. " +
-                    "Ex: java:int, armory:gun. This helps keep the keys unique between packages. If you wish to bypass this register a converter directly.");
+            throw new IllegalArgumentException(String.format("ContentLoader: templateID is required to have a prefix of 'domain:' for registering a template for class[%s]", clazz));
+        }
+        else if (!templateID.toLowerCase().equals(templateID))
+        {
+            throw new IllegalArgumentException(String.format("ContentLoader: templateID is required to be lower cased for registering a template for class[%s]", clazz));
+        }
+        else if (registryID == null || registryID.trim().isEmpty())
+        {
+            throw new IllegalArgumentException(String.format("ContentLoader: registryID is required for registering a template for class[%s]", clazz));
+        }
+        else if (registryID.split(":").length <= 1)
+        {
+            throw new IllegalArgumentException(String.format("ContentLoader: registryID is required to have a prefix of 'domain:' for registering a template for class[%s]", clazz));
+        }
+        else if (!registryID.toLowerCase().equals(templateID))
+        {
+            throw new IllegalArgumentException(String.format("ContentLoader: registryID is required to be lower cased for registering a template for class[%s]", clazz));
         }
 
         //Map
-        final JsonClassMapper mapper = jsonMappingHandler.register(clazz, type);
+        final JsonClassMapper mapper = jsonMappingHandler.register(clazz, templateID);
 
         //Check for factory
         if (factory == null)
         {
-            final IJsonBuilder builder = mapper.getBuilder(type);
+            final IJsonBuilder builder = mapper.getBuilder(templateID);
             if (builder == null)
             {
-                throw new IllegalArgumentException("ContentLoader: Can not provide an object type[" + type + "] for loading without a factory to create objects");
+                throw new IllegalArgumentException("ContentLoader: Can not provide an object type[" + templateID + "] for loading without a factory to create objects");
             }
 
             //Generate factory for class
-            factory = (jsonElement) ->
+            conversionHandler.addConverter(new ConverterObjectBuilder<C>(templateID.toLowerCase(), clazz, (jsonElement) ->
             {
                 try
                 {
@@ -173,20 +190,20 @@ public class ContentLoader
                 }
                 catch (Exception e)
                 {
-                    throw new RuntimeException("Failed to build object of type[" + type + "]" + clazz, e);
+                    throw new RuntimeException("Failed to build object of type[" + templateID + "]" + clazz, e);
                 }
-            };
+            }));
+        }
+        else
+        {
+            conversionHandler.addConverter(new ConverterObjectBuilder<C>(templateID, clazz, factory));
         }
 
-        //Register
-        conversionHandler.addConverter(new ConverterObjectBuilder<C>(type, clazz, factory));
-
-
         //Make sure we have a handler
-        jsonObjectHandlerRegistry.createOrGetHandler(type);
+        jsonObjectHandlerRegistry.createOrGetHandler(registryID);
 
         //DEBUG-LOGGING
-        getLogger().accept("registerObject", "Type: '" + type + "' Class: '" + clazz + "'");
+        getLogger().accept("registerObject", String.format("TemplateID: '%s' RegistryID: '%s' Class: '%s'", templateID, registryID, clazz));
     }
 
     /**
@@ -325,7 +342,7 @@ public class ContentLoader
 
     protected void processObjects()
     {
-        for(PipeLine pipeLine : pipelines)
+        for (PipeLine pipeLine : pipelines)
         {
             int index = 0;
             for (Object object : generatedObjects)

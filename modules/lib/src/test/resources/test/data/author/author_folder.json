@@ -1,5 +1,5 @@
 {
-  "type": "author",
+  "type": "builder:author",
   "id": "test.data.author",
   "name": "Master Author",
   "url": "www.builtbroken.com",

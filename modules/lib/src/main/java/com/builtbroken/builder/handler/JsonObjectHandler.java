@@ -21,7 +21,7 @@ public class JsonObjectHandler implements IJsonObjectHandler
     @Override
     public void onCreated(IJsonGeneratedObject object)
     {
-        if (id.equalsIgnoreCase(object.getJsonType()))
+        if (id.equalsIgnoreCase(object.getJsonRegistryID()))
         {
             String uniqueID = object.getJsonUniqueID();
             if (uniqueID != null)

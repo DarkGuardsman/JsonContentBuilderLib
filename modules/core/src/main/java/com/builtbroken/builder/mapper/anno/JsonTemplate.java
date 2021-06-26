@@ -26,10 +26,15 @@ public @interface JsonTemplate
 {
 
     /**
-     * Type of json object this template represents
-     * Ex: armory:sword
+     * JsonObjectHandler to map the objects using this template to registry matching.
+     * <p>
+     * By default every template gets a unique registry but this is not always desired. Especially
+     * in cases were several templates output the same object sets.
      */
-    String type();
+    String registry() default "";
+
+    /** Unique content loader ID */
+    String value();
 
     /**
      * Content loader to register for

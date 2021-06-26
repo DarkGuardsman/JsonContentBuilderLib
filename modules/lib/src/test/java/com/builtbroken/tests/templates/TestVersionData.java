@@ -38,15 +38,15 @@ public class TestVersionData
         Assertions.assertEquals(1, loader.objectsGenerated);
 
         //Test that our something is the right something
-        IJsonObjectHandler handler = loader.jsonObjectHandlerRegistry.getHandler("version.package");
+        IJsonObjectHandler handler = loader.jsonObjectHandlerRegistry.getHandler("builder:version.package");
         Object object = handler.getObject("version.test");
 
         Assertions.assertTrue(object instanceof VersionData);
 
         VersionData versionData = (VersionData) object;
-        Assertions.assertEquals("0.0.1.1", versionData.version);
-        Assertions.assertEquals("version.test", versionData.id);
-        Assertions.assertEquals(MetaDataLevel.PACKAGE, versionData.level);
+        Assertions.assertEquals("0.0.1.1", versionData.getVersion());
+        Assertions.assertEquals("version.test", versionData.getJsonUniqueID());
+        Assertions.assertEquals(MetaDataLevel.PACKAGE, versionData.getMetaDataLevel());
     }
 
     @AfterEach

@@ -46,9 +46,9 @@ public class MainContentLoaderTest
         loader.addFileLocator(() -> Collections.singleton(new DataFileLoad(new File("./fake.json"), array)));
 
         //Setup loader and add registry templates
-        loader.registerObjectTemplate("tree", TreeTest.class, (json) -> new TreeTest());
-        loader.registerObjectTemplate("log", LogTest.class, (json) -> new LogTest());
-        loader.registerObjectTemplate("stick", StickTest.class, (json) -> new StickTest());
+        loader.registerObjectTemplate("test:tree","test:tree", TreeTest.class, (json) -> new TreeTest());
+        loader.registerObjectTemplate("test:log","test:log", LogTest.class, (json) -> new LogTest());
+        loader.registerObjectTemplate("test:stick","test:stick", StickTest.class, (json) -> new StickTest());
         loader.setup();
         loader.load();
 
@@ -76,7 +76,7 @@ public class MainContentLoaderTest
 
         JsonObject object = new JsonObject();
         object.addProperty("_Comment", "Something something tests");
-        object.addProperty("type", "tree");
+        object.addProperty("type", "test:tree");
         object.addProperty("child", "log3");
         object.addProperty("i", 0);
         array.add(object);
@@ -84,7 +84,7 @@ public class MainContentLoaderTest
 
         object = new JsonObject();
         object.addProperty("_Comment", "Something something tests");
-        object.addProperty("type", "log");
+        object.addProperty("type", "test:log");
         object.addProperty("child", "stick5");
         object.addProperty("i", 1);
         array.add(object);
@@ -92,7 +92,7 @@ public class MainContentLoaderTest
 
         object = new JsonObject();
         object.addProperty("_Comment", "Something something tests");
-        object.addProperty("type", "stick");
+        object.addProperty("type", "test:stick");
         object.addProperty("i", 2);
         array.add(object);
 
@@ -109,7 +109,7 @@ public class MainContentLoaderTest
         public LogTest log;
 
         @Override
-        public String getJsonType()
+        public String getJsonTemplateID()
         {
             return "tree";
         }
@@ -131,7 +131,7 @@ public class MainContentLoaderTest
         public StickTest stick;
 
         @Override
-        public String getJsonType()
+        public String getJsonTemplateID()
         {
             return "log";
         }
@@ -150,7 +150,7 @@ public class MainContentLoaderTest
         public int i;
 
         @Override
-        public String getJsonType()
+        public String getJsonTemplateID()
         {
             return "stick";
         }

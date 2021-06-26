@@ -47,7 +47,15 @@ public class JsonClassMapper
 
     public JsonClassMapper init()
     {
-        //Handle fields
+        handleFields();
+        handleMethods();
+        handleConstructors();
+        handleClassAnnotation();
+
+        return this;
+    }
+
+    private void handleFields() {
         final Field[] fields = clazz.getDeclaredFields();
         for (Field field : fields)
         {
@@ -142,7 +150,9 @@ public class JsonClassMapper
                 }
             }
         }
+    }
 
+    private void handleMethods() {
         //Handle methods
         final Method[] methods = clazz.getDeclaredMethods();
         for (Method method : methods)
@@ -277,8 +287,9 @@ public class JsonClassMapper
 
             }
         }
+    }
 
-        //Handle Constructors
+    private void handleConstructors() {
         final Constructor[] constructors = clazz.getDeclaredConstructors();
         for (Constructor constructor : constructors)
         {
@@ -313,11 +324,23 @@ public class JsonClassMapper
                 }
             }
         }
+    }
 
+    private void handleClassAnnotation() {
         final JsonTemplate jsonTemplate = (JsonTemplate) clazz.getAnnotation(JsonTemplate.class);
-        if (jsonTemplate != null && jsonTemplate.useDefaultConstructor())
+        if (jsonTemplate != null && jsonTemplate. useDefaultConstructor())
         {
-            final String type = jsonTemplate.type().toLowerCase();
+            final String type = jsonTemplate.value().toLowerCase();
+
+            //Throw an error if the IDs are not actually unqiue
+            if(jsonBuilders.containsKey(type)) {
+                final String errorMessage = String.format(
+                        "Unique ID conflict while registering type(%s) for class(%s)",
+                        type,
+                        clazz
+                );
+                throw new RuntimeException(errorMessage); //TODO make custom error class
+            }
             jsonBuilders.put(type, new JsonBuilderSupplier(type, () ->
             {
                 try
@@ -326,12 +349,9 @@ public class JsonClassMapper
                 } catch (Exception e)
                 {
                     throw new RuntimeException("JsonClassMapper: Unexpected error using creating object of type[" + type + "] using default method for clazz " + clazz, e);
-
                 }
             }));
         }
-
-        return this;
     }
 
     public void addLink(String name, IJsonLinker linker)

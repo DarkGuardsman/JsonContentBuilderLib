@@ -38,12 +38,12 @@ public class JsonObjectHandlerRegistry
         if (objectCreated instanceof IJsonGeneratedObject)
         {
             final IJsonGeneratedObject jsonGeneratedObject = (IJsonGeneratedObject) objectCreated;
-            final String type = jsonGeneratedObject.getJsonType().toLowerCase();
+            final String type = jsonGeneratedObject.getJsonRegistryID().toLowerCase();
 
             //Create handler if we have none
             createOrGetHandler(type).onCreated(jsonGeneratedObject);
 
-            System.out.println("JsonObjectHandlerRegistry >> Registered: " + type + " >> " + jsonGeneratedObject);
+            System.out.println("JsonObjectHandlerRegistry >> Registered: " + type + " >> " + jsonGeneratedObject); //TODO run through logger
         }
         else
         {

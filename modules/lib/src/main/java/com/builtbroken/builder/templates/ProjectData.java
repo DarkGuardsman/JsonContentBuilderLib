@@ -16,7 +16,7 @@ import java.util.List;
  * <p>
  * Created by Robin Seifert on 2019-05-15.
  */
-@JsonTemplate(type = ContentBuilderRefs.TYPE_PROJECT_DATA)
+@JsonTemplate(ContentBuilderRefs.TYPE_PROJECT_DATA)
 public class ProjectData implements IJsonGeneratedObject
 {
     /**
@@ -33,13 +33,13 @@ public class ProjectData implements IJsonGeneratedObject
     /**
      * Creation information about the project
      */
-    @JsonObjectWiring(jsonFields = "id", objectType = ContentBuilderRefs.TYPE_CREATION_DATA + "." + ContentBuilderRefs.TYPE_PROJECT_DATA)
-    public CreationData creationData;
+    @JsonObjectWiring(jsonFields = "id", objectType = ContentBuilderRefs.TYPE_CREATION_DATA + ".project")
+    public ObjectMetadata creationData;
 
     /**
      * Person who created the project
      */
-    @JsonObjectWiring(jsonFields = "id", objectType = ContentBuilderRefs.TYPE_AUTHOR_DATA + "." + ContentBuilderRefs.TYPE_PROJECT_DATA)
+    @JsonObjectWiring(jsonFields = "id", objectType = ContentBuilderRefs.TYPE_AUTHOR_DATA + ".project")
     public AuthorData authorData;
 
     /**
@@ -63,7 +63,7 @@ public class ProjectData implements IJsonGeneratedObject
     }
 
     @Override
-    public String getJsonType()
+    public String getJsonTemplateID()
     {
         return ContentBuilderRefs.TYPE_PROJECT_DATA;
     }

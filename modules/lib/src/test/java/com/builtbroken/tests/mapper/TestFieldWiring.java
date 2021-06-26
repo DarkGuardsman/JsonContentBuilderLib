@@ -58,7 +58,7 @@ public class TestFieldWiring
     {
 
         @Override
-        public String getJsonType()
+        public String getJsonTemplateID()
         {
             return TYPE_ID;
         }

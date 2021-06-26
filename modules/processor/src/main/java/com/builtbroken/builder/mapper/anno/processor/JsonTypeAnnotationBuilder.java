@@ -4,6 +4,7 @@ import com.builtbroken.builder.mapper.anno.JsonTemplate;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import com.google.gson.stream.JsonWriter;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -20,7 +21,7 @@ import javax.tools.StandardLocation;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.Set;
 
 /**
@@ -30,7 +31,7 @@ import java.util.Set;
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class JsonTypeAnnotationBuilder extends AbstractProcessor
 {
-    private Set<String> templates = new HashSet();
+    private HashMap<String, Element> templates = new HashMap();
 
     @Override
     public SourceVersion getSupportedSourceVersion()
@@ -70,7 +71,7 @@ public class JsonTypeAnnotationBuilder extends AbstractProcessor
                 processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR,
                         String.format("Only classes can be annotated with @%s", JsonTemplate.class.getSimpleName()));
             }
-            templates.add(element.toString());
+            templates.put(element.toString(), element);
         }
     }
 
@@ -89,20 +90,29 @@ public class JsonTypeAnnotationBuilder extends AbstractProcessor
             throw new RuntimeException(e);
         }
 
-        final JsonObject object = new JsonObject();
         final JsonArray array = new JsonArray();
-        templates.stream().forEach(array::add);
-        object.add("list", array);
+        templates.values().stream()
+                .map(this::generateJsonForTemplate)
+                .forEach(array::add);
 
         try (Writer writer = fileObject.openWriter())
         {
             final Gson gson = new Gson();
-            gson.toJson(object, new JsonWriter(writer));
+            gson.toJson(array, new JsonWriter(writer));
         }
         catch (IOException e)
         {
             throw new RuntimeException(e);
         }
+    }
+
+    private JsonObject generateJsonForTemplate(Element element) {
+        final JsonObject object = new JsonObject();
+        object.add("class", new JsonPrimitive(element.getSimpleName().toString()));
+
+        JsonTemplate template = element.getAnnotation(JsonTemplate.class);
+
+        return object;
     }
 
     private void writeServiceFile()
@@ -121,7 +131,7 @@ public class JsonTypeAnnotationBuilder extends AbstractProcessor
 
         try (Writer writer = fileObject.openWriter())
         {
-            templates.forEach(template -> {
+            templates.keySet().forEach(template -> {
                 try
                 {
                     writer.write(template + "\n");

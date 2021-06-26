@@ -28,7 +28,7 @@ public class TestProjectData
         loader.addFileLocator(new FileLocatorSimple(file));
         loader.registerObjectTemplate(VersionData.class);
         loader.registerObjectTemplate(AuthorData.class);
-        loader.registerObjectTemplate(CreationData.class);
+        loader.registerObjectTemplate(ObjectMetadata.class);
         loader.registerObjectTemplate(ProjectData.class);
         loader.setup();
 
@@ -53,20 +53,20 @@ public class TestProjectData
         Assertions.assertNotNull(projectData.creationData.version, "Failed to write version data");
 
         //Validate meta
-        CreationData creationData = projectData.creationData;
+        ObjectMetadata creationData = projectData.creationData;
         Assertions.assertEquals("test.project", creationData.id);
         Assertions.assertEquals(MetaDataLevel.PROJECT, creationData.level);
 
         //Validate version stuff
         VersionData versionData = creationData.version;
-        Assertions.assertEquals("0.0.1.1", versionData.version);
-        Assertions.assertEquals("metadata:test.project", versionData.id);
-        Assertions.assertEquals(MetaDataLevel.OBJECT, versionData.level);
+        Assertions.assertEquals("0.0.1.1", versionData.getVersion());
+        Assertions.assertEquals("test.project", versionData.getJsonUniqueID());
+        Assertions.assertEquals(MetaDataLevel.OBJECT, versionData.getMetaDataLevel());
 
         //Validate author
         AuthorData authorData = projectData.authorData;
-        Assertions.assertEquals("test.project", authorData.id);
-        Assertions.assertEquals(MetaDataLevel.PROJECT, authorData.level);
+        Assertions.assertEquals("test.project", authorData.getJsonUniqueID());
+        Assertions.assertEquals(MetaDataLevel.PROJECT, authorData.getMetaDataLevel());
 
         //Validate project data
         Assertions.assertEquals("test.project", projectData.id);

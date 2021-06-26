@@ -1,6 +1,6 @@
 [
   {
-    "type": "recipe.crafting.shapeless",
+    "type": "test:recipe.crafting.shapeless",
     "items" : [
       "cobblestone",
       "cobblestone",
@@ -10,7 +10,7 @@
     ]
   },
   {
-    "type": "recipe.crafting.grid",
+    "type": "test:recipe.crafting.grid",
     "grid" : [
       ".C.",
       "CSC",

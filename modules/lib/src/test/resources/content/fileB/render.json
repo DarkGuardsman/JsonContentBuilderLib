@@ -1,5 +1,5 @@
 {
-  "type": "render.item.simple",
+  "type": "test:render.item.simple",
   "item" : "mod:item_rock",
   "texture" : "mod:item.rock"
 }

@@ -1,10 +1,11 @@
 package com.builtbroken.tests.templates;
 
 import com.builtbroken.builder.ContentBuilderLib;
+import com.builtbroken.builder.ContentBuilderRefs;
 import com.builtbroken.builder.handler.IJsonObjectHandler;
 import com.builtbroken.builder.loader.MainContentLoader;
 import com.builtbroken.builder.loader.file.FileLocatorSimple;
-import com.builtbroken.builder.templates.CreationData;
+import com.builtbroken.builder.templates.ObjectMetadata;
 import com.builtbroken.builder.templates.MetaDataLevel;
 import com.builtbroken.builder.templates.VersionData;
 import org.junit.jupiter.api.AfterEach;
@@ -26,7 +27,7 @@ public class TestCreationData
         final MainContentLoader loader = new MainContentLoader();
         final File file = new File(System.getProperty("user.dir"), "src/test/resources/test/data/creation/metadata.json");
         loader.addFileLocator(new FileLocatorSimple(file));
-        loader.registerObjectTemplate(CreationData.class);
+        loader.registerObjectTemplate(ObjectMetadata.class);
         loader.registerObjectTemplate(VersionData.class);
         loader.setup();
 
@@ -39,14 +40,14 @@ public class TestCreationData
         Assertions.assertEquals(2, loader.objectsGenerated);
 
         //Test that our something is the right something
-        IJsonObjectHandler handler = loader.jsonObjectHandlerRegistry.getHandler("metadata.package");
+        IJsonObjectHandler handler = loader.jsonObjectHandlerRegistry.getHandler(ContentBuilderRefs.TYPE_CREATION_DATA + ".package");
         Assertions.assertNotNull(handler, "Failed to locate handler to get object");
         Object object = handler.getObject("test.meta");
 
         //Check that it exists
-        Assertions.assertTrue(object instanceof CreationData, "Failed to locate object");
+        Assertions.assertTrue(object instanceof ObjectMetadata, "Failed to locate object");
 
-        CreationData creationData = (CreationData) object;
+        ObjectMetadata creationData = (ObjectMetadata) object;
 
         //Validate creation data
         Assertions.assertNotNull(creationData.version, "Failed to wire version");
@@ -58,9 +59,9 @@ public class TestCreationData
 
         //validate version
         VersionData versionData = creationData.version;
-        Assertions.assertEquals("0.0.0.1", versionData.version);
-        Assertions.assertEquals("metadata:test.meta", versionData.id);
-        Assertions.assertEquals(MetaDataLevel.OBJECT, versionData.level);
+        Assertions.assertEquals("0.0.0.1", versionData.getVersion());
+        Assertions.assertEquals("test.meta", versionData.getJsonUniqueID());
+        Assertions.assertEquals(MetaDataLevel.OBJECT, versionData.getMetaDataLevel());
     }
 
     @AfterEach

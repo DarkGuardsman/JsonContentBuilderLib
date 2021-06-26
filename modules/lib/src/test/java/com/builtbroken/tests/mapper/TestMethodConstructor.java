@@ -19,7 +19,7 @@ import java.util.Collections;
 public class TestMethodConstructor
 {
 
-    private static final String TYPE = "testClass";
+    private static final String TYPE = "test:class";
 
     private static final String TREE = "tree";
     private static final String COUNT = "count";
@@ -39,7 +39,7 @@ public class TestMethodConstructor
 
         //Setup default loader
         final MainContentLoader loader = new MainContentLoader();
-        loader.registerObjectTemplate(TYPE, ClassForMappingTest.class, null);
+        loader.registerObjectTemplate(TYPE, TYPE, ClassForMappingTest.class, null);
         loader.addFileLocator(() -> Collections.singleton(new DataFileLoad(new File("./fake.json"), jsonData)));
         loader.setup();
         loader.load();
@@ -74,7 +74,7 @@ public class TestMethodConstructor
         }
 
         @Override
-        public String getJsonType()
+        public String getJsonTemplateID()
         {
             return TYPE;
         }

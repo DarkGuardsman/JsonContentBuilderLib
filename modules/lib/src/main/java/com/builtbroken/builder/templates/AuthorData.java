@@ -13,31 +13,20 @@ import com.builtbroken.builder.mapper.anno.JsonTemplate;
  * <p>
  * Created by Robin Seifert on 2019-05-14.
  */
-@JsonTemplate(type = ContentBuilderRefs.TYPE_AUTHOR_DATA)
-public class AuthorData implements IJsonGeneratedObject, ISimpleDataValidation
+@JsonTemplate(ContentBuilderRefs.TYPE_AUTHOR_DATA)
+public class AuthorData extends AbstractLevelData implements IJsonGeneratedObject, ISimpleDataValidation
 {
-
     /**
      * Author's name for display
      */
     @JsonMapping(keys = "name", type = ConverterRefs.STRING, required = true)
-    public String name;
-
-    /**
-     * Unique global ID for tracking this author
-     */
-    public String id;
+    private String name;
 
     /**
      * Author's personal URL or contract information
      */
     @JsonMapping(keys = "url", type = ConverterRefs.STRING)
-    public String url;
-
-    /**
-     * Level the author data represents
-     */
-    public MetaDataLevel level;
+    private String url;
 
     @JsonConstructor
     public static AuthorData create(@JsonMapping(keys = "id", type = ConverterRefs.STRING, required = true) String id,
@@ -50,9 +39,9 @@ public class AuthorData implements IJsonGeneratedObject, ISimpleDataValidation
     }
 
     @Override
-    public String getJsonType()
+    public String getJsonTemplateID()
     {
-        return ContentBuilderRefs.TYPE_AUTHOR_DATA + "." + level.name().toLowerCase();
+        return ContentBuilderRefs.TYPE_AUTHOR_DATA;
     }
 
     @Override
@@ -70,8 +59,16 @@ public class AuthorData implements IJsonGeneratedObject, ISimpleDataValidation
     @Override
     public boolean isValid()
     {
-        return level != null
-                && id != null && !id.isEmpty()
-                && name != null && !name.isEmpty();
+        return super.isValid() && name != null && !name.isEmpty();
+    }
+
+    public String getAuthorName()
+    {
+        return name;
+    }
+
+    public String getAuthorUrl()
+    {
+        return url;
     }
 }

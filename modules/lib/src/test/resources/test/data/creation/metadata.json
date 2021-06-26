@@ -1,6 +1,6 @@
 [
   {
-    "type": "metadata",
+    "type": "builder:metadata",
     "id": "test.meta",
     "level": "package",
     "creation_date" : "5/16/2019",
@@ -8,8 +8,8 @@
     "program_used" : "mac"
   },
   {
-    "type": "version",
-    "id": "metadata:test.meta",
+    "type": "builder:version",
+    "id": "test.meta",
     "version": "0.0.0.1"
   }
 ]

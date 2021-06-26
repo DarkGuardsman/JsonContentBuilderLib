@@ -23,8 +23,8 @@ import java.util.function.Supplier;
 public class TestFieldConstructor
 {
 
-    private static final String TYPE = "testClass";
-    private static final String TYPE2 = "testClass2";
+    private static final String TYPE = "test:class";
+    private static final String TYPE2 = "test:class2";
 
     private static final String TREE = "tree";
     private static final String COUNT = "count";
@@ -44,7 +44,7 @@ public class TestFieldConstructor
 
         //Setup default loader
         final MainContentLoader loader = new MainContentLoader();
-        loader.registerObjectTemplate(TYPE, ClassForMappingTest.class, null);
+        loader.registerObjectTemplate(TYPE, TYPE, ClassForMappingTest.class, null);
         loader.addFileLocator(() -> Collections.singleton(new DataFileLoad(new File("./fake.json"), jsonData)));
         loader.setup();
         loader.load();
@@ -74,7 +74,7 @@ public class TestFieldConstructor
 
         //Setup default loader
         final MainContentLoader loader = new MainContentLoader();
-        loader.registerObjectTemplate(TYPE2, ClassForMappingTest2.class, null);
+        loader.registerObjectTemplate(TYPE2, TYPE2, ClassForMappingTest2.class, null);
         loader.addFileLocator(() -> Collections.singleton(new DataFileLoad(new File("./fake.json"), jsonData)));
         loader.setup();
         loader.load();
@@ -105,7 +105,7 @@ public class TestFieldConstructor
         public int testField2;
 
         @Override
-        public String getJsonType()
+        public String getJsonTemplateID()
         {
             return TYPE;
         }
@@ -129,7 +129,7 @@ public class TestFieldConstructor
         public int testField2;
 
         @Override
-        public String getJsonType()
+        public String getJsonTemplateID()
         {
             return TYPE;
         }

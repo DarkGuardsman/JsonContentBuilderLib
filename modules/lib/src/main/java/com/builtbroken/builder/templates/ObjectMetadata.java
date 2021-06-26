@@ -13,8 +13,8 @@ import com.builtbroken.builder.mapper.anno.JsonTemplate;
  * <p>
  * Created by Robin Seifert on 2019-05-14.
  */
-@JsonTemplate(type = ContentBuilderRefs.TYPE_CREATION_DATA)
-public class CreationData implements IJsonGeneratedObject
+@JsonTemplate(ContentBuilderRefs.TYPE_CREATION_DATA)
+public class ObjectMetadata implements IJsonGeneratedObject
 {
 
     public String id;
@@ -30,14 +30,14 @@ public class CreationData implements IJsonGeneratedObject
     @JsonMapping(keys = "program_used", type = ConverterRefs.STRING)
     public String program;
 
-    @JsonObjectWiring(jsonFields = "id", objectType = "version", valuePrefix = ContentBuilderRefs.TYPE_CREATION_DATA + ":")
+    @JsonObjectWiring(jsonFields = {"version", "id"}, objectType = ContentBuilderRefs.TYPE_VERSION_DATA)
     public VersionData version;
 
     @JsonConstructor
-    public static CreationData create(@JsonMapping(keys = "id", type = ConverterRefs.STRING, required = true) String id,
-                                      @JsonMapping(keys = "level", type = ConverterRefs.ENUM, required = true) MetaDataLevel level)
+    public static ObjectMetadata create(@JsonMapping(keys = "id", type = ConverterRefs.STRING, required = true) String id,
+                                        @JsonMapping(keys = "level", type = ConverterRefs.ENUM, required = true) MetaDataLevel level)
     {
-        CreationData creationData = new CreationData();
+        ObjectMetadata creationData = new ObjectMetadata();
         creationData.id = id;
         creationData.level = level;
 
@@ -45,7 +45,13 @@ public class CreationData implements IJsonGeneratedObject
     }
 
     @Override
-    public String getJsonType()
+    public String getJsonTemplateID()
+    {
+        return ContentBuilderRefs.TYPE_CREATION_DATA;
+    }
+
+    @Override
+    public String getJsonRegistryID()
     {
         return ContentBuilderRefs.TYPE_CREATION_DATA + "." + level.name().toLowerCase();
     }

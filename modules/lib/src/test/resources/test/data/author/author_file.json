@@ -1,5 +1,5 @@
 {
-  "type": "author",
+  "type": "builder:author",
   "id" : "test.author",
   "name": "Master Author",
   "level": "file"
