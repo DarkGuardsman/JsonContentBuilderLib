@@ -88,4 +88,84 @@ public class TestVersionData
                 Arguments.of("0.0.0.0.1", IllegalArgumentException.class, "Version can only contain 4 numbers split by '.', instead got 5 values from '0.0.0.0.1")
         );
     }
+
+
+    @ParameterizedTest(name = "[{index}] {0}.{1}.{2}.{3} -> {4}")
+    @MethodSource()
+    void testVersionString(Integer major, Integer minor, Integer rev, Integer build, String outputString)
+    {
+        final VersionData version = new VersionData();
+        version.major = major;
+        version.minor = minor;
+        version.rev = rev;
+        version.build = build;
+        Assertions.assertEquals(outputString, version.getVersion());
+    }
+
+    static Stream<Arguments> testVersionString()
+    {
+        return Stream.of(
+                //Error state
+                Arguments.of(null, null, null, null, "err"),
+
+                //Good paths
+                Arguments.of(null, null, null, 5, "5"),
+                Arguments.of(5, null, null, null, "5"),
+                Arguments.of(5, 5, null, null, "5.5"),
+                Arguments.of(5, 5, 5, null, "5.5.5"),
+                Arguments.of(5, 5, 5, 5, "5.5.5.5"),
+
+                //Bad paths, adding tests to remind me to update these if fixed
+                Arguments.of(null, 5, 5, 5, "null.5.5.5"),
+                Arguments.of(null, null, 5, 5, "null.null.5.5"),
+                Arguments.of(5, null, 5, 5, "5.null.5.5"),
+                Arguments.of(5, null, null, 5, "5.null.null.5"),
+                Arguments.of(5, 5, null, 5, "5.5.null.5")
+
+        );
+    }
+
+    @ParameterizedTest(name = "[{index}] {0}.{1}.{2}.{3} -> {4}")
+    @MethodSource()
+    void testValidation(Integer major, Integer minor, Integer rev, Integer build, boolean isValid)
+    {
+        final VersionData version = VersionData.create("test", MetaDataLevel.FILE);
+        version.major = major;
+        version.minor = minor;
+        version.rev = rev;
+        version.build = build;
+        Assertions.assertEquals(isValid, version.isValid());
+    }
+
+    static Stream<Arguments> testValidation()
+    {
+        return Stream.of(
+                //Error state
+                Arguments.of(null, null, null, null, false),
+
+                //Good paths
+                Arguments.of(null, null, null, 5, true),
+                Arguments.of(5, null, null, null, true),
+                Arguments.of(5, 5, null, null, true),
+                Arguments.of(5, 5, 5, null, true),
+                Arguments.of(5, 5, 5, 5, true),
+
+                //Bad paths, adding tests to remind me to update these if fixed
+                Arguments.of(null, 5, 5, 5, false),
+                Arguments.of(null, null, 5, 5, false),
+                Arguments.of(5, null, 5, 5, false),
+                Arguments.of(5, null, null, 5, false),
+                Arguments.of(5, 5, null, 5, false)
+
+        );
+    }
+
+    @Test
+    void testToString()
+    {
+        final VersionData version = VersionData.create("test", MetaDataLevel.FILE);
+        version.loadVersion("1.2.3.4");
+        Assertions.assertEquals("VersionData[FILE, test, 1.2.3.4]", version.toString());
+    }
+
 }

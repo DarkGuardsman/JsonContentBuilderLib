@@ -101,11 +101,11 @@ public class VersionData extends AbstractLevelData implements IJsonGeneratedObje
      */
     public String getVersion()
     {
-        if (major != null)
+        if (major != null || minor != null || rev != null)
         {
-            if (minor != null)
+            if (minor != null || rev != null || build != null)
             {
-                if (rev != null)
+                if (rev != null || build != null)
                 {
                     if (build != null)
                     {
@@ -127,7 +127,9 @@ public class VersionData extends AbstractLevelData implements IJsonGeneratedObje
     @Override
     public boolean isValid()
     {
-        return super.isValid() && !getVersion().equalsIgnoreCase("err");
+        return super.isValid()
+                && !getVersion().equalsIgnoreCase("err")
+                && !getVersion().contains("null");
     }
 
     @Override
@@ -139,6 +141,6 @@ public class VersionData extends AbstractLevelData implements IJsonGeneratedObje
     @Override
     public String toString()
     {
-        return String.format("VersionData[%s, %s]", getJsonUniqueID(), getVersion());
+        return String.format("VersionData[%s, %s, %s]", getMetaDataLevel(), getJsonUniqueID(), getVersion());
     }
 }
