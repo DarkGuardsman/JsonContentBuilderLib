@@ -19,16 +19,16 @@ import com.builtbroken.builder.mapper.anno.JsonTemplate;
 @JsonTemplate(ContentBuilderRefs.TYPE_VERSION_DATA)
 public class VersionData extends AbstractLevelData implements IJsonGeneratedObject
 {
-    @JsonMapping(keys = "major", type = ConverterRefs.STRING)
+    @JsonMapping(keys = "major", type = ConverterRefs.INT)
     protected Integer major;
 
-    @JsonMapping(keys = "minor", type = ConverterRefs.STRING)
+    @JsonMapping(keys = "minor", type = ConverterRefs.INT)
     protected Integer minor;
 
-    @JsonMapping(keys = "rev", type = ConverterRefs.STRING)
+    @JsonMapping(keys = "rev", type = ConverterRefs.INT)
     protected Integer rev;
 
-    @JsonMapping(keys = "build", type = ConverterRefs.STRING)
+    @JsonMapping(keys = "build", type = ConverterRefs.INT)
     protected Integer build;
 
     /**
