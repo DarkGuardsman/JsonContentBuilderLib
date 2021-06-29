@@ -109,7 +109,7 @@ public class ContentBuilderLib
      */
     public static void load()
     {
-        loaders.values().forEach(loader -> loader.load());
+        loaders.values().forEach(ContentLoader::load);
     }
 
     /**
@@ -118,7 +118,7 @@ public class ContentBuilderLib
      */
     public static void destroy()
     {
-        loaders.values().forEach(loader -> loader.destroy());
+        loaders.values().forEach(ContentLoader::destroy);
         loaders.clear();
 
         if (MAIN_LOADER != null)
