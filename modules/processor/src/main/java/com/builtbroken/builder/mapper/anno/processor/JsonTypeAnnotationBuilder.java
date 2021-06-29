@@ -1,5 +1,6 @@
 package com.builtbroken.builder.mapper.anno.processor;
 
+import com.builtbroken.builder.mapper.anno.JsonMapping;
 import com.builtbroken.builder.mapper.anno.JsonTemplate;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -20,8 +21,10 @@ import javax.tools.FileObject;
 import javax.tools.StandardLocation;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -106,11 +109,41 @@ public class JsonTypeAnnotationBuilder extends AbstractProcessor
         }
     }
 
-    private JsonObject generateJsonForTemplate(Element element) {
+    private JsonObject generateJsonForTemplate(Element templateElement) {
         final JsonObject object = new JsonObject();
-        object.add("class", new JsonPrimitive(element.getSimpleName().toString()));
+        object.add("class", new JsonPrimitive(templateElement.getSimpleName().toString()));
 
-        JsonTemplate template = element.getAnnotation(JsonTemplate.class);
+        JsonTemplate template = templateElement.getAnnotation(JsonTemplate.class);
+        object.add("id", new JsonPrimitive(template.value()));
+        object.add("registry", new JsonPrimitive(template.registry().isEmpty() ? template.value() : template.registry()));
+
+        //TODO generate fields (json fields not just class fields)
+
+        final List<? extends Element> elementList = templateElement.getEnclosedElements();
+
+
+        final HashMap<String, JsonMapping> mappings = new HashMap();
+
+        for(Element element : elementList) {
+            final JsonMapping mapping = element.getAnnotation(JsonMapping.class);
+            if(mapping != null) {
+               Arrays.stream(mapping.keys()).forEach(key -> mappings.put(key, mapping));
+            }
+            //TODO factory methods/
+            //TODO constructors
+            //TODO wiring
+        }
+
+        //Generate list of fields for the editors
+        final JsonArray array = new JsonArray();
+        mappings.entrySet().forEach(entry -> {
+            JsonObject elementData = new JsonObject();
+            elementData.add("key", new JsonPrimitive(entry.getKey()));
+            elementData.add("required", new JsonPrimitive(entry.getValue().required()));
+            elementData.add("type", new JsonPrimitive(entry.getValue().type()));
+            array.add(elementData);
+        });
+        object.add("fields", array);
 
         return object;
     }
