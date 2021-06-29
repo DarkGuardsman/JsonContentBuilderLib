@@ -47,4 +47,11 @@ public @interface JsonMapping
      */
     boolean required() default false;
 
+    /**
+     * Marks the mapping as a legacy conversion for older files
+     *
+     * @return true to note legacy and to generate warnings
+     */
+    boolean legacy() default false;
+
 }
