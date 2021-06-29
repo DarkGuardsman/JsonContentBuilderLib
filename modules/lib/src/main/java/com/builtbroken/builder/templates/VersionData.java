@@ -36,7 +36,7 @@ public class VersionData extends AbstractLevelData implements IJsonGeneratedObje
      *
      * @param version
      */
-    @JsonMapping(keys = "version", type = ConverterRefs.STRING)
+    @JsonMapping(keys = "version", type = ConverterRefs.STRING, legacy = true)
     public void loadVersion(String version)
     {
         if (!version.contains("."))
