@@ -80,7 +80,7 @@ public class PipeLine
     public void init()
     {
         //DEBUG
-        getLogger().accept("init", "start");
+        //TODO add event getLogger().accept("init", "start");
 
         //INIT
         //TODO sort out pipes and nodes so they run in order
@@ -88,26 +88,7 @@ public class PipeLine
         pipes.forEach(pipe -> pipe.init());
 
         //DEBUG
-        getLogger().accept("init", "end");
-    }
-
-    public BiConsumer<String, String> getLogger()
-    {
-        if (logger == null)
-        {
-            logger = (prefix, msg) ->
-            {
-                if (getLoader() != null)
-                {
-                    getLoader().getLogger().accept("PipeLine >> " + prefix, msg);
-                }
-                else
-                {
-                    System.out.println("PipeLine:" + prefix + " >> " + msg);
-                }
-            };
-        }
-        return logger;
+        //TODO add event getLogger().accept("init", "end");
     }
 
     /**
@@ -118,13 +99,13 @@ public class PipeLine
     public void loadComplete()
     {
         //DEBUG
-        getLogger().accept("load", "start");
+        //TODO add event getLogger().accept("load", "start");
 
         //Load
         pipes.forEach(pipe -> pipe.loadComplete());
 
         //DEBUG
-        getLogger().accept("load", "end");
+        //TODO add event getLogger().accept("load", "end");
     }
 
     /**
@@ -136,7 +117,7 @@ public class PipeLine
     public void add(String key, IPipeNode node)
     {
         //DEBUG
-        getLogger().accept("addNodeToPipe", "KEY: " + key + "  NODE: " + node);
+        //TODO add event getLogger().accept("addNodeToPipe", "KEY: " + key + "  NODE: " + node);
 
         //ADD
         if (id_to_pipe.containsKey(key.toLowerCase()))
@@ -162,8 +143,7 @@ public class PipeLine
     public List<Object> handle(@Nullable JsonElement jsonData, @Nullable Object object, @Nullable Function<Pipe, Boolean> shouldSkipPipe) //TODO need a set return type other than object, something that is <Type, Data>
     {
         //DEBUG
-        getLogger().accept("handle", "start " + jsonData
-                + "\n=========================");
+        //TODO add event  getLogger().accept("handle", "start " + jsonData + "\n=========================");
 
         //HANDLE
         final List<Object> builtObjects = new ArrayList();
@@ -184,23 +164,22 @@ public class PipeLine
                 currentOut.clear();
 
                 //DEBUG
-                getLogger().accept("handle >> pipe", pipe.pipeName + " IN: " + currentIN.size() + "\n");
+                //TODO add event getLogger().accept("handle >> pipe", pipe.pipeName + " IN: " + currentIN.size() + "\n");
 
                 //loop inputs
                 while (currentIN.peek() != null)
                 {
                     //DEBUG
-                    getLogger().accept("handle >> pipe", pipe.pipeName + " NEXT: " + currentIN.peek());
+                    //TODO add event getLogger().accept("handle >> pipe", pipe.pipeName + " NEXT: " + currentIN.peek());
 
                     pipe.processSet(jsonData, currentIN.poll(), currentOut);
 
                     //DEBUG
-                    getLogger().accept("handle >> pipe", pipe.pipeName + " END: " + currentOut.size() + "\n");
+                    //TODO add event getLogger().accept("handle >> pipe", pipe.pipeName + " END: " + currentOut.size() + "\n");
                 }
 
                 //DEBUG
-                getLogger().accept("handle >> pipe", pipe.pipeName + " OUT: " + currentOut.size()
-                        + "\n=====================================");
+                //TODO add event getLogger().accept("handle >> pipe", pipe.pipeName + " OUT: " + currentOut.size() + "\n=====================================");
             }
         }
 
@@ -209,7 +188,7 @@ public class PipeLine
         builtObjects.removeIf(o -> o == null);
 
         //DEBUG
-        getLogger().accept("init", "end " + builtObjects.size());
+        //TODO add event getLogger().accept("init", "end " + builtObjects.size());
 
         return builtObjects;
     }

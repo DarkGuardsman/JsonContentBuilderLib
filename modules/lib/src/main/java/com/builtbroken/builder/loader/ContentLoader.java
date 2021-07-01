@@ -6,6 +6,8 @@ import com.builtbroken.builder.converter.strut.ConverterObjectBuilder;
 import com.builtbroken.builder.data.DataFileLoad;
 import com.builtbroken.builder.data.GeneratedObject;
 import com.builtbroken.builder.data.IJsonGeneratedObject;
+import com.builtbroken.builder.events.EventSystem;
+import com.builtbroken.builder.events.imp.FileLocatorAddedEvent;
 import com.builtbroken.builder.handler.JsonObjectHandlerRegistry;
 import com.builtbroken.builder.loader.file.IFileLocator;
 import com.builtbroken.builder.mapper.JsonMappingHandler;
@@ -20,7 +22,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Queue;
-import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 /**
@@ -79,12 +80,7 @@ public class ContentLoader
      */
     public final List<Object> generatedObjects = new ArrayList();
 
-    /**
-     * Function to use for outputting logs. Allows switching
-     * the builder's logger without hard deps on any logger
-     * implementation.
-     */
-    protected BiConsumer<String, String> logger;
+    public final EventSystem eventSystem = new EventSystem();
 
     public int filesLocated = 0;
     public int filesProcessed = 0;
@@ -152,7 +148,7 @@ public class ContentLoader
         {
             throw new IllegalArgumentException(String.format("ContentLoader: templateID is required to have a prefix of 'domain:' for registering a template for class[%s]", clazz));
         }
-        else if (!templateID.toLowerCase().equals(templateID))
+        else if (templateID.chars().anyMatch(Character::isUpperCase))
         {
             throw new IllegalArgumentException(String.format("ContentLoader: templateID is required to be lower cased for registering a template for class[%s]", clazz));
         }
@@ -164,7 +160,7 @@ public class ContentLoader
         {
             throw new IllegalArgumentException(String.format("ContentLoader: registryID is required to have a prefix of 'domain:' for registering a template for class[%s]", clazz));
         }
-        else if (!registryID.toLowerCase().equals(templateID))
+        else if (registryID.chars().anyMatch(Character::isUpperCase))
         {
             throw new IllegalArgumentException(String.format("ContentLoader: registryID is required to be lower cased for registering a template for class[%s]", clazz));
         }
@@ -203,7 +199,7 @@ public class ContentLoader
         jsonObjectHandlerRegistry.createOrGetHandler(registryID);
 
         //DEBUG-LOGGING
-        getLogger().accept("registerObject", String.format("TemplateID: '%s' RegistryID: '%s' Class: '%s'", templateID, registryID, clazz));
+        //TODO add event getLogger().accept("registerObject", String.format("TemplateID: '%s' RegistryID: '%s' Class: '%s'", templateID, registryID, clazz));
     }
 
     /**
@@ -213,8 +209,8 @@ public class ContentLoader
      */
     public void addFileLocator(IFileLocator locator)
     {
-        getLogger().accept("addFileLocator", "" + locator);
         fileLocators.add(locator);
+        eventSystem.fireEvent(new FileLocatorAddedEvent(this, locator));
     }
 
     /**
@@ -224,31 +220,35 @@ public class ContentLoader
     public void setup()
     {
         //DEBUG-LOGGING
-        getLogger().accept("setup", "start");
+        //TODO add event getLogger().accept("setup", "start");
 
         //Trigger setup defaults if not run
         if (!hasSetup)
         {
             //DEBUG-LOGGING
-            getLogger().accept("setup", "setup phase has not run, applying defaults");
+            //TODO add event getLogger().accept("setup", "setup phase has not run, applying defaults");
 
             //Defaults
             ContentBuilderLib.setupDefault(this);
+
+            hasSetup = true;
         }
 
         //Trigger loading if not run
         if (!hasLoaded)
         {
             //DEBUG-LOGGING
-            getLogger().accept("setup", "load phase has not run, triggering init");
+            //TODO add event getLogger().accept("setup", "load phase has not run, triggering init");
 
             //Run
             init();
             loadComplete();
+
+            hasLoaded = true;
         }
 
         //DEBUG-LOGGING
-        getLogger().accept("setup", "end");
+        //TODO add event getLogger().accept("setup", "end");
     }
 
     /**
@@ -258,7 +258,7 @@ public class ContentLoader
     public void load()
     {
         //DEBUG-LOGGING
-        getLogger().accept("load", "start");
+        //TODO add event getLogger().accept("load", "start");
 
         //Run
         locateFiles();
@@ -266,7 +266,7 @@ public class ContentLoader
         processObjects();
 
         //DEBUG-LOGGING
-        getLogger().accept("load", "end");
+        //TODO add event getLogger().accept("load", "end");
     }
 
     protected void locateFiles()
@@ -281,30 +281,30 @@ public class ContentLoader
         //          goes for any information that might depend on accessing or editing other objects.
 
         //DEBUG-LOGGING
-        getLogger().accept("locateFiles", "start");
+        //TODO add event getLogger().accept("locateFiles", "start");
 
         //Loop loaders to find files to process
         for (IFileLocator locator : fileLocators)
         {
             //DEBUG-LOGGING
             final int prev = loadedFiles.size();
-            getLogger().accept("locateFiles", locator.toString() + " start search");
+            //TODO add event getLogger().accept("locateFiles", locator.toString() + " start search");
 
             //Do search
             loadedFiles.addAll(locator.search());
 
             //DEBUG-LOGGING
             final int found = (loadedFiles.size() - prev);
-            getLogger().accept("locateFiles", locator.toString() + " found " + found + " new file" + (found > 1 ? "s" : ""));
+            //TODO add event getLogger().accept("locateFiles", locator.toString() + " found " + found + " new file" + (found > 1 ? "s" : ""));
 
-            getLogger().accept("locateFiles", locator.toString() + " end search");
+            //TODO add event getLogger().accept("locateFiles", locator.toString() + " end search");
         }
 
         filesLocated = loadedFiles.size();
 
         //DEBUG-LOGGING
-        getLogger().accept("locateFiles", "located " + filesLocated + " file" + (filesLocated > 1 ? "s" : ""));
-        getLogger().accept("locateFiles", "end");
+        //TODO add event getLogger().accept("locateFiles", "located " + filesLocated + " file" + (filesLocated > 1 ? "s" : ""));
+        //TODO add event getLogger().accept("locateFiles", "end");
     }
 
     protected void processFiles()
@@ -314,7 +314,7 @@ public class ContentLoader
             try
             {
                 //DEBUG-LOGGING
-                getLogger().accept("processing", "[" + filesProcessed + "]  start processing data load: " + fileLoad);
+                //TODO add event getLogger().accept("processing", "[" + filesProcessed + "]  start processing data load: " + fileLoad);
 
                 final List<Object> out = objectCreationPipeline.handle(fileLoad.element, null, null); //TODO add metadata
 
@@ -325,10 +325,10 @@ public class ContentLoader
                 objectsGenerated += out.size();
 
                 //DEBUG-LOGGING
-                getLogger().accept("processing", "[" + filesProcessed + "]  generated " + out.size() + " object" + (out.size() > 1 ? "s" : ""));
+                //TODO add event getLogger().accept("processing", "[" + filesProcessed + "]  generated " + out.size() + " object" + (out.size() > 1 ? "s" : ""));
 
                 //DEBUG-LOGGING
-                getLogger().accept("processing", "[" + filesProcessed + "] end processing data load: " + fileLoad);
+                //TODO add event getLogger().accept("processing", "[" + filesProcessed + "] end processing data load: " + fileLoad);
 
                 //Count file is completed
                 filesProcessed += 1;
@@ -348,7 +348,7 @@ public class ContentLoader
             for (Object object : generatedObjects)
             {
                 //DEBUG-LOGGING
-                getLogger().accept("post-processing", "[" + (index++) + "]  processing: " + object);
+                //TODO add event getLogger().accept("post-processing", "[" + (index++) + "]  processing: " + object);
 
                 List<Object> out;
 
@@ -371,11 +371,11 @@ public class ContentLoader
                 objectsGenerated += out.stream().filter(o -> o != object).count();
 
                 //DEBUG-LOGGING
-                getLogger().accept("processing", "[" + filesProcessed + "]  generated " + out.size() + " object" + (out.size() > 1 ? "s" : ""));
+                //TODO add event getLogger().accept("processing", "[" + filesProcessed + "]  generated " + out.size() + " object" + (out.size() > 1 ? "s" : ""));
 
 
                 //DEBUG-LOGGING
-                getLogger().accept("post-processing", "[" + (index++) + "]  ending: " + object);
+                //TODO add event getLogger().accept("post-processing", "[" + (index++) + "]  ending: " + object);
             }
         }
     }
@@ -388,7 +388,7 @@ public class ContentLoader
     protected void init()
     {
         //DEBUG-LOGGING
-        getLogger().accept("init", "start");
+        //TODO add event getLogger().accept("init", "start");
 
         addPipes();
         objectCreationPipeline.init();
@@ -397,7 +397,7 @@ public class ContentLoader
         pipelines.forEach(pipe -> pipe.contentLoader = this);
 
         //DEBUG-LOGGING
-        getLogger().accept("init", "end");
+        //TODO add event getLogger().accept("init", "end");
     }
 
     protected void addPipes()
@@ -413,13 +413,13 @@ public class ContentLoader
     protected void loadComplete()
     {
         //DEBUG-LOGGING
-        getLogger().accept("loadComplete", "start");
+        //TODO add event getLogger().accept("loadComplete", "start");
 
         objectCreationPipeline.loadComplete();
         pipelines.forEach(PipeLine::loadComplete);
 
         //DEBUG-LOGGING
-        getLogger().accept("loadComplete", "end");
+        //TODO add event getLogger().accept("loadComplete", "end");
     }
 
     /**
@@ -430,7 +430,7 @@ public class ContentLoader
     public void destroy()
     {
         //DEBUG-LOGGING
-        getLogger().accept("destroy", "start");
+        //TODO add event getLogger().accept("destroy", "start");
 
         clean();
 
@@ -441,7 +441,7 @@ public class ContentLoader
         jsonMappingHandler.destroy();
 
         //DEBUG-LOGGING
-        getLogger().accept("destroy", "end");
+        //TODO add event getLogger().accept("destroy", "end");
     }
 
     /**
@@ -450,21 +450,11 @@ public class ContentLoader
     public void clean()
     {
         //DEBUG-LOGGING
-        getLogger().accept("clean", "start");
+        //TODO add event getLogger().accept("clean", "start");
 
         loadedFiles.clear();
 
         //DEBUG-LOGGING
-        getLogger().accept("clean", "end");
-    }
-
-    public BiConsumer<String, String> getLogger()
-    {
-        return logger;
-    }
-
-    public void setLogger(BiConsumer<String, String> logger)
-    {
-        this.logger = logger;
+        //TODO add event getLogger().accept("clean", "end");
     }
 }

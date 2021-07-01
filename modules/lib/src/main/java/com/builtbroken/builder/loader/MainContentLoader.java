@@ -21,7 +21,6 @@ public class MainContentLoader extends ContentLoader
     public MainContentLoader()
     {
         super(ContentBuilderRefs.MAIN_LOADER, new PipeLine());
-        logger = (prefix, msg) -> System.out.println("ContentLoader[" + ContentBuilderRefs.MAIN_LOADER + "]:" + prefix + " >> " + msg);
     }
 
     @Override

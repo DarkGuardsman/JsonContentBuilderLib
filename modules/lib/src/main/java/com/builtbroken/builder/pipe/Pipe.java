@@ -63,9 +63,9 @@ public class Pipe
      */
     public void init()
     {
-        getLogger().accept("Init", "Start");
+        //TODO add event getLogger().accept("Init", "Start");
         nodes.forEach(node -> node.init());
-        getLogger().accept("Init", "End");
+        //TODO add event getLogger().accept("Init", "End");
     }
 
     /**
@@ -75,9 +75,9 @@ public class Pipe
      */
     public void loadComplete()
     {
-        getLogger().accept("Load", "Start");
+        //TODO add event getLogger().accept("Load", "Start");
         nodes.forEach(node -> node.onLoadComplete());
-        getLogger().accept("Load", "End");
+        //TODO add event getLogger().accept("Load", "End");
     }
 
     /**
@@ -89,7 +89,7 @@ public class Pipe
      */
     public void processSet(JsonElement jsonData, Object currentObject, Queue<Object> objectsOut)
     {
-        getLogger().accept("Process", "Object: " + currentObject);
+        //TODO add event getLogger().accept("Process", "Object: " + currentObject);
 
         //Start
         queueIn.clear();
@@ -115,12 +115,12 @@ public class Pipe
 
         //Last run add everything
         objectsOut.addAll(queueOut);
-        getLogger().accept("Process", "End " + objectsOut.size());
+        //TODO add event getLogger().accept("Process", "End " + objectsOut.size());
     }
 
     private void handleNodeStep(IPipeNode node, JsonElement jsonData, Object currentObject, Queue<Object> queueOut)
     {
-        getLogger().accept("Node[" + node.getUniqueID() + "]", jsonData + " " + currentObject);
+        //TODO add event getLogger().accept("Node[" + node.getUniqueID() + "]", jsonData + " " + currentObject);
 
         NodeActionResult result = node.shouldReceive(jsonData, currentObject);
         if (result == NodeActionResult.CONTINUE)
@@ -148,7 +148,7 @@ public class Pipe
 
     public void addNode(IPipeNode node)
     {
-        getLogger().accept("AddNode", node.toString());
+        //TODO add event getLogger().accept("AddNode", node.toString());
         nodes.add(node);
     }
 
@@ -165,24 +165,5 @@ public class Pipe
     public ConversionHandler getConverter()
     {
         return pipeLine != null ? pipeLine.getConverter() : null;
-    }
-
-    public BiConsumer<String, String> getLogger()
-    {
-        if (logger == null)
-        {
-            logger = (prefix, msg) ->
-            {
-                if (getPipeLine() != null)
-                {
-                    getPipeLine().getLogger().accept("Pipe[" + pipeName + "] >> " + prefix, msg);
-                }
-                else
-                {
-                    System.out.println("Pipe[" + pipeName + "]: " + prefix + " >> " + msg);
-                }
-            };
-        }
-        return logger;
     }
 }
